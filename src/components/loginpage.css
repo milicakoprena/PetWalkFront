@@ -1,0 +1,105 @@
+* {
+    margin:0;
+    box-sizing: border-box;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.page {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.logincover {
+    background-color:rgb(221, 221, 221);
+    width: 30em;
+    height: 40em;
+    position: absolute;
+    top: 5%;
+    left: 35%;
+    border-radius: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+
+}
+
+.loginlogo {
+    width: 400px;
+    height: auto;
+    margin: -20px 0px 0px 0px;
+    position: relative;
+}
+
+.login-btn {
+    width: 60%;
+    height: 2em;
+    background-color: rgb(124, 127, 131);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.25em;
+    cursor: pointer;
+    transition: 0.5s;
+    color: aliceblue;
+    font-size: 1.7em;
+    margin-top: -40px;
+}
+
+
+
+.login-btn:hover{
+    transform: scale(1.15);
+}
+
+input {
+    font-size: 20px;
+    border-radius: 0.25em;
+    border-color: transparent;
+    height: 2.5em;
+    width: 100%;
+    margin:0;
+    padding-left:40px;
+}
+
+.loginusername {
+    height: 2.5em;
+    width: 60%;
+    position: relative;
+    margin: -70px 0px 0px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding:0;
+    
+}
+
+.loginpassword {
+    height: 2.5em;
+    width: 60%;
+    position: relative;
+    margin: -40px 0px 0px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding:0;
+}
+
+.mail {
+    position:absolute;
+    bottom:8px;
+    left:10px;
+    width:25px;
+    height:25px;
+}
+.lock {
+    position:absolute;
+    bottom:8px;
+    left:10px;
+    width:25px;
+    height:25px;
+}
