@@ -6,7 +6,7 @@ const StartPage = () => {
     const navigate = useNavigate();
     return (
         <div className="cover">
-            <img className="logostart" src={require('./resources/logo.png')} />
+            <img className="logostart" src={require('./resources/logo.png')} alt="img1" />
             <p>
             <button className="start-to-login-btn" onClick={() => navigate("/loginpage")}>Prijavi se</button>
             </p>
