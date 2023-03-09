@@ -1,0 +1,129 @@
+* {
+    margin:0;
+    box-sizing: border-box;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.page {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.petlistcover {
+    background-color:rgba(186, 165, 186, 0.581);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+
+}
+
+.owneroptions {
+    background-color:rgb(249, 208, 255);
+    display: flex;
+    height: 100%;
+    width: 25%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    text-align: right;
+    background-image: url("./resources/back2.png");
+    background-size: 120%;
+    background-position: top;
+}
+
+
+.owneroptionslist {
+    width: 90%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+
+.owneroptionslist div {
+    height: 6em;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+}
+
+.owneroptionslist div img {
+    position:relative;
+    bottom:12px;
+    left:10px;
+    width: 2.5em;
+    height: auto;
+}
+
+.owneroptionslist div:hover{
+    transform: scale(1.15);
+}
+
+.owneroptions div text {
+    width: 95%;
+    color: rgba(25, 6, 29, 0.8);
+    font-size: 30px;
+    position: relative;
+    text-align: left;
+    padding-left:30px;
+    margin-bottom: 20px;
+}
+
+
+
+
+.petwalkdiv {
+    width: 90%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.petwalklogotext {
+    color: rgba(11, 3, 12, 0.8);
+    font-size: 40px;
+    margin-left: -25px;
+}
+
+.petwalkdiv .petwalklogo {
+    height: 8em;
+    width: auto;
+    position: relative;
+    margin-top: -10px;
+    margin-left: -10px;
+}
+
+
+
+.ownerlogo {
+    position:relative;
+    width: 10em;
+    height: auto;
+    margin-bottom: 190px;
+}
+
+
+.ownerprofile {
+    height: 100%;
+    width: 75%;
+    box-shadow: 20px;
+    background-image: radial-gradient(rgb(230, 238, 251),rgb(148, 177, 220));
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
