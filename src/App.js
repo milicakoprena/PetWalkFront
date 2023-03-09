@@ -6,6 +6,7 @@ import AddPetPage from "./components/addpetpage";
 import AddWalkerPage from "./components/addwalkerpage";
 import OwnerMenu from "./components/ownermenu";
 import WalkerMenu from "./components/walkermenu";
+import AdminMenu from "./components/adminmenu";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/addwalkerpage" element={<AddWalkerPage />} />
           <Route path="/ownermenu" element={<OwnerMenu />} />
           <Route path="/walkermenu" element={<WalkerMenu />} />
+          <Route path="/adminmenu" element={<AdminMenu />} />
         </Routes>
       </Router>
     </div>

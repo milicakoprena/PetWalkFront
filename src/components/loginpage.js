@@ -1,7 +1,9 @@
 import React from "react";
 import "./loginpage.css";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+    const navigate = useNavigate();
     return (
         <div className="logincover">
             <img className="loginlogo" src={require('./resources/logo.png')} />
@@ -14,7 +16,7 @@ const LoginPage = () => {
                 <img src={require('./resources/padlock.png')} className="lock"></img>
             </div>
            
-            <div className="login-btn">Prijavi se</div>
+            <div className="login-btn" onClick={() => navigate("/adminmenu")}>Prijavi se</div>
             
         </div>
     );
