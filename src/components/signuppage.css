@@ -52,7 +52,7 @@
     transform: scale(1.15);
 }
 
-input {
+.signupcover div input {
     background-color: rgba(238, 245, 252, 0.907);
     font-size: 20px;
     border-radius: 0.25em;

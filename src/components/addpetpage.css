@@ -28,67 +28,19 @@
 
 }
 
-input {
-    background-color: rgba(238, 245, 252, 0.907);
-    font-size: 20px;
-    border-radius: 0.25em;
-    border-color: transparent;
-    height: 100%;
-    width: 100%;
-    margin:0;
-    position: relative;
-}
+
 
 .addphoto {
     width: 190px;
     height: 190px;
-    margin-top: -5px;
+    margin-top: 10px;
     position: relative;
 }
 
-.petname {
-    height: 2.5em;
-    width: 60%;
-    position: relative;
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    padding:0;
-    margin-top: -20px;
-}
 
-.description {
-    height: 2.5em;
-    width: 60%;
-    position: relative;
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    padding:0;
-}
-
-.location {
-    height: 2.5em;
-    width: 60%;
-    position: relative;
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    padding:0;
-}
-
-.note {
-    height: 2.5em;
-    width: 60%;
-    position: relative;
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    padding:0;
-}
 
 .add-btn {
-    width: 38%;
+    width: 60%;
     height: 2em;
     background-color: rgba(147, 133, 255, 0.907);
     display: flex;
@@ -98,19 +50,53 @@ input {
     cursor: pointer;
     transition: 0.5s;
     color: rgba(255, 255, 255, 0.952);
-    font-size: 1.4em;
+    font-size: 25px;
     position: relative;
     margin-bottom: 8%;
 }
+
+.ownerfields {
+    width: 70%;
+    position: relative;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.ownerfields div {
+    height: 3.5em;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items:flex-start;
+    margin-top: -40px;
+}
+
+
+
 
 .add-btn:hover {
     transform: scale(1.15);
 }
 
-text {
-    width: 60%;
-    height: 2em;
-    margin: 0;
-    align-items: center;
+.ownerfields div text {
+    position: relative;
+    font-size: 25px;
     text-align: start;
+    width: 100%;
+}
+
+.ownerfields div input {
+    background-color: rgba(238, 245, 252, 0.907);
+    font-size: 25px;
+    width: 100%;
+    text-align: start;
+    border-radius: 0.25em;
+    border-color: transparent;
+    height: 2.5em;
+    margin:0;
+    position: relative;
 }

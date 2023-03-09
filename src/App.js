@@ -4,6 +4,8 @@ import SignUpPage from "./components/signuppage";
 import ChoicePage from "./components/choicepage";
 import AddPetPage from "./components/addpetpage";
 import AddWalkerPage from "./components/addwalkerpage";
+import OwnerMenu from "./components/ownermenu";
+import WalkerMenu from "./components/walkermenu";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="/choicepage" element={<ChoicePage />} />
           <Route path="/addpetpage" element={<AddPetPage />} />
           <Route path="/addwalkerpage" element={<AddWalkerPage />} />
+          <Route path="/ownermenu" element={<OwnerMenu />} />
+          <Route path="/walkermenu" element={<WalkerMenu />} />
         </Routes>
       </Router>
     </div>
