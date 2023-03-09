@@ -24,7 +24,7 @@ const ReportProblemOwnerPage = () => {
                     <img src={require('./resources/caution.png')} alt="img4"></img>
                     <text>Prijava problema</text>
                 </div>
-                <div>
+                <div onClick={() => navigate("/reviewpage")}>
                     <img src={require('./resources/review.png')} alt="img5"></img>
                     <text>Recenzije</text>
                 </div>

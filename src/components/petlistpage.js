@@ -20,7 +20,7 @@ const PetListPage = () => {
                     <img src={require('./resources/track.png')} alt="img3"></img>
                     <text>Pregled ljubimaca</text>
                 </div>
-                <div>
+                <div onClick={() => navigate("/reportproblempage")}>
                     <img src={require('./resources/caution.png')} alt="img4"></img>
                     <text>Prijava problema</text>
                 </div>
