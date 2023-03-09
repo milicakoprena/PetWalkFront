@@ -6,6 +6,7 @@ import AddPetPage from "./components/addpetpage";
 import AddWalkerPage from "./components/addwalkerpage";
 import OwnerMenu from "./components/ownermenu";
 import WalkerMenu from "./components/walkermenu";
+import AdminMenu from "./components/adminmenu";
 import WalkerListPage from "./components/walkerlistpage";
 import PetListPage from "./components/petlistpage";
 import ReportProblemPage from "./components/reportproblempage";
@@ -25,6 +26,7 @@ function App() {
           <Route path="/addwalkerpage" element={<AddWalkerPage />} />
           <Route path="/ownermenu" element={<OwnerMenu />} />
           <Route path="/walkermenu" element={<WalkerMenu />} />
+          <Route path="/adminmenu" element={<AdminMenu />} />
           <Route path="/walkerlistpage" element={<WalkerListPage />} />
           <Route path="/petlistpage" element={<PetListPage />} />
           <Route path="/reportproblempage" element={<ReportProblemPage />} />

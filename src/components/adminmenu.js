@@ -1,32 +1,32 @@
 import React from "react";
-import "./walkermenu.css";
+import "./adminmenu.css";
 import { useNavigate } from "react-router-dom";
 
-const WalkerMenu = () => {
-    const navigate = useNavigate();
+const AdminMenu = () => {
     return (
-        <div className="walkermenucover">
-            <div className="walkeroptions">
+        <div className="adminmenucover">
+            <div className="adminoptions">
                 <div className="petwalkdiv">
                     <img className="petwalklogo" src={require('./resources/logo.png')}></img>
-                    <text className="petwalklogotext">Opcije za čuvare:</text>
+                    <text className="petwalklogotext">Opcije za administratora:</text>
                 </div>
-                <div className="walkeroptionslist">
+                <div className="adminoptionslist">
                 <div>
-                    <img src={require('./resources/editprofile.png')}></img>
-                    <text>Uredi profil</text>
+                    <img src={require('./resources/user.png')}></img>
+                    <text>Pregled vlasnika</text>
                 </div>
-                <div onClick={() => navigate("/petlistpage")}>
-                    <img src={require('./resources/track.png')}></img>
-                    <text>Pregled ljubimaca</text>
+                <div>
+                    <img src={require('./resources/dog-training.png')}></img>
+                    <text>Pregled čuvara</text>
                 </div>
-                <div onClick={() => navigate("/reportproblempage")}>
+                <div>
                     <img src={require('./resources/caution.png')}></img>
-                    <text>Prijava problema</text>
+                    <text>Pregled prijavljenih problema</text>
                 </div>
+                
                 <div>
                     <img src={require('./resources/writing.png')}></img>
-                    <text>Izvještaj</text>
+                    <text>Pregled izvještaja</text>
                 </div>
                 <div>
                     <img src={require('./resources/review.png')}></img>
@@ -42,7 +42,7 @@ const WalkerMenu = () => {
                 </div>
                 </div>
             </div>
-            <div className="walkerprofile">
+            <div className="adminprofile">
                 <img src={require('./resources/pets.png')}></img>
                  
             </div>
@@ -52,4 +52,4 @@ const WalkerMenu = () => {
     );
 }
 
-export default WalkerMenu;
+export default AdminMenu;

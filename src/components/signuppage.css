@@ -15,12 +15,9 @@
 
 .signupcover {
     background-color:rgba(143, 115, 143, 0.581);
-    width: 30em;
-    height: 40em;
+    width: 100%;
+    height: 100%;
     position: absolute;
-    top: 5%;
-    left: 35%;
-    border-radius: 1em;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,7 +28,7 @@
 
 
 .signup-btn {
-    width: 60%;
+    width: 30%;
     height: 2em;
     background-color: rgba(238, 245, 252, 0.907);
     display: flex;
@@ -66,46 +63,19 @@
 
 
 
-.signupname {
+.signupcover div {
     height: 2.5em;
-    width: 60%;
+    width: 30%;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     padding:0;
-    margin-top: 90px;
-}
-.signupusername {
-    height: 2.5em;
-    width: 60%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding:0;
-}
-.signuppassword {
-    height: 2.5em;
-    width: 60%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding:0;
-}
-.signupnumber {
-    height: 2.5em;
-    width: 60%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding:0;
+    margin-top: 50px;
 }
 
 
-div img {
+.signupcover div img {
     position:absolute;
     bottom:8px;
     left:10px;
