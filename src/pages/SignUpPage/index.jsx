@@ -23,8 +23,8 @@ export const Cover = styled.div`
     justify-content: space-around;
 `;
 
-export const LoginButton = styled.div`
-    width: 20%;
+export const SignUpButton = styled.div`
+    width: 360px;
     height: 2em;
     background-color: rgb(124, 127, 131);
     display: flex;
@@ -44,12 +44,6 @@ export const LoginButton = styled.div`
 
 
 
-export const Logo = styled.img`
-    width: 400px;
-    height: auto;
-    margin: 60px 0px 0px 0px;
-    position: relative;
-`;
 
 
 export const Icon = styled.img`
@@ -58,7 +52,8 @@ export const Icon = styled.img`
 `;
 
 export const StyledForm = styled(Form)`
-    width:340px;
+    margin-top:60px;
+    width:400px;
     margin-bottom:40px;
 `;
 
@@ -71,17 +66,23 @@ export const StyledInput = styled(Input)`
 `;
 
 
-const LoginPage = () => {
+const SignUpPage = () => {
     const [form] = Form.useForm();
     return (
         <Page>
             <Cover>
-                <Logo src={require('../resources/logo.png')}></Logo>
                 <StyledForm
                   form={form}
                   size="large"
                   
                   >
+                  <StyledFormItem
+                    name="fullname"
+                    rules={[{ required: true, message: "Polje je obavezno!"}]}
+                    >
+                  
+                  <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Ime i prezime" />
+                  </StyledFormItem>
                   <StyledFormItem
                     name="username"
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
@@ -90,17 +91,31 @@ const LoginPage = () => {
                   <StyledInput prefix={<Icon  src={require('../resources/mail.png')}/>} placeholder="Korisničko ime" />
                   </StyledFormItem>
                   <StyledFormItem
+                    name="email"
+                    rules={[{ required: true, message: "Polje je obavezno!"}]}
+                    >
+                  
+                  <StyledInput prefix={<Icon  src={require('../resources/arroba.png')}/>} placeholder="Email adresa" />
+                  </StyledFormItem>
+                  <StyledFormItem
                     name="password"
                     rules={[{ required: true, message: "Polje je obavezno!" }]}
                     >
                     <StyledInput type="password" prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" />
                   </StyledFormItem>
+                  <StyledFormItem
+                    name="number"
+                    rules={[{ required: true, message: "Polje je obavezno!"}]}
+                    >
+                  
+                  <StyledInput prefix={<Icon  src={require('../resources/phone.png')}/>} placeholder="Broj telefona" />
+                  </StyledFormItem>
              
                 </StyledForm>
-                <LoginButton>Prijavi se</LoginButton>
+                <SignUpButton>Registruj se</SignUpButton>
             </Cover>
         </Page>
     );
 };
 
-export default LoginPage;
+export default SignUpPage;

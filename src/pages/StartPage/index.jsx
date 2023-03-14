@@ -78,7 +78,7 @@ const StartPage = () => {
             <Cover>
                 <Logo src={require('../resources/logo.png')}></Logo>
                 <LoginButton onClick={() => navigate("/loginpage")}>Prijavi se</LoginButton>
-                <SignUpButton>Nemaš nalog? Registruj se ovdje!</SignUpButton>
+                <SignUpButton onClick={() => navigate("/signuppage")}>Nemaš nalog? Registruj se ovdje!</SignUpButton>
             </Cover>
         </Page>
     );
