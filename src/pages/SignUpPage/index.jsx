@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { Form, Input } from "antd";
-
+import { useNavigate } from "react-router-dom";
 
 export const Page = styled.div`
     height: 100vh;
@@ -67,6 +67,7 @@ export const StyledInput = styled(Input)`
 
 
 const SignUpPage = () => {
+    const navigate = useNavigate();
     const [form] = Form.useForm();
     return (
         <Page>
@@ -77,7 +78,7 @@ const SignUpPage = () => {
                   
                   >
                   <StyledFormItem
-                    name="fullname"
+                    name="name"
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
@@ -112,7 +113,7 @@ const SignUpPage = () => {
                   </StyledFormItem>
              
                 </StyledForm>
-                <SignUpButton>Registruj se</SignUpButton>
+                <SignUpButton onClick={() => navigate("/addpetpage")}>Registruj se</SignUpButton>
             </Cover>
         </Page>
     );
