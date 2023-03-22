@@ -7,6 +7,10 @@ import { useMap } from 'react-leaflet/hooks'
 import "leaflet-geosearch/dist/geosearch.css";
 import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
 import styled from "styled-components";
+import {  Layout } from 'antd';
+import MainMenu from "../../components/MainMenu";
+
+const { Header, Content, Sider } = Layout;
 
 export const Page = styled.div`
     height: 100vh;
@@ -63,7 +67,7 @@ function LeafletgeoSearch() {
       const searchControl = new GeoSearchControl({
         provider,
         marker: {
-            iconUrl: require('../resources/location-pin.png'),
+            icon: customMarker,
         }
       });
   
@@ -76,12 +80,20 @@ function LeafletgeoSearch() {
   }
 
 const MapPage = () => {
-
+    const [collapsed, setCollapsed] = useState(false);
         return (
-            <Page>
+            <Layout hasSider>
+            <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{
+                    minHeight: '100vh',
+                    minWidth: ''
+                    }}>
+                <MainMenu></MainMenu>
+            </Sider>
+            <Layout className="site-layout">
+                <Content>
+                <Page>
                 <Cover>
-                <MapContainer center={[44.772182, 17.191000]} zoom={15} style={{ height: "550px", width: "70%", marginTop: "0px",
-                  marginLeft: "400px" }} >
+                <MapContainer center={[44.772182, 17.191000]} zoom={15} style={{ height: "100%", width: "100%"}} >
                 <TileLayer
                     url={
                         "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -92,6 +104,10 @@ const MapPage = () => {
             </MapContainer>
                 </Cover>
             </Page>
+                </Content>
+            </Layout>
+        </Layout>
+            
             
         ); 
 };

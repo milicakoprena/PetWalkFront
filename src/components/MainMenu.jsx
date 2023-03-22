@@ -55,7 +55,7 @@ import {
             flexDirection: 'row',
           }}
         >
-          <HeaderImage src={require('C:/Users/Korisnik/Desktop/petwalk/PetWalkFront/src/pages/resources/walking-the-dog.png')} />
+          <HeaderImage src={require('../pages/resources/walking-the-dog.png')} />
         </div>
         <Menu theme="dark"  mode="inline" items={items} onClick={({key}) => navigate(key)}/>
       </div>
