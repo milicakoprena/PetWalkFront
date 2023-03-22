@@ -2,6 +2,41 @@ import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
+import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Modal, Upload, message } from 'antd';
+
+const getBase64 = (img, callback) => {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+};
+
+const beforeUpload = (file) => {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  if (!isJpgOrPng) {
+    message.error('You can only upload JPG/PNG file!');
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error('Image must smaller than 2MB!');
+  }
+  return isJpgOrPng && isLt2M;
+};
+
+export const StyledUpload = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left:140px;
+    margin-top:-40px;
+`;
+
+export const UserPhoto = styled.img`
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+`;
 
 export const Page = styled.div`
     height: 100vh;
@@ -13,7 +48,7 @@ export const Page = styled.div`
 `;
 
 export const Cover = styled.div`
-    background-color:rgb(221, 221, 221);
+    background-color:rgb(163, 163, 163);  
     width: 100%;
     height: 100%;
     position: absolute;
@@ -54,7 +89,7 @@ export const Icon = styled.img`
 export const StyledForm = styled(Form)`
     margin-top:60px;
     width:400px;
-    margin-bottom:40px;
+    margin-bottom: 0px;
 `;
 
 export const StyledFormItem = styled(Form.Item)`
@@ -69,14 +104,71 @@ export const StyledInput = styled(Input)`
 const SignUpPage = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
+    const [loading, setLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState();
+    
+    const handleChange = (info) => {
+        if (info.file.status === 'uploading') {
+          setLoading(true);
+          return;
+        }
+        if (info.file.status === 'done') {
+          // Get this url from response in real world.
+          getBase64(info.file.originFileObj, (url) => {
+            setLoading(false);
+            setImageUrl(url);
+          });
+        }
+      };
+      const uploadButton = (
+        <div>
+          {loading ? <LoadingOutlined /> : <PlusOutlined/>
+          }
+          <div
+            style={{
+              marginTop: 8,
+            }}
+          >
+            Upload
+          </div>
+        </div>
+      );
+      const saveFile = ({ file, onSuccess }) => {
+        setTimeout(() => {
+          onSuccess("ok");
+        }, 0);
+      };
     return (
         <Page>
             <Cover>
-                <StyledForm
+                <StyledForm 
                   form={form}
                   size="large"
                   
                   >
+                    <StyledUpload>
+                  <Upload
+              name="avatar"
+              customRequest={saveFile}
+              listType="picture-circle"
+              className="avatar-uploader"
+              showUploadList={false}
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              beforeUpload={beforeUpload}
+              onChange={handleChange}
+              
+            >
+              {imageUrl ? (
+                <UserPhoto
+                  src={imageUrl}
+                  alt="avatar"
+                  
+                />
+              ) : (
+                uploadButton
+              )}
+            </Upload>
+                  </StyledUpload>
                   <StyledFormItem
                     name="name"
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
@@ -113,7 +205,7 @@ const SignUpPage = () => {
                   </StyledFormItem>
              
                 </StyledForm>
-                <SignUpButton onClick={() => navigate("/addpetpage")}>Registruj se</SignUpButton>
+                <SignUpButton onClick={() => navigate("/ownermenupage")}>Registruj se</SignUpButton>
             </Cover>
         </Page>
     );
