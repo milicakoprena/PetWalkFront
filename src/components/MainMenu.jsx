@@ -1,6 +1,6 @@
 import {
     EnvironmentOutlined, 
-    NotificationOutlined, 
+    PlusCircleOutlined, 
     UnorderedListOutlined, 
     FormOutlined, 
     EditOutlined, 
@@ -11,6 +11,7 @@ import {
   import { Menu } from 'antd';
   import { useState } from 'react';
   import styled from 'styled-components';
+  import { useNavigate } from 'react-router';
 
   function getItem(label, key, icon, children, type) {
     return {
@@ -24,9 +25,9 @@ import {
   const items = [
     getItem('Uredi profil', "/editprofile", <EditOutlined />),
     getItem('Lista ljubimaca', "/petlist", <UnorderedListOutlined />),
-    getItem('Dodaj ljubimca', "/addpetpage", <NotificationOutlined />),
+    getItem('Dodaj ljubimca', "/addpetpage", <PlusCircleOutlined />),
     getItem('Izvještaj', "/reportpage", <FormOutlined />),
-    getItem('Mapa', "/map", <EnvironmentOutlined />),
+    getItem('Mapa', "/mappage", <EnvironmentOutlined />),
     getItem('Recenzije', "/reviewpage", <StarOutlined />),
     getItem('Prijava problema', "/reportproblem", <ExclamationCircleOutlined />),
     getItem('Lista čuvara', "/walkerlist", <TeamOutlined />),
@@ -38,6 +39,7 @@ import {
 `;
 
   const MainMenu = () => {
+    const navigate=useNavigate();
     const [collapsed, setCollapsed] = useState(false);
     return (
         <div collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} 
@@ -55,7 +57,7 @@ import {
         >
           <HeaderImage src={require('C:/Users/Korisnik/Desktop/petwalk/PetWalkFront/src/pages/resources/walking-the-dog.png')} />
         </div>
-        <Menu theme="dark" defaultSelectedKeys={["/editprofile"]} mode="inline" items={items} />
+        <Menu theme="dark"  mode="inline" items={items} onClick={({key}) => navigate(key)}/>
       </div>
     );
   };

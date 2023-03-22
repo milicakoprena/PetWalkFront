@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Select } from "antd";
 import TextArea from "rc-textarea";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
-import { Modal, Upload, message } from 'antd';
+import { Modal, Upload, message, Layout } from 'antd';
 import styled from "styled-components";
+import MainMenu from "../../components/MainMenu";
+
+const { Header, Content, Sider } = Layout;
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -37,7 +40,7 @@ export const Page = styled.div`
 `;
 
 export const Cover = styled.div`
-    background-color:rgb(163, 163, 163);
+    background-color:rgba(0, 33, 64, 0.59);
     width: 100%;
     height: 100%;
     position: absolute;
@@ -50,7 +53,7 @@ export const Cover = styled.div`
 export const AddPetButton = styled.div`
     width: 360px;
     height: 2em;
-    background-color: rgb(124, 127, 131);
+    background-color: rgba(0,21,41,255);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -159,11 +162,19 @@ const AddPetPage = () => {
         }, 0);
       };
     const [form] = Form.useForm();
+    const [collapsed, setCollapsed] = useState(false);
     return (
-        <Page>
+      <Layout hasSider>
+        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{
+                minHeight: '100vh',
+                minWidth: ''
+                }}>
+          <MainMenu></MainMenu>
+        </Sider>
+        <Layout className="site-layout">
+          <Content>
+          <Page>
             <Cover>
-           
-            
                 <StyledForm
                   form={form}
                   size="large"
@@ -233,6 +244,9 @@ const AddPetPage = () => {
                 <AddPetButton>Dodaj ljubimca</AddPetButton>
             </Cover>
         </Page>
+        </Content>
+        </Layout>
+        </Layout>
     );
 };
 
