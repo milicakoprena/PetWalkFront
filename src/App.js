@@ -3,6 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import AddPetPage from "./pages/AddPetPage";
 import MenuPage from "./pages/MenuPage";
+import MapPage from "./pages/MapPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route exact path="/signuppage" element={<SignUpPage />} />
           <Route exact path="/addpetpage" element={<AddPetPage />} />
           <Route exact path="/menupage" element={<MenuPage />} />
+          <Route path="/mappage" element={<MapPage />} />
         </Routes>
       </Router>
       

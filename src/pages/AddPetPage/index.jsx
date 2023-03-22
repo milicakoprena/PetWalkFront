@@ -1,7 +1,31 @@
-import styled from "styled-components";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Select } from "antd";
 import TextArea from "rc-textarea";
+import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Modal, Upload, message } from 'antd';
+import styled from "styled-components";
+
+const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  };
+
+  const beforeUpload = (file) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('You can only upload JPG/PNG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!');
+    }
+    return isJpgOrPng && isLt2M;
+  };
+
 const Option = Select.Option;
+
+
 
 export const Page = styled.div`
     height: 100vh;
@@ -13,7 +37,7 @@ export const Page = styled.div`
 `;
 
 export const Cover = styled.div`
-    background-color:rgb(221, 221, 221);
+    background-color:rgb(163, 163, 163);
     width: 100%;
     height: 100%;
     position: absolute;
@@ -78,15 +102,19 @@ export const StyledSelect = styled(Select)`
     width:360px;
 `;
 
+export const StyledUpload = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left:120px;
+    margin-top:20px;
+`;
+
 export const PetPhoto = styled.img`
-    width: 190px;
-    height: 190px;
-    margin-top:-20px;
-    position: relative;
-    &:hover {
-        transform: scale(1.15);
-    }
-    transition:0.5s;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
 `;
 
 export const StyledLabel = styled.div`
@@ -95,11 +123,47 @@ export const StyledLabel = styled.div`
 
 
 const AddPetPage = () => {
+    
+    const [loading, setLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState();
+    
+    const handleChange = (info) => {
+        if (info.file.status === 'uploading') {
+          setLoading(true);
+          return;
+        }
+        if (info.file.status === 'done') {
+          // Get this url from response in real world.
+          getBase64(info.file.originFileObj, (url) => {
+            setLoading(false);
+            setImageUrl(url);
+          });
+        }
+      };
+      const uploadButton = (
+        <div>
+          {loading ? <LoadingOutlined /> : <PlusOutlined/>
+          }
+          <div
+            style={{
+              marginTop: 8,
+            }}
+          >
+            Upload
+          </div>
+        </div>
+      );
+      const saveFile = ({ file, onSuccess }) => {
+        setTimeout(() => {
+          onSuccess("ok");
+        }, 0);
+      };
     const [form] = Form.useForm();
     return (
         <Page>
             <Cover>
-                <PetPhoto src={require('../resources/addpet.png')}></PetPhoto>
+           
+            
                 <StyledForm
                   form={form}
                   size="large"
@@ -109,6 +173,29 @@ const AddPetPage = () => {
                   wrapperCol={{ span: 24 }
                   }
                   >
+                  <StyledUpload>
+                  <Upload
+              name="avatar"
+              customRequest={saveFile}
+              listType="picture-circle"
+              className="avatar-uploader"
+              showUploadList={false}
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              beforeUpload={beforeUpload}
+              onChange={handleChange}
+              
+            >
+              {imageUrl ? (
+                <PetPhoto
+                  src={imageUrl}
+                  alt="avatar"
+                  
+                />
+              ) : (
+                uploadButton
+              )}
+            </Upload>
+                  </StyledUpload>
                   <StyledFormItem
                     label={ <StyledLabel style={{fontSize:"18px"}}>Ime</StyledLabel> }
                     name="name"
