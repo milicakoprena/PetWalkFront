@@ -5,7 +5,8 @@ import {
     FormOutlined, 
     EditOutlined, 
     StarOutlined, 
-    ExclamationCircleOutlined
+    ExclamationCircleOutlined,
+    TeamOutlined
   } from '@ant-design/icons';
   import { Menu } from 'antd';
   import { useState } from 'react';
@@ -28,6 +29,7 @@ import {
     getItem('Mapa', "/map", <EnvironmentOutlined />),
     getItem('Recenzije', "/reviewpage", <StarOutlined />),
     getItem('Prijava problema', "/reportproblem", <ExclamationCircleOutlined />),
+    getItem('Lista čuvara', "/walkerlist", <TeamOutlined />),
   ];
 
   export const HeaderImage = styled.img`
