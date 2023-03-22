@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
 import { Form, Input, Select } from "antd";
 import TextArea from "rc-textarea";
 const Option = Select.Option;

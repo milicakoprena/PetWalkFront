@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
 import { Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 
@@ -113,7 +112,7 @@ const SignUpPage = () => {
                   </StyledFormItem>
              
                 </StyledForm>
-                <SignUpButton onClick={() => navigate("/addpetpage")}>Registruj se</SignUpButton>
+                <SignUpButton onClick={() => navigate("/menupage")}>Registruj se</SignUpButton>
             </Cover>
         </Page>
     );
