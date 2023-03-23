@@ -4,14 +4,13 @@ import SignUpPage from "./pages/SignUpPage";
 import AddPetPage from "./pages/AddPetPage";
 import MenuPage from "./pages/MenuPage";
 import MapPage from "./pages/MapPage";
-import ReportProblem from "./pages/ReportProblem";
-import PetListPage from "./pages/PetListPage";
-import WalkerListPage from "./pages/WalkerListPage";
 import ChoicePage from "./pages/ChoicePage";
 import EditProfilePage from "./pages/EditProfilePage";
 import ReportProblem from "./pages/ReportProblem";
 import PetListPage from "./pages/PetListPage";
 import WalkerListPage from "./pages/WalkerListPage";
+import ReviewPage from "./pages/ReviewPage";
+import ReportPage from "./pages/ReportPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -30,6 +29,8 @@ function App() {
           <Route path="/petlist" element={<PetListPage />} />
           <Route path="/walkerlist" element={<WalkerListPage />} />
           <Route path="/choicepage" element={<ChoicePage />} />
+          <Route path="/reportpage" element={<ReportPage />} />
+          <Route path="/reviewpage" element={<ReviewPage />} />
         </Routes>
       </Router>
       
