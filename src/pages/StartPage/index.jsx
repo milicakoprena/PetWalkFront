@@ -30,7 +30,7 @@ export const LoginButton = styled.div`
     justify-content: center;
     align-items: center;
     padding:0;
-    background-color: rgb(124, 127, 131);
+    background-color: rgba(0,21,41,255);
     border-radius: 0.25em;
     cursor: pointer;
     transition: 0.5s;
@@ -54,7 +54,7 @@ export const SignUpButton = styled.div`
     font-size: 1.4em;
     text-decoration: underline;
     cursor: pointer;
-    color:rgba(19, 19, 20, 0.704);
+    color: rgba(0,21,41,255);
     position: relative;
     border: 0pc;
     margin-top: -100px;

@@ -5,6 +5,8 @@ import AddPetPage from "./pages/AddPetPage";
 import MenuPage from "./pages/MenuPage";
 import MapPage from "./pages/MapPage";
 import ReportProblem from "./pages/ReportProblem";
+import PetListPage from "./pages/PetListPage";
+import WalkerListPage from "./pages/WalkerListPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
           <Route exact path="/menupage" element={<MenuPage />} />
           <Route path="/mappage" element={<MapPage />} />
           <Route path="/reportproblem" element={<ReportProblem />} />
+          <Route path="/petlist" element={<PetListPage />} />
+          <Route path="/walkerlist" element={<WalkerListPage />} />
         </Routes>
       </Router>
       
