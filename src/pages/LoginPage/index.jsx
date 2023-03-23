@@ -13,7 +13,7 @@ export const Page = styled.div`
 `;
 
 export const Cover = styled.div`
-    background-color:rgb(221, 221, 221);
+    background-color:rgba(190,174,190,255);    
     width: 100%;
     height: 100%;
     position: absolute;
@@ -26,7 +26,7 @@ export const Cover = styled.div`
 export const LoginButton = styled.div`
     width: 20%;
     height: 2em;
-    background-color: rgb(124, 127, 131);
+    background-color: rgba(0,21,41,255);
     display: flex;
     justify-content: center;
     align-items: center;

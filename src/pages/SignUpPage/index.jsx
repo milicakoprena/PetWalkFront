@@ -48,7 +48,7 @@ export const Page = styled.div`
 `;
 
 export const Cover = styled.div`
-    background-color:rgb(163, 163, 163);  
+    background-color:rgba(0, 33, 64, 0.59);  
     width: 100%;
     height: 100%;
     position: absolute;
@@ -61,7 +61,7 @@ export const Cover = styled.div`
 export const SignUpButton = styled.div`
     width: 360px;
     height: 2em;
-    background-color: rgb(124, 127, 131);
+    background-color: rgba(0,21,41,255);
     display: flex;
     justify-content: center;
     align-items: center;
