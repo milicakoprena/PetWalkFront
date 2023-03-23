@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { Form, Input } from "antd";
+import { useNavigate } from "react-router";
 
 
 export const Page = styled.div`
@@ -72,6 +73,7 @@ export const StyledInput = styled(Input)`
 
 
 const LoginPage = () => {
+    const navigate = useNavigate();
     const [form] = Form.useForm();
     return (
         <Page>
@@ -97,7 +99,7 @@ const LoginPage = () => {
                   </StyledFormItem>
              
                 </StyledForm>
-                <LoginButton>Prijavi se</LoginButton>
+                <LoginButton onClick={() => navigate("/menupage")}>Prijavi se</LoginButton>
             </Cover>
         </Page>
     );

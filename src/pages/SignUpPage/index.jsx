@@ -205,7 +205,7 @@ const SignUpPage = () => {
                   </StyledFormItem>
              
                 </StyledForm>
-                <SignUpButton onClick={() => navigate("/menupage")}>Registruj se</SignUpButton>
+                <SignUpButton onClick={() => navigate("/choicepage")}>Registruj se</SignUpButton>
             </Cover>
         </Page>
     );

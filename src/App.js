@@ -8,6 +8,7 @@ import EditProfilePage from "./pages/EditProfilePage";
 import ReportProblem from "./pages/ReportProblem";
 import PetListPage from "./pages/PetListPage";
 import WalkerListPage from "./pages/WalkerListPage";
+import ChoicePage from "./pages/ChoicePage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/reportproblem" element={<ReportProblem />} />
           <Route path="/petlist" element={<PetListPage />} />
           <Route path="/walkerlist" element={<WalkerListPage />} />
+          <Route path="/choicepage" element={<ChoicePage />} />
         </Routes>
       </Router>
       
