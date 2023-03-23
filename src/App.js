@@ -4,11 +4,11 @@ import SignUpPage from "./pages/SignUpPage";
 import AddPetPage from "./pages/AddPetPage";
 import MenuPage from "./pages/MenuPage";
 import MapPage from "./pages/MapPage";
-import EditProfilePage from "./pages/EditProfilePage";
 import ReportProblem from "./pages/ReportProblem";
 import PetListPage from "./pages/PetListPage";
 import WalkerListPage from "./pages/WalkerListPage";
 import ChoicePage from "./pages/ChoicePage";
+import EditProfilePage from "./pages/EditProfilePage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
