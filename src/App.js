@@ -11,8 +11,6 @@ import PetListPage from "./pages/PetListPage";
 import WalkerListPage from "./pages/WalkerListPage";
 import ReviewPage from "./pages/ReviewPage";
 import ReportPage from "./pages/ReportPage";
-import PetListPage from "./pages/PetListPage";
-import WalkerListPage from "./pages/WalkerListPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
