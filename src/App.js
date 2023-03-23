@@ -11,6 +11,8 @@ import PetListPage from "./pages/PetListPage";
 import WalkerListPage from "./pages/WalkerListPage";
 import ReviewPage from "./pages/ReviewPage";
 import ReportPage from "./pages/ReportPage";
+import PetListPage from "./pages/PetListPage";
+import WalkerListPage from "./pages/WalkerListPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -31,6 +33,7 @@ function App() {
           <Route path="/choicepage" element={<ChoicePage />} />
           <Route path="/reportpage" element={<ReportPage />} />
           <Route path="/reviewpage" element={<ReviewPage />} />
+          <Route path="/reportpage" element={<ReportPage />} />
         </Routes>
       </Router>
       
