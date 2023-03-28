@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Select } from "antd";
-import TextArea from "rc-textarea";
-import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Modal, Upload, message, Layout } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table, Tag } from 'antd';
+import { Descriptions } from 'antd';
+
+import { UserOutlined } from '@ant-design/icons';
+import { Avatar } from 'antd';
 
 const { Header, Content, Sider } = Layout;
-
 export const PetIcon = styled.img `
     heigth: 40px;
     width: 40px;
@@ -18,67 +18,8 @@ export const StyledTable = styled(Table) `
     width: 100%;
 `;
 
-const columns = [
-    {
-        title: '',
-        dataIndex: 'imageURL',
-        width: '5%',
-        render: theImageURL => <PetIcon alt={theImageURL} src={theImageURL} ></PetIcon>
-    },
-    {
-      title: 'Ime',
-      dataIndex: 'name',
-      width: '20%',
-    },
-    {
-      title: 'Lokacija',
-      dataIndex: 'location',
-      width: '20%',
-    },
-    {
-      title: 'Ime vlasnika',
-      dataIndex: 'username',
-    },
-    {
-        title: '',
-        dataIndex: 'action',
-        render: (_, record) => (
-            <Space size="middle">
-              <a>Prikaži</a>
-            </Space>
-          ),
-      },
-  ];
-  const data = [];
-  for (let i = 0; i < 50; i++) {
-    data.push({
-      imageURL: require('../resources/track.png'),
-      key: i,
-      name: `Tedi ${i}`,
-      location: 'Centar',
-      username: `blablabla. ${i}`,
-    });
-  }
-const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-  };
 
-  const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-      message.error('You can only upload JPG/PNG file!');
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error('Image must smaller than 2MB!');
-    }
-    return isJpgOrPng && isLt2M;
-  };
-
-const Option = Select.Option;
-
+  
 
 
 export const Page = styled.div`
@@ -128,58 +69,70 @@ export const Icon = styled.img`
     height:25px;
 `;
 
-export const StyledForm = styled(Form)`
-    width:360px;
-    margin-top:-40px;
-`;
 
-export const StyledFormItem = styled(Form.Item)`
-    margin-top:-10px;
-`;
 
-export const StyledInput = styled(Input)`
-    font-size:15px;
-`;
 
-export const StyledTextArea = styled(TextArea)`
-    font-size:15px;
-    width:353px;
-    height:60px;
-    border-radius: 5px;
-    border-color: transparent;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-
-`;
-
-export const StyledSelect = styled(Select)`
-    font-size:15px;
-    width:360px;
-`;
-
-export const StyledUpload = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left:120px;
-    margin-top:20px;
-`;
-
-export const PetPhoto = styled.img`
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-`;
-
-export const StyledLabel = styled.div`
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-`;
 
 
 const PetListPage = () => {
-    
-    
-    const [form] = Form.useForm();
+  
+const columns = [
+  {
+      title: '',
+      dataIndex: 'imageURL',
+      width: '5%',
+      render: theImageURL => <PetIcon alt={theImageURL} src={theImageURL} ></PetIcon>
+  },
+  {
+    title: 'Ime',
+    dataIndex: 'name',
+    width: '20%',
+  },
+  {
+    title: 'Lokacija',
+    dataIndex: 'location',
+    width: '20%',
+  },
+  {
+    title: 'Ime vlasnika',
+    dataIndex: 'username',
+  },
+  {
+      title: '',
+      dataIndex: 'action',
+      render: (_, record) => (
+          <Space size="middle">
+            <a onClick={() => showModal(record)}>Prikaži</a>
+          </Space>
+        ),
+    },
+];
+const data = [];
+for (let i = 0; i < 50; i++) {
+  data.push({
+    imageURL: require('../resources/track.png'),
+    key: i,
+    name: `Tedi ${i}`,
+    location: 'Centar',
+    username: `blablabla. ${i}`,
+  });
+}
+
+  
+  
+  const showModal = (pet) => {
+    setSelectedPet(pet);
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+   
+  const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedPet, setSelectedPet] = useState(null);
     const [collapsed, setCollapsed] = useState(false);
     return (
       <Layout hasSider>
@@ -204,6 +157,23 @@ const PetListPage = () => {
                     y: 600,
                   }}
              />
+             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={650} 
+             okText="Izaberi"
+             cancelText="Otkaži"
+             >
+             <Descriptions title="" size="default" column={2}>
+               <Descriptions.Item>
+                 <Avatar size={130} icon={<UserOutlined />} src={require('../resources/cute-dog-headshot.jpg')}/>
+               </Descriptions.Item>
+               <Descriptions.Item label="Ime">Tedi</Descriptions.Item>
+               <Descriptions.Item label="Ime vlasnika">Marko</Descriptions.Item>
+               <Descriptions.Item label="Lokacija">Centar</Descriptions.Item>
+               <Descriptions.Item label="Opis">blablababalbalablablablalabal</Descriptions.Item>
+               <Descriptions.Item label="Napomena">
+                blablabalbalbalablabalbalbalablabalaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+               </Descriptions.Item>
+             </Descriptions>
+            </Modal>
             </Cover>
           </Page>
                 
@@ -212,5 +182,7 @@ const PetListPage = () => {
         </Layout>
     );
 };
+
+
 
 export default PetListPage;
