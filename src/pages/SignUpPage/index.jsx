@@ -111,31 +111,77 @@ const SignUpPage = () => {
     const [imageUrl, setImageUrl] = useState();
     const { buttonloading } = useSelector((state) => state.users);
     const dispatch = useDispatch();
-    const [credentials, setCredentials] = useState({
-        firstname: "",
-        lastname: "",
-        username: "",
-        password: "",
-        email: "",
-        phonenumber: "",
-      });
-      useEffect(() => {
-        const { username } = credentials;
-        if (!username) return;
-        userService
-        .signUp(credentials)
-        .then(() => {
-          message.success("user.signUpSuccess");
-        })
-        .catch((err) => {
-          console.error(err);
-          if (err.response.status === 409)
-            message.error("user.usernameExists");
-          else message.error("user.signUpFail");
-        });
-        
-      }, [credentials]);
+    const [firstname, setFirstName] = useState('');
+    const [lastname, setLastName] = useState('');
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [phoneNumber, SetPhoneNumber] = useState('');
+    const [error, setError] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+   
+  const handleFirstName = (e) => {
+    setFirstName(e.target.value);
+    setSubmitted(false);
+  };
 
+  const handleLastName = (e) => {
+    setLastName(e.target.value);
+    setSubmitted(false);
+  };
+
+  const handleUsername = (e) => {
+    setUsername(e.target.value);
+    setSubmitted(false);
+  };
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+    setSubmitted(false);
+  };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+    setSubmitted(false);
+  };
+
+  const handlePhoneNumber = (e) => {
+    SetPhoneNumber(e.target.value);
+    setSubmitted(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (firstname === '' || lastname === '' || username === '' || email === '' || password === '') {
+      setError(true);
+    } else {
+      setSubmitted(true);
+      setError(false);
+    }
+  };
+      
+      const signUpUser = (firstname,lastname,username,password,
+        email,phoneNumber) => {
+        userService
+          .signUp(firstname,lastname,username,password,
+            email,phoneNumber)
+          .then(() => {
+            message.success("user.signUpSuccess");
+          })
+          .catch((err) => {
+            console.error(err);
+            if (err.response.status === 409)
+              message.error("user.usernameExists");
+            else message.error("user.signUpFail");
+          });
+      };
+
+      const signUpNavigate = (firstname,lastname,username,password,
+        email,phoneNumber) => {
+        signUpUser(firstname,lastname,username,password,
+          email,phoneNumber);
+        navigate("/menupage")
+      }
 
     const handleChange = (info) => {
         if (info.file.status === 'uploading') {
@@ -174,8 +220,6 @@ const SignUpPage = () => {
                 <StyledForm 
                   form={form}
                   size="large"
-                  initialValues={credentials}
-                  onFinish={(values) => setCredentials(values)}
                   >
                     <StyledUpload>
                   <Upload
@@ -205,7 +249,9 @@ const SignUpPage = () => {
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
-                  <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Ime" />
+                  <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Ime"
+                  onChange={handleFirstName}
+                  value={firstname}/>
                   
                   </StyledFormItem>
 
@@ -214,7 +260,9 @@ const SignUpPage = () => {
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
-                  <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Prezime" />
+                  <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Prezime" 
+                  onChange={handleLastName}
+                  value={lastname}/>
                   
                   </StyledFormItem>
                   <StyledFormItem
@@ -222,30 +270,39 @@ const SignUpPage = () => {
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
-                  <StyledInput prefix={<Icon  src={require('../resources/mail.png')}/>} placeholder="Korisničko ime" />
+                  <StyledInput prefix={<Icon  src={require('../resources/mail.png')}/>} placeholder="Korisničko ime" 
+                  onChange={handleUsername}
+                  value={username}/>
                   </StyledFormItem>
                   <StyledFormItem
                     name="email"
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
-                  <StyledInput prefix={<Icon  src={require('../resources/arroba.png')}/>} placeholder="Email adresa" />
+                  <StyledInput prefix={<Icon  src={require('../resources/arroba.png')}/>} placeholder="Email adresa" 
+                  onChange={handleEmail}
+                  value={email}/>
                   </StyledFormItem>
                   <StyledFormItem
                     name="password"
                     rules={[{ required: true, message: "Polje je obavezno!" }]}
                     >
-                    <StyledInput type="password" prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" />
+                    <StyledInput type="password" prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" 
+                    onChange={handlePassword}
+                    value={password}/>
                   </StyledFormItem>
                   <StyledFormItem
                     name="number"
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
-                  <StyledInput prefix={<Icon  src={require('../resources/phone.png')}/>} placeholder="Broj telefona" />
+                  <StyledInput prefix={<Icon  src={require('../resources/phone.png')}/>} placeholder="Broj telefona"
+                  onChange={handlePhoneNumber}
+                  value={phoneNumber} />
                   </StyledFormItem>
                   <StyledFormItem>
-                    <SignUpButton loading={buttonloading} onClick={() => navigate("/menupage")}>Registruj se</SignUpButton>
+                    <SignUpButton loading={buttonloading} onClick={() => signUpNavigate(firstname,lastname,username,password,
+                      email,phoneNumber)}>Registruj se</SignUpButton>
                   </StyledFormItem>
                 </StyledForm>
                 
