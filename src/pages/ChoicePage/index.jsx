@@ -77,9 +77,9 @@ const ChoicePage = () => {
     return (
         <Page>
             <Cover>
-                <Ownerbtn src={require('../resources/owner.png')} onClick={() => navigate("/menupage")} />
+                <Ownerbtn src={require('../resources/owner.png')} onClick={() => navigate("/editprofile")} />
                 <Text1>VLASNIK</Text1>
-                <Walkerbtn src={require('../resources/walker.png')} onClick={() => navigate("/menupage")} />
+                <Walkerbtn src={require('../resources/walker.png')} onClick={() => navigate("/editprofile")} />
                 <Text2>ČUVAR</Text2>
             </Cover>
         </Page>
