@@ -3,12 +3,22 @@ import { Modal, Layout } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table } from 'antd';
-import { Descriptions } from 'antd';
-
+import { Descriptions, Button, Input } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar } from 'antd';
+import { Avatar, DatePicker } from 'antd';
+
+const { TextArea } = Input;
 
 const { Content, Sider } = Layout;
+
+const onChangeDate = (date, dateString) => {
+  console.log(date, dateString);
+};
+
+const onChange = (e) => {
+  console.log('Change:', e.target.value);
+};
+
 export const PetIcon = styled.img `
     heigth: 40px;
     width: 40px;
@@ -131,9 +141,21 @@ for (let i = 0; i < 50; i++) {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  const showModal1 = (walker) => {
+    setmodaldata(walker);
+    setIsModalOpen1(true);
+  };
+  const handleOk1 = () => {
+    setIsModalOpen1(false);
+  };
+  const handleCancel1 = () => {
+    setIsModalOpen1(false);
+  }
    
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [isModalOpen1, setIsModalOpen1] = useState(false);
+
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
@@ -157,9 +179,22 @@ for (let i = 0; i < 50; i++) {
                     y: 600,
                   }}
              />
-             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={650} 
-             okText="Izaberi"
-             cancelText="Otkaži"
+             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={650}
+             footer={[
+              <Button key="back" onClick={handleCancel}>
+                Otkaži
+              </Button>,
+              <Button key="submit" type="primary" onClick={handleOk}>
+                Izaberi
+              </Button>,
+              <Button
+                key="addreview"
+                type="primary"
+                onClick={showModal1}
+              >
+                Dodaj izvještaj 
+              </Button>,
+            ]}
              >
              <Descriptions title="" size="default" column={2}>
                <Descriptions.Item>
@@ -173,6 +208,20 @@ for (let i = 0; i < 50; i++) {
                 blablabalbalbalablabalbalbalablabalaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                </Descriptions.Item>
              </Descriptions>
+             <Modal title="Dodaj izvještaj" open={isModalOpen1} onOk={handleOk1} onCancel={handleCancel1} okText="Dodaj"
+                    cancelText="Otkaži">
+                <TextArea
+                  showCount
+                  maxLength={100}
+                  style={{
+                  height: 120,
+                  resize: 'none',
+                  }}
+                  onChange={onChange}
+                  placeholder="Unesite izvještaj"
+                />
+                <DatePicker onChange={onChangeDate} style={{ marginTop: '3%' }} placeholder="Izaberite datum" />
+              </Modal>
             </Modal>
             </Cover>
           </Page>
