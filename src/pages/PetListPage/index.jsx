@@ -75,8 +75,9 @@ export const Icon = styled.img`
 
 
 const PetListPage = () => {
+  const [modaldata, setmodaldata] = useState([]);
   
-const columns = [
+  const columns = [
   {
       title: '',
       dataIndex: 'imageURL',
@@ -120,8 +121,8 @@ for (let i = 0; i < 50; i++) {
 
   
   
-  const showModal = (pet) => {
-    setSelectedPet(pet);
+  const showModal = (record) => {
+    setmodaldata(record);
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -165,9 +166,9 @@ for (let i = 0; i < 50; i++) {
                <Descriptions.Item>
                  <Avatar size={130} icon={<UserOutlined />} src={require('../resources/cute-dog-headshot.jpg')}/>
                </Descriptions.Item>
-               <Descriptions.Item label="Ime">Tedi</Descriptions.Item>
-               <Descriptions.Item label="Ime vlasnika">Marko</Descriptions.Item>
-               <Descriptions.Item label="Lokacija">Centar</Descriptions.Item>
+               <Descriptions.Item label="Ime">{modaldata.name}</Descriptions.Item>
+               <Descriptions.Item label="Ime vlasnika">{modaldata.username}</Descriptions.Item>
+               <Descriptions.Item label="Lokacija">{modaldata.location}</Descriptions.Item>
                <Descriptions.Item label="Opis">blablababalbalablablablalabal</Descriptions.Item>
                <Descriptions.Item label="Napomena">
                 blablabalbalbalablabalbalbalablabalaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
