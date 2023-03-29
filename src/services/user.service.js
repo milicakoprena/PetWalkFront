@@ -19,8 +19,7 @@ const securedInstance = base.service(true);
   });
 
   export const signUp = (firstname, lastname, username, password, email, phonenumber) =>{
-    const user = { firstname, lastname, username, password, email, phonenumber };
-    instance.post("/sign-up", user);
+    instance.post("/sign-up", { firstname, lastname, username, password, email, phonenumber });
   }
   
 
