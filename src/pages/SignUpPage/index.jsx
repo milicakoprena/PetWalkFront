@@ -122,7 +122,7 @@ const SignUpPage = () => {
       useEffect(() => {
         const { username } = credentials;
         if (!username) return;
-        userService.signUp();
+        userService.signUp(firstname, lastname, username, password, email, phonenumber);
       }, [credentials]);
 
 
