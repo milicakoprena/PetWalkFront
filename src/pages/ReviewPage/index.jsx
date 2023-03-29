@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Upload, message, Layout } from 'antd';
+import { Modal, Upload, message, Layout, Rate } from 'antd';
+
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table, Tag } from 'antd';
@@ -9,6 +10,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 
 const { Header, Content, Sider } = Layout;
+const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
 
 export const UserIcon = styled.img `
     heigth: 40px;
@@ -39,6 +41,7 @@ export const Cover = styled.div`
     align-items: center;
     justify-content: space-around;
 `;
+
 
 
 
@@ -90,6 +93,7 @@ for (let i = 0; i < 50; i++) {
 
     
     const [collapsed, setCollapsed] = useState(false);
+    const [value, setValue] = useState(3);
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{
@@ -113,7 +117,7 @@ for (let i = 0; i < 50; i++) {
                     y: 500,
                   }}
              />
-             <Modal title="Recenzija" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={450} 
+             <Modal title="Recenzija" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={530} 
              okText="OK"
              cancelText="Otkaži"
              >
@@ -122,9 +126,19 @@ for (let i = 0; i < 50; i++) {
                  <Avatar size={130} icon={<UserOutlined />}/>
                </Descriptions.Item>
                <Descriptions.Item label="Ime vlasnika">Marko</Descriptions.Item>
+               <span style={{
+              
+            }}>
+              <Rate tooltips={desc} onChange={setValue} value={value} />
+                 {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
+             </span>
+
                <Descriptions.Item label="Tekst">
                 blablabalbalbalablabalbalbalablabalblalablbalbalbalbalbalbzudhwfvkuzdfvlwzfvxčifvw
                </Descriptions.Item>
+                
+                
+                
              </Descriptions>
             </Modal>
             </Cover>
