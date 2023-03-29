@@ -4,7 +4,6 @@ import SignUpPage from "./pages/SignUpPage";
 import AddPetPage from "./pages/AddPetPage";
 import MenuPage from "./pages/MenuPage";
 import MapPage from "./pages/MapPage";
-import ChoicePage from "./pages/ChoicePage";
 import EditProfilePage from "./pages/EditProfilePage";
 import ReportProblem from "./pages/ReportProblem";
 import PetListPage from "./pages/PetListPage";
@@ -28,7 +27,6 @@ function App() {
           <Route path="/reportproblem" element={<ReportProblem />} />
           <Route path="/petlist" element={<PetListPage />} />
           <Route path="/walkerlist" element={<WalkerListPage />} />
-          <Route path="/choicepage" element={<ChoicePage />} />
           <Route path="/reportpage" element={<ReportPage />} />
           <Route path="/reviewpage" element={<ReviewPage />} />
           <Route path="/reportpage" element={<ReportPage />} />

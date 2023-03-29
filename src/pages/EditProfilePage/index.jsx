@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Form, Input, Select, Button } from "antd";
+import React, { useState } from "react";
+import { Form, Input, Select } from "antd";
 import TextArea from "rc-textarea";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Modal, Upload, message, Layout } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
-  };
+};
 
-  const beforeUpload = (file) => {
+const beforeUpload = (file) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
       message.error('You can only upload JPG/PNG file!');
@@ -24,11 +24,9 @@ const getBase64 = (img, callback) => {
       message.error('Image must smaller than 2MB!');
     }
     return isJpgOrPng && isLt2M;
-  };
+};
 
 const Option = Select.Option;
-
-
 
 export const Page = styled.div`
     height: 100vh;
@@ -69,6 +67,7 @@ export const EditProfileButton = styled.div`
         transform: scale(1.15);
     }
 `;
+
 export const DeactivateButton = styled.div`
     width: 23%;
     height: 2em;
@@ -89,9 +88,6 @@ export const DeactivateButton = styled.div`
         transform: scale(1.15);
     }
 `;
-
-
-
 
 export const Icon = styled.img`
     width:25px;
@@ -196,9 +192,8 @@ const EditProfilePage = () => {
     const [collapsed, setCollapsed] = useState(false);
     return (
       <Layout hasSider>
-        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{
-                minHeight: '100vh',
-                minWidth: ''
+        <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
+                minHeight: '100vh'
                 }}>
           <MainMenu></MainMenu>
         </Sider>
