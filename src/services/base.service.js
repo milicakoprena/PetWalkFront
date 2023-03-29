@@ -4,6 +4,7 @@ const baseConfig = {
   baseURL: environment().baseServiceUrl,
 };
 
+/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
   service: (useAuth) => {
     const instance = axios.create(baseConfig);
