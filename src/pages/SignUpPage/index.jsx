@@ -3,9 +3,10 @@ import { Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Modal, Upload, message } from 'antd';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import userService from "../../services/user.service";
+import { useDispatch, useSelector } from "react-redux";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -30,7 +31,7 @@ export const StyledUpload = styled.div`
     justify-content: center;
     align-items: center;
     margin-left:140px;
-    margin-top:-40px;
+    margin-top:160px;
 `;
 
 export const UserPhoto = styled.img`
@@ -73,7 +74,7 @@ export const SignUpButton = styled.div`
     color: aliceblue;
     font-size: 1.7em;
     margin-top: -20px;
-    margin-bottom: 40px;
+    margin-bottom: 100px;
     &:hover {
         transform: scale(1.15);
     }
@@ -89,13 +90,13 @@ export const Icon = styled.img`
 `;
 
 export const StyledForm = styled(Form)`
-    margin-top:60px;
+    margin-top:-50px;
     width:400px;
     margin-bottom: 0px;
 `;
 
 export const StyledFormItem = styled(Form.Item)`
-    padding: 15px;
+    padding: 10px;
 `;
 
 export const StyledInput = styled(Input)`
@@ -103,38 +104,27 @@ export const StyledInput = styled(Input)`
 `;
 
 
-const SignUpPage = (props) => {
-  const { onOk } = props;
+const SignUpPage = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState();
-    
-    const signUpUser = (values) => {
-      userService
-        .signUp(values)
-        .then(() => {
-          message.success("signUpSuccess");
-        })
-        .catch((err) => {
-          console.error(err);
-          if (err.response.status === 409)
-            message.error("usernameExists");
-          else message.error("signUpFail");
-        });
-    };
-
-    const onSubmit = () => {
-      form.validateFields().then((values) => {
-        onOk(values);
+    const { buttonloading } = useSelector((state) => state.users);
+    const dispatch = useDispatch();
+    const [credentials, setCredentials] = useState({
+        firstname: "",
+        lastname: "",
+        username: "",
+        password: "",
+        email: "",
+        phonenumber: "",
       });
-    };
+      useEffect(() => {
+        const { username } = credentials;
+        if (!username) return;
+        userService.signUp();
+      }, [credentials]);
 
-    function signUpNavigate(){
-      onSubmit();
-      signUpUser();
-      navigate("/menupage");
-  }
 
     const handleChange = (info) => {
         if (info.file.status === 'uploading') {
@@ -173,7 +163,8 @@ const SignUpPage = (props) => {
                 <StyledForm 
                   form={form}
                   size="large"
-                  
+                  initialValues={credentials}
+                  onFinish={(values) => setCredentials(values)}
                   >
                     <StyledUpload>
                   <Upload
@@ -199,11 +190,21 @@ const SignUpPage = (props) => {
             </Upload>
                   </StyledUpload>
                   <StyledFormItem
-                    name="name"
+                    name="firstname"
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
-                  <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Ime i prezime" />
+                  <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Ime" />
+                  
+                  </StyledFormItem>
+
+                  <StyledFormItem
+                    name="lastname"
+                    rules={[{ required: true, message: "Polje je obavezno!"}]}
+                    >
+                  
+                  <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Prezime" />
+                  
                   </StyledFormItem>
                   <StyledFormItem
                     name="username"
@@ -233,7 +234,7 @@ const SignUpPage = (props) => {
                   <StyledInput prefix={<Icon  src={require('../resources/phone.png')}/>} placeholder="Broj telefona" />
                   </StyledFormItem>
                   <StyledFormItem>
-                    <SignUpButton onClick={() => signUpNavigate()}>Registruj se</SignUpButton>
+                    <SignUpButton loading={buttonloading} onClick={() => navigate("/menupage")}>Registruj se</SignUpButton>
                   </StyledFormItem>
                 </StyledForm>
                 

@@ -18,7 +18,9 @@ const securedInstance = base.service(true);
     return { ...user, token: null };
   });
 
-  export const signUp = (user) => instance.post("/sign-up", user);
+  export const signUp = (firstname, lastname, username, password, email, phonenumber) =>
+  instance.post("/login", { firstname, lastname, username, password, email, phonenumber });
+
 
   export const state = () => {
     return securedInstance.get("/state").then((res) => res.data);
