@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Modal, Upload, message } from 'antd';
 import { useState } from "react";
+import PropTypes from "prop-types";
+import userService from "../../services/user.service";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -59,7 +61,7 @@ export const Cover = styled.div`
 `;
 
 export const SignUpButton = styled.div`
-    width: 360px;
+    width: 100%;
     height: 2em;
     background-color: rgba(0,21,41,255);
     display: flex;
@@ -101,12 +103,39 @@ export const StyledInput = styled(Input)`
 `;
 
 
-const SignUpPage = () => {
+const SignUpPage = (props) => {
+  const { onOk } = props;
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState();
     
+    const signUpUser = (values) => {
+      userService
+        .signUp(values)
+        .then(() => {
+          message.success("signUpSuccess");
+        })
+        .catch((err) => {
+          console.error(err);
+          if (err.response.status === 409)
+            message.error("usernameExists");
+          else message.error("signUpFail");
+        });
+    };
+
+    const onSubmit = () => {
+      form.validateFields().then((values) => {
+        onOk(values);
+      });
+    };
+
+    function signUpNavigate(){
+      onSubmit();
+      signUpUser();
+      navigate("/menupage");
+  }
+
     const handleChange = (info) => {
         if (info.file.status === 'uploading') {
           setLoading(true);
@@ -203,9 +232,11 @@ const SignUpPage = () => {
                   
                   <StyledInput prefix={<Icon  src={require('../resources/phone.png')}/>} placeholder="Broj telefona" />
                   </StyledFormItem>
-             
+                  <StyledFormItem>
+                    <SignUpButton onClick={() => signUpNavigate()}>Registruj se</SignUpButton>
+                  </StyledFormItem>
                 </StyledForm>
-                <SignUpButton onClick={() => navigate("/choicepage")}>Registruj se</SignUpButton>
+                
             </Cover>
         </Page>
     );

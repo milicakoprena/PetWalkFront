@@ -28,7 +28,7 @@ export const Cover = styled.div`
 `;
 
 export const LoginButton = styled.div`
-    width: 20%;
+    width: 100%;
     height: 2em;
     background-color: rgba(0,21,41,255);
     display: flex;
