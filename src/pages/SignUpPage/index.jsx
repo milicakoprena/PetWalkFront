@@ -160,21 +160,21 @@ const SignUpPage = () => {
     }
   };
       
-      const signUpUser = (firstname,lastname,username,password,
-        email,phoneNumber) => {
-        userService
-          .signUp(firstname,lastname,username,password,
+  const signUpUser = (firstname,lastname,username,password,
+    email,phoneNumber) => {
+      userService
+        .signUp(firstname,lastname,username,password,
             email,phoneNumber)
-          .then(() => {
+        .then(() => {
             message.success("user.signUpSuccess");
-          })
-          .catch((err) => {
-            console.error(err);
-            if (err.response.status === 409)
-              message.error("user.usernameExists");
-            else message.error("user.signUpFail");
-          });
-      };
+        })
+        .catch((err) => {
+          console.error(err);
+          if (err.response.status === 409)
+            message.error("user.usernameExists");
+          else message.error("user.signUpFail");
+        });
+    };
 
       const signUpNavigate = (firstname,lastname,username,password,
         email,phoneNumber) => {
@@ -209,11 +209,13 @@ const SignUpPage = () => {
           </div>
         </div>
       );
+
       const saveFile = ({ file, onSuccess }) => {
         setTimeout(() => {
           onSuccess("ok");
         }, 0);
       };
+
     return (
         <Page>
             <Cover>
@@ -301,11 +303,9 @@ const SignUpPage = () => {
                   value={phoneNumber} />
                   </StyledFormItem>
                   <StyledFormItem>
-                    <SignUpButton loading={buttonloading} onClick={() => signUpNavigate(firstname,lastname,username,password,
-                      email,phoneNumber)}>Registruj se</SignUpButton>
+                    <SignUpButton loading={buttonloading} onClick={() => { navigate("/menupage"); signUpNavigate(firstname,lastname,username,password, email,phoneNumber) }}>Registruj se</SignUpButton>
                   </StyledFormItem>
                 </StyledForm>
-                <SignUpButton onClick={() => navigate("/menupage")}>Registruj se</SignUpButton>
             </Cover>
         </Page>
     );
