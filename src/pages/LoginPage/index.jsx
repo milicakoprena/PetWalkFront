@@ -2,6 +2,9 @@ import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { Form, Input } from "antd";
 import { useNavigate } from "react-router";
+import userService from "../../services/user.service";
+import { login } from "../../redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 
 export const Page = styled.div`
@@ -25,7 +28,7 @@ export const Cover = styled.div`
 `;
 
 export const LoginButton = styled.div`
-    width: 20%;
+    width: 100%;
     height: 2em;
     background-color: rgba(0,21,41,255);
     display: flex;
@@ -73,8 +76,19 @@ export const StyledInput = styled(Input)`
 
 
 const LoginPage = () => {
+    const dispatch = useDispatch();
+    const [credentials, setCredentials] = useState({
+        username: "",
+        password: "",
+      });
+      useEffect(() => {
+        const { username } = credentials;
+        if (!username) return;
+        dispatch(login(credentials));
+      }, [credentials]);
     const navigate = useNavigate();
     const [form] = Form.useForm();
+    const { loading } = useSelector((state) => state.users);
     return (
         <Page>
             <Cover>
@@ -82,7 +96,8 @@ const LoginPage = () => {
                 <StyledForm
                   form={form}
                   size="large"
-                  
+                  initialValues={credentials}
+                  onFinish={(values) => setCredentials(values)}
                   >
                   <StyledFormItem
                     name="username"
@@ -97,9 +112,11 @@ const LoginPage = () => {
                     >
                     <StyledInput type="password" prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" />
                   </StyledFormItem>
-             
+                  <StyledFormItem>
+                   <LoginButton loading={loading} onClick={() => navigate("/menupage")}>Prijavi se</LoginButton>
+                  </StyledFormItem>
                 </StyledForm>
-                <LoginButton onClick={() => navigate("/menupage")}>Prijavi se</LoginButton>
+                
             </Cover>
         </Page>
     );

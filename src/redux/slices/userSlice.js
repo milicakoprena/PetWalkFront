@@ -1,26 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import userService from "../../services/user.service";
 
-export const login = createAsyncThunk("users/login", ({ username, password }) =>
+export const login = createAsyncThunk("korisnici/login", ({ username, password }) =>
   userService.login(username, password)
 );
 
-export const authState = createAsyncThunk("users/authState", () =>
+export const authState = createAsyncThunk("korisnici/authState", () =>
   userService.state()
 );
 
-export const getAll = createAsyncThunk("users/getAll", () => userService.getAll());
+export const getAll = createAsyncThunk("korisnici/getAll", () => userService.getAll());
 
-export const update = createAsyncThunk("users/update", (user, { rejectWithValue }) =>
+export const update = createAsyncThunk("korisnici/update", (user, { rejectWithValue }) =>
   userService.update(user).catch(rejectWithValue)
 );
 export const changeStatus = createAsyncThunk(
-  "users/changeStatus",
+  "korisnici/changeStatus",
   (user, { rejectWithValue }) =>
     userService.changeStatus(user).catch(rejectWithValue)
 );
 export const changeRole = createAsyncThunk(
-  "users/changeRole",
+  "korisnici/changeRole",
   (user, { rejectWithValue }) =>
     userService.changeRole(user).catch(rejectWithValue)
 );
@@ -45,7 +45,7 @@ const updateElements = (arr, obj) => {
 };
 
 const userSlice = createSlice({
-  name: "users",
+  name: "korisnici",
   initialState: {
     authenticated: false,
     authenticationFailed: false,
