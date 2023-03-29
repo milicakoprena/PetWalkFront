@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Page } from "../AddPetPage";
 import styled from "styled-components";
 
 export const Cover = styled.div`
@@ -12,6 +11,15 @@ export const Cover = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+`;
+
+export const Page = styled.div`
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 `;
 
 export const Ownerbtn = styled.img`

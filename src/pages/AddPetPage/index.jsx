@@ -6,7 +6,7 @@ import { Modal, Upload, message, Layout } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -31,7 +31,7 @@ const Option = Select.Option;
 
 
 export const Page = styled.div`
-    height: 100vh;
+    height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -166,7 +166,7 @@ const AddPetPage = () => {
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{
-                minHeight: '100vh',
+                maxHeight: '100vh',
                 minWidth: ''
                 }}>
           <MainMenu></MainMenu>
