@@ -122,7 +122,18 @@ const SignUpPage = () => {
       useEffect(() => {
         const { username } = credentials;
         if (!username) return;
-        userService.signUp(credentials);
+        userService
+        .signUp(credentials)
+        .then(() => {
+          message.success("user.signUpSuccess");
+        })
+        .catch((err) => {
+          console.error(err);
+          if (err.response.status === 409)
+            message.error("user.usernameExists");
+          else message.error("user.signUpFail");
+        });
+        
       }, [credentials]);
 
 
