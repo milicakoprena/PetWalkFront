@@ -10,7 +10,7 @@ import styled from "styled-components";
 import {  Layout } from 'antd';
 import MainMenu from "../../components/MainMenu";
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 export const Page = styled.div`
     height: 100vh;
@@ -55,10 +55,6 @@ const markers = [
     
 ]
 
-
-
-
-
 function LeafletgeoSearch() {
     const map = useMap();
     useEffect(() => {
@@ -74,7 +70,7 @@ function LeafletgeoSearch() {
       map.addControl(searchControl);
   
       return () => map.removeControl(searchControl);
-    }, []);
+    }, [map]);
   
     return null;
   }
@@ -83,7 +79,7 @@ const MapPage = () => {
     const [collapsed, setCollapsed] = useState(false);
         return (
             <Layout hasSider>
-            <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{
+            <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
                     minHeight: '100vh',
                     minWidth: ''
                     }}>

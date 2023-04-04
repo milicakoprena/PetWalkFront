@@ -29,13 +29,13 @@ export const StyledButton = styled.div`
     background-color: rgba(0,21,41,255);
 `;
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const ReportProblem = () => {
     const [collapsed, setCollapsed] = useState(false);
     return (
         <Layout hasSider>
-            <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{
+            <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
                     minHeight: '100vh',
                     minWidth: ''
                     }}>

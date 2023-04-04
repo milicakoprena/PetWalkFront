@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Form, Input, Select } from "antd";
 import TextArea from "rc-textarea";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
-import { Modal, Upload, message, Layout } from 'antd';
+import { Upload, message, Layout } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 
@@ -165,13 +165,12 @@ const AddPetPage = () => {
     const [collapsed, setCollapsed] = useState(false);
     return (
       <Layout hasSider>
-        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{
+        <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
                 maxHeight: '100vh',
                 minWidth: ''
                 }}>
           <MainMenu></MainMenu>
         </Sider>
-        <Layout className="site-layout">
           <Content>
           <Page>
             <Cover>
@@ -245,7 +244,6 @@ const AddPetPage = () => {
             </Cover>
         </Page>
         </Content>
-        </Layout>
         </Layout>
     );
 };

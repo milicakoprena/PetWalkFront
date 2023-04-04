@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Modal, message, Layout, Button, Rate, Input } from 'antd';
+import React, { useState } from "react";
+import { Modal, Layout, Button, Rate, Input } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table, Tag } from 'antd';
@@ -7,7 +7,7 @@ import { Descriptions } from 'antd';
 
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
 const { TextArea } = Input;
 
@@ -144,7 +144,7 @@ const WalkerListPage = () => {
     const [value, setValue] = useState(3);
     return (
       <Layout hasSider>
-        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{
+        <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
                 minHeight: '100vh',
                 minWidth: ''
                 }}>

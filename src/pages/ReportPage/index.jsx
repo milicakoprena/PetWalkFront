@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Upload, message, Layout } from 'antd';
+import React, { useState } from "react";
+import { Modal, Layout } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
-import { Space, Table, Tag } from 'antd';
+import { Space, Table } from 'antd';
 import { Descriptions } from 'antd';
 
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 export const UserIcon = styled.img `
     heigth: 40px;
@@ -97,7 +97,7 @@ for (let i = 0; i < 50; i++) {
     const [collapsed, setCollapsed] = useState(false);
     return (
       <Layout hasSider>
-        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} style={{
+        <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
                 minHeight: '100vh',
                 minWidth: ''
                 }}>
