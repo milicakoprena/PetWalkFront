@@ -89,8 +89,20 @@ const MapPage = () => {
         { position: [44.75984639714031, 17.196088413320002], name: "Frizko", description: "Salon za šišanje pasa" },
         { position: [44.776937561235734, 17.201737467293214], name: "Tea's grooming corner", description: "Šišanje pasa" },
         { position: [44.77141564544468, 17.196543509621797], name: "Kadar", description: "Pet friendly kafe bar" },
-        { position: [44.76883961689355, 17.188300111471023], name: "Pet shop Draganić", description: "Prodavnica kućnih ljubimaca" }
-    
+        { position: [44.76883961689355, 17.188300111471023], name: "Pet shop Draganić", description: "Prodavnica kućnih ljubimaca" },
+        { position: [44.77387087292766, 17.18688992496436], name: "Veterinarski institut Republike Srpske Dr Vaso Butozan", description: "https://virs-vb.com/" },
+        { position: [44.77700396548966, 17.189865524964468], name: "MIM Coop", description: "Veterinarska ambulanta" },
+        { position: [44.76766712195801, 17.185520382635364], name: "Vetmedik", description: "http://www.vetmedikbl.com/" },
+        { position: [44.76801720927072, 17.19082561332026], name: "Veterinarska apoteka", description: "Apoteka za životinje " },
+        { position: [44.79718115735773, 17.210076713321243], name: "Ljubimac", description: "Veterinarska ambulanta" },
+        { position: [44.7785031850491, 17.206783494849404], name: "Park za pse", description: "Prilagođen za pse" },
+        { position: [44.780187481961605, 17.206962055649416], name: "Delta Planet", description: "Pet friendly tržni centar" },
+        { position: [44.77547901423748, 17.1977062133206], name: "Grooming salon Tango", description: "Salon za uređivanje kućnih ljubimaca" },
+        { position: [44.774359621183855, 17.20109822738237], name: "Grooming salon Alexandar", description: "Šišanje i kupanje kućnih ljubimaca" },
+        { position: [44.76267350638166, 17.19699178263525], name: "Grooming salon Snupići", description: "Šišanje i kupanje kućnih ljubimaca" },
+        { position: [44.76206726581702, 17.200276253721256], name: "VrebacVET", description: "Veterinarska ordinacija" }
+
+
     
       ];
         return (
