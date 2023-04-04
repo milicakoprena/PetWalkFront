@@ -143,7 +143,7 @@ export const StyledCol = styled(Col)`
     height: 100%;
     width: 33.33%;
     padding: 4%;
-    margin-top:9%;
+    margin-top:10.5%;
     align-content: center;
 `;
 
