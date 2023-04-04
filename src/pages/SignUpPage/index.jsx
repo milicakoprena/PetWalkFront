@@ -112,7 +112,7 @@ const SignUpPage = () => {
     const [email, setEmail] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-
+    const [messageApi, contextHolder] = message.useMessage();
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -155,7 +155,10 @@ const SignUpPage = () => {
             phoneNumber,
           };
           await axios.post('http://localhost:9000/sign-up', user);
-          
+          messageApi.open({
+            type: 'success',
+            content: 'Korisnik uspješno registrovan!',
+          });
         } catch (error) {
           console.log(error);
         }
@@ -250,6 +253,7 @@ const SignUpPage = () => {
                    onChange={(e) => setPhoneNumber(e.target.value)}/>
                   </StyledFormItem>
                   <StyledFormItem>
+                  {contextHolder}
                     <SignUpButton type="submit" onClick={handleSubmit}>Registruj se</SignUpButton>
                   </StyledFormItem>
                 </StyledForm>

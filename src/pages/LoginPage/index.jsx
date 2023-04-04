@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
-import { Form, Input } from "antd";
+import { Form, Input, message } from "antd";
 import { useNavigate } from "react-router";
 import userService from "../../services/user.service";
 import { login } from "../../redux/slices/userSlice";
@@ -79,7 +79,7 @@ export const StyledInput = styled(Input)`
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
+    const [messageApi, contextHolder] = message.useMessage();
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -90,9 +90,17 @@ const LoginPage = () => {
           const user = response.data;
           console.log(user);
           localStorage.setItem('auth', user.token);
+          messageApi.open({
+            type: 'success',
+            content: 'Prijava je uspješna!',
+          });
           return {...user, token: null};
         } catch (error) {
           console.error(error);
+          messageApi.open({
+            type: 'error',
+            content: 'Prijava nije uspješna!',
+          });
         }
       };
     const navigate = useNavigate();
@@ -124,6 +132,7 @@ const LoginPage = () => {
                     onChange={(e) => setPassword(e.target.value)}/>
                   </StyledFormItem>
                   <StyledFormItem>
+                  {contextHolder}
                    <LoginButton onClick={handleSubmit}>Prijavi se</LoginButton>
                   </StyledFormItem>
                 </StyledForm>
