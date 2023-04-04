@@ -34,8 +34,8 @@ export const Cover = styled.div`
 
 const customMarker = new L.icon({
     iconUrl: require('../resources/location-pin.png'),
-    iconSize: [56, 72],
-    iconAnchor: [26, 72],
+    iconSize: [40, 52],
+    iconAnchor: [20, 50],
 }); 
 
 const MyPopupMarker = ({ content, position }) => (
@@ -51,9 +51,13 @@ const MyMarkersList = ({ markers }) => {
     return <Fragment>{items}</Fragment>
 }
 
+
 const markers = [
-    
 ]
+
+
+
+
 
 function LeafletgeoSearch() {
     const map = useMap();
@@ -77,6 +81,18 @@ function LeafletgeoSearch() {
 
 const MapPage = () => {
     const [collapsed, setCollapsed] = useState(false);
+    const locations = [
+        { position: [44.76656719765876, 17.20447089815072], name: "BL Vet", description: "https://bl-vet.com/" },
+        { position: [44.77359478646836, 17.17559528263551], name: "Vet Centar", description: "https://vetcentar.com/" },
+        { position: [44.79688441138837, 17.139584155649985], name: "VET Company", description: "Veterinarska ordinacija" },
+        { position: [44.76902856745142, 17.185328467292994], name: "Frizerski salon za pse Nola", description: "https://sisanje-pasa-banja-luka-frizerski-salon-za-pse-nola.business.site/?utm_source=gmb&utm_medium=referral" },
+        { position: [44.75984639714031, 17.196088413320002], name: "Frizko", description: "Salon za šišanje pasa" },
+        { position: [44.776937561235734, 17.201737467293214], name: "Tea's grooming corner", description: "Šišanje pasa" },
+        { position: [44.77141564544468, 17.196543509621797], name: "Kadar", description: "Pet friendly kafe bar" },
+        { position: [44.76883961689355, 17.188300111471023], name: "Pet shop Draganić", description: "Prodavnica kućnih ljubimaca" }
+    
+    
+      ];
         return (
             <Layout hasSider>
             <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
@@ -90,12 +106,23 @@ const MapPage = () => {
                 <Page>
                 <Cover>
                 <MapContainer center={[44.772182, 17.191000]} zoom={15} style={{ height: "100%", width: "100%"}} >
+                {locations.map(location => (
+                        <Marker position={location.position} icon={customMarker} >
+                        <Popup>
+                            <h2>{location.name}</h2>
+                            <p>{location.description}</p>
+                        </Popup>
+                        </Marker>
+                    ))}
                 <TileLayer
                     url={
                         "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                     }
                 />
-                <MyMarkersList markers={markers} />
+              <MyMarkersList markers={markers}
+               
+               />
+               
                 <LeafletgeoSearch/>
             </MapContainer>
                 </Cover>
