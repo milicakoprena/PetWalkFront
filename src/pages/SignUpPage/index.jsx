@@ -303,7 +303,7 @@ const SignUpPage = () => {
                   value={phoneNumber} />
                   </StyledFormItem>
                   <StyledFormItem>
-                    <SignUpButton loading={buttonloading} onClick={() => { navigate("/menupage"); signUpNavigate(firstname,lastname,username,password, email,phoneNumber) }}>Registruj se</SignUpButton>
+                    <SignUpButton loading={buttonloading} onClick={() => { navigate("/editprofile"); signUpNavigate(firstname,lastname,username,password, email,phoneNumber) }}>Registruj se</SignUpButton>
                   </StyledFormItem>
                 </StyledForm>
             </Cover>
