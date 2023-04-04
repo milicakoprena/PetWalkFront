@@ -7,6 +7,8 @@ import {
     STATUS_REQUESTED,
   } from "../util.js/constants";
   import base from "./base.service";
+  import { client, BASE_URL } from "./axios.service";
+
 
 const instance = base.service();
 const securedInstance = base.service(true);
@@ -14,13 +16,28 @@ const securedInstance = base.service(true);
   export const login = (username, password) =>
   instance.post("/login", { username, password }).then((res) => {
     const user = res.data;
+    console.log(username);
     sessionStorage.setItem("auth", user.token);
     return { ...user, token: null };
+  }).catch((e) => {
+    console.log(e);
   });
 
-  export const signUp = (firstname, lastname, username, password, email, phonenumber) =>{
-    instance.post("/sign-up", { firstname, lastname, username, password, email, phonenumber });
-  }
+
+    export function signUp(user) {
+      console.log(user);
+      const u = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        password: user.passwordHash,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+      };
+     return client.post("/sign-up", u);
+    }
+  
+
   
 
   export const state = () => {
