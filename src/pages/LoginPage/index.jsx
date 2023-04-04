@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import userService from "../../services/user.service";
 import { login } from "../../redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 
 export const Page = styled.div`
@@ -76,16 +77,24 @@ export const StyledInput = styled(Input)`
 
 
 const LoginPage = () => {
-    const dispatch = useDispatch();
-    const [credentials, setCredentials] = useState({
-        username: "",
-        password: "",
-      });
-      useEffect(() => {
-        const { username } = credentials;
-        if (!username) return;
-        dispatch(login(credentials));
-      }, [credentials]);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+          const response = await axios.post('http://localhost:9000/login', {
+            username,
+            password,
+          });
+          const user = response.data;
+          console.log(user);
+          localStorage.setItem('auth', user.token);
+          return {...user, token: null};
+        } catch (error) {
+          console.error(error);
+        }
+      };
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const { loading } = useSelector((state) => state.users);
@@ -96,24 +105,26 @@ const LoginPage = () => {
                 <StyledForm
                   form={form}
                   size="large"
-                  initialValues={credentials}
-                  onFinish={(values) => setCredentials(values)}
                   >
                   <StyledFormItem
                     name="username"
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
-                  <StyledInput prefix={<Icon  src={require('../resources/mail.png')}/>} placeholder="Korisničko ime" />
+                  <StyledInput prefix={<Icon  src={require('../resources/mail.png')}/>} placeholder="Korisničko ime" 
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}/>
                   </StyledFormItem>
                   <StyledFormItem
                     name="password"
                     rules={[{ required: true, message: "Polje je obavezno!" }]}
                     >
-                    <StyledInput type="password" prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" />
+                    <StyledInput type="password" prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}/>
                   </StyledFormItem>
                   <StyledFormItem>
-                   <LoginButton loading={loading} onClick={() => navigate("/menupage")}>Prijavi se</LoginButton>
+                   <LoginButton onClick={handleSubmit}>Prijavi se</LoginButton>
                   </StyledFormItem>
                 </StyledForm>
                 

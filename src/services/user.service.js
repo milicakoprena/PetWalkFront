@@ -16,8 +16,11 @@ const securedInstance = base.service(true);
   export const login = (username, password) =>
   instance.post("/login", { username, password }).then((res) => {
     const user = res.data;
+    console.log(username);
     sessionStorage.setItem("auth", user.token);
     return { ...user, token: null };
+  }).catch((e) => {
+    console.log(e);
   });
 
 
@@ -31,7 +34,7 @@ const securedInstance = base.service(true);
         email: user.email,
         phoneNumber: user.phoneNumber,
       };
-      instance.post("/sign-up", { u });
+     return client.post("/sign-up", u);
     }
   
 

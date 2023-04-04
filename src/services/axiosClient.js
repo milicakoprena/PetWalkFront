@@ -6,10 +6,10 @@ export function createAxiosClient({ options, getToken }) {
   client.interceptors.request.use(
     (config) => {
       if (config.authorization !== false) {
-        const token = getToken();
-        if (token) {
-          config.headers.Authorization = "Bearer " + token;
-        }
+       const token = getToken();
+       if (token) {
+         config.headers.Authorization = "Bearer " + token;
+       }
       }
       return config;
     },

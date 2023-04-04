@@ -4,7 +4,7 @@ export const BASE_URL = "http://localhost:9000";
 //export const BASE_URL = "http://192.168.100.8:9000";
 function getToken() {
   try {
-    const token = JSON.parse(sessionStorage.getItem("korisnik")).token;
+    const token = JSON.parse(sessionStorage.getItem("user")).token;
     console.log(token);
     return token;
   } catch (ex) {
@@ -21,5 +21,5 @@ export const client = createAxiosClient({
       "Content-Type": "application/json",
     },
   },
-  //getToken,
+  getToken,
 });

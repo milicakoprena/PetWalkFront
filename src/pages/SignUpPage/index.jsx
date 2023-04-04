@@ -5,7 +5,8 @@ import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Modal, Upload, message } from 'antd';
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signUp } from "../../services/user.service";
+import userService, { signUp } from "../../services/user.service";
+import axios from "axios";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -104,12 +105,13 @@ export const StyledInput = styled(Input)`
 
 
 const SignUpPage = () => {
-    const [firstname, setFirstName] = useState('');
-    const [lastname, setLastName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [phonenumber, setPhoneNumber] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
 
     const navigate = useNavigate();
     const [form] = Form.useForm();
@@ -140,25 +142,24 @@ const SignUpPage = () => {
       
       
 
-      const onFinish = () => {
-        
-        signUp({
-          firstName: firstname,
-          lastName: lastname,
-          username: username,
-          password: password,
-          email: email,
-          phoneNumber: phonenumber,
-        })
-          .then((response) => {
-           // console.log(response.data);
-           // sessionStorage.setItem("korisnik", JSON.stringify(response.data));
-            navigate("/menupage");
-          })
-          .catch((e) => {
-            console.log("error");
-          });
+      const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+          const user = {
+            firstName,
+            lastName,
+            username,
+            password,
+            email,
+            phoneNumber,
+          };
+          await axios.post('http://localhost:9000/sign-up', user);
+          
+        } catch (error) {
+          console.log(error);
+        }
       };
+      
 
     return (
         <Page>
@@ -196,7 +197,7 @@ const SignUpPage = () => {
                     >
                   
                   <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Ime"
-                  value={firstname}
+                  value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                  />
                   
@@ -208,7 +209,7 @@ const SignUpPage = () => {
                     >
                   
                   <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Prezime" 
-                  value={lastname}
+                  value={lastName}
                   onChange={(e) => setLastName(e.target.value)}/>
                   
                   </StyledFormItem>
@@ -244,11 +245,11 @@ const SignUpPage = () => {
                     >
                   
                   <StyledInput prefix={<Icon  src={require('../resources/phone.png')}/>} placeholder="Broj telefona"
-                   value={phonenumber}
+                   value={phoneNumber}
                    onChange={(e) => setPhoneNumber(e.target.value)}/>
                   </StyledFormItem>
                   <StyledFormItem>
-                    <SignUpButton type="submit" onClick={onFinish}>Registruj se</SignUpButton>
+                    <SignUpButton type="submit" onClick={handleSubmit}>Registruj se</SignUpButton>
                   </StyledFormItem>
                 </StyledForm>
                 
