@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Form, Input, Select } from "antd";
+import { Form, Input, Select, Space, Button } from "antd";
 import TextArea from "rc-textarea";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
-import { Modal, Upload, message, Layout } from 'antd';
+import { Modal, Upload, message, Layout, Row, Col } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 
@@ -40,13 +40,7 @@ export const Page = styled.div`
 
 export const Cover = styled.div`
     background-color:rgba(0, 33, 64, 0.59);
-    width: 100%;
     height: 100%;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
 `;
 
 export const EditProfileButton = styled.div`
@@ -69,9 +63,10 @@ export const EditProfileButton = styled.div`
 `;
 
 export const DeactivateButton = styled.div`
-    width: 23%;
+    width: 100%;
     height: 2em;
     display: flex;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     padding:0;
@@ -82,7 +77,7 @@ export const DeactivateButton = styled.div`
     color:rgba(19, 19, 20, 0.704);
     position: relative;
     border: 0pc;
-    margin-top: -100px;
+    margin-top: 12%;
     background-color: transparent;
     &:hover {
         transform: scale(1.15);
@@ -95,7 +90,7 @@ export const Icon = styled.img`
 `;
 
 export const StyledForm = styled(Form)`
-    width:360px;
+    width:350px;
     margin-top:-40px;
 `;
 
@@ -141,9 +136,42 @@ export const StyledLabel = styled.div`
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 `;
 
+export const StyledCol = styled(Col)`
+    height: 100%;
+    width: 33.33%;
+    padding: 4%;
+    margin-top:9%;
+    align-content: center;
+`;
+
+export const StyledCol1 = styled(Col)`
+    height: 100%;
+    width: 33.33%;
+    padding: 4%;
+    margin-top:10.3%;
+    align-content: center;
+`;
+
+function getOption(label, value) {
+  return {
+      label,
+      value,
+  };
+}
+
+const options = [
+  getOption('Čuvanje', 'cuvanje'),
+  getOption('Šetanje', 'setanje'),
+  getOption('Uređivanje', 'uredjivanje'),
+]
+
+const handleChange1 = (value) => {
+  console.log(`selected ${value}`);
+};
 
 const EditProfilePage = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -152,6 +180,12 @@ const EditProfilePage = () => {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Promjene uspješno sačuvane.',
+    });
   };
     
     const [loading, setLoading] = useState(false);
@@ -200,8 +234,9 @@ const EditProfilePage = () => {
           <Content style={{
                 maxHeight: '103vh'
                 }} >
-          <Page>
             <Cover>
+              <Row>
+                <StyledCol>
                 <StyledForm
                   form={form}
                   size="large"
@@ -242,13 +277,71 @@ const EditProfilePage = () => {
                   <StyledInput/>
                   </StyledFormItem>
                   <StyledFormItem
-                    label={ <StyledLabel style={{fontSize:"18px"}}>Lozinka</StyledLabel> }
-                    name="password"
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Prezime</StyledLabel> }
+                    name="surname"
                     >
                   
                   <StyledInput/>
                   </StyledFormItem>
-                  <StyledFormItem
+                    <StyledFormItem
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Email</StyledLabel> }
+                    name="email"
+                    >
+                      <StyledInput/>
+                    </StyledFormItem>
+
+                  </StyledForm>
+                </StyledCol>
+                <StyledCol1>
+                  <StyledForm form={form}
+                    size="large"
+                    labelCol={
+                      { span: 24 }
+                    }
+                    wrapperCol={{ span: 24 }
+                    }>
+                    <StyledFormItem
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Korisničko ime</StyledLabel> }
+                    name="username"
+                    >
+                      <StyledInput/>
+                    </StyledFormItem>
+                    <StyledFormItem
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Broj telefona</StyledLabel> }
+                    name="phonenumber"
+                    >
+                      <StyledInput/>
+                    </StyledFormItem>
+                    <StyledFormItem
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Lozinka</StyledLabel> }
+                    name="password"
+                    >
+                      <StyledInput type="password"/>
+                    </StyledFormItem>
+                    <StyledFormItem
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Cijena</StyledLabel> }
+                    name="price"
+                    >
+                  <StyledInput/>
+                  </StyledFormItem>
+                  {contextHolder}
+                  <Space style={{ justifyContent: 'center', marginLeft:80 }} >
+                    <Button  style={{
+                      marginTop:60, minHeight:40, backgroundColor: 'rgba(0,21,41,255)', color:'white'
+                    }} onClick={success} >Sačuvaj promjene</Button>
+                
+                  </Space>
+                  </StyledForm>
+                </StyledCol1>
+                <StyledCol1>
+                  <StyledForm form={form}
+                    size="large"
+                    labelCol={
+                      { span: 24 }
+                    }
+                    wrapperCol={{ span: 24 }
+                    }>
+                    <StyledFormItem
                     name="description"
                     label={ <StyledLabel style={{fontSize:"18px"}}>Opis</StyledLabel> }
                     >
@@ -260,38 +353,49 @@ const EditProfilePage = () => {
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
-                  <StyledSelect size="large">
+                  <StyledSelect size="large" 
+                    mode="multiple"
+                    allowClear
+                    style={{
+                      width: '100%',
+                    }}
+                    onChange={handleChange1}>
                      <Option value="mejdan">Mejdan</Option>
                      <Option value="borik">Borik</Option>
+                     <Option value="starcevica">Starčevica</Option>
+                     <Option value="laus">Lauš</Option>
+                     <Option value="budzak">Budžak</Option>
                   </StyledSelect>
                   </StyledFormItem>
-                  <StyledFormItem
-                    label={ <StyledLabel style={{fontSize:"18px"}}>Cijena</StyledLabel> }
-                    name="price"
-                    >
                   
-                  <StyledInput/>
+                  <StyledFormItem
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Usluga</StyledLabel> }
+                    name="service"
+                    >
+                  <StyledSelect mode="multiple"
+                    allowClear
+                    style={{
+                      width: '100%',
+                    }}
+                    onChange={handleChange1}
+                    options={options} />
                   </StyledFormItem>
-                 
-             
-                </StyledForm>
-                <>
-      <DeactivateButton type="primary" onClick={showModal}>
-        Deaktiviraj nalog
-      </DeactivateButton>
-      <Modal title="Deaktiviraj nalog" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="Potvrdi"
-        cancelText="Otkaži">
-      
-        <p>Da li ste sigurni da želite da deaktivirate Vaš nalog</p>
-        
-      </Modal>
-    </>
-                
-                
-                
+                  
+                  </StyledForm>
+                  <>
+                    <DeactivateButton type="primary" onClick={showModal}>
+                      Deaktiviraj nalog
+                    </DeactivateButton>
+                    <Modal title="Deaktiviraj nalog" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="Potvrdi"
+                      cancelText="Otkaži">
+                    
+                      <p>Da li ste sigurni da želite da deaktivirate Vaš nalog</p>
+                      
+                    </Modal>
+                  </>
+                </StyledCol1>
+              </Row>
             </Cover>
-            <EditProfileButton>Sačuvaj promjene</EditProfileButton>
-        </Page>
         </Content>
         </Layout>
     );
