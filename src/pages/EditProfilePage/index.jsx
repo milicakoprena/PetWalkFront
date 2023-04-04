@@ -6,7 +6,7 @@ import { Modal, Upload, message, Layout } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 
-const { Content, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -29,7 +29,7 @@ const beforeUpload = (file) => {
 const Option = Select.Option;
 
 export const Page = styled.div`
-    height: 100vh;
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -193,12 +193,13 @@ const EditProfilePage = () => {
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
-                minHeight: '100vh'
+                maxHeight: '103vh'
                 }}>
-          <MainMenu></MainMenu>
+          <MainMenu/>
         </Sider>
-        <Layout className="site-layout">
-          <Content>
+          <Content style={{
+                maxHeight: '103vh'
+                }} >
           <Page>
             <Cover>
                 <StyledForm
@@ -292,7 +293,6 @@ const EditProfilePage = () => {
             <EditProfileButton>Sačuvaj promjene</EditProfileButton>
         </Page>
         </Content>
-        </Layout>
         </Layout>
     );
 };

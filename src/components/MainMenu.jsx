@@ -51,6 +51,7 @@ const adminItems = [
 ]
 
 let items = walkerItems;
+let selectedValue = 1;
 
 export const HeaderImage = styled.img`
     width: 40px;
@@ -58,8 +59,18 @@ export const HeaderImage = styled.img`
 `;
 
 const MainMenu = () => {
+
+    if(items===walkerItems)
+    {
+        selectedValue=1;
+    }
+    else if(items===ownerItems)
+    {
+        selectedValue=2;
+    }
+
     const navigate=useNavigate();
-    const [value, setValue] = useState(1);
+    const [value, setValue] = useState(selectedValue);
     const onChange = (e) => {
         console.log('radio checked', e.target.value);
         setValue(e.target.value);
@@ -72,6 +83,7 @@ const MainMenu = () => {
             items=ownerItems;
         }
     };
+
     return (
         <div  
             style={{

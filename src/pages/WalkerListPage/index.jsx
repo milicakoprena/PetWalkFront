@@ -27,7 +27,7 @@ export const StyledTable = styled(Table) `
 
 
 export const Page = styled.div`
-    height: 100vh;
+    height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -145,13 +145,13 @@ const WalkerListPage = () => {
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
-                minHeight: '100vh',
-                minWidth: ''
+                maxHeight: '103vh'
                 }}>
           <MainMenu></MainMenu>
         </Sider>
-        <Layout className="site-layout">
-          <Content>
+          <Content style={{
+                maxHeight: '103vh'
+                }}>
           <Page>
             <Cover>
             <StyledTable
@@ -207,7 +207,6 @@ const WalkerListPage = () => {
           </Page>
                 
         </Content>
-        </Layout>
         </Layout>
     );
 };

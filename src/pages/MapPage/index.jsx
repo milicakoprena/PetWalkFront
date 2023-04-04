@@ -13,7 +13,7 @@ import MainMenu from "../../components/MainMenu";
 const { Content, Sider } = Layout;
 
 export const Page = styled.div`
-    height: 100vh;
+    height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -80,15 +80,14 @@ const MapPage = () => {
         return (
             <Layout hasSider>
             <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
-                    minHeight: '100vh',
-                    minWidth: ''
+                    maxHeight: '103vh'
                     }}>
-                <MainMenu></MainMenu>
+                <MainMenu/>
             </Sider>
-            <Layout className="site-layout">
-                <Content>
+            <Content style={{
+                    maxHeight: '103vh'
+                }}>
                 <Page>
-                <Cover>
                 <MapContainer center={[44.772182, 17.191000]} zoom={15} style={{ height: "100%", width: "100%"}} >
                 <TileLayer
                     url={
@@ -98,10 +97,8 @@ const MapPage = () => {
                 <MyMarkersList markers={markers} />
                 <LeafletgeoSearch/>
             </MapContainer>
-                </Cover>
             </Page>
-                </Content>
-            </Layout>
+            </Content>
         </Layout>
             
             
