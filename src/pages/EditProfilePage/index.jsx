@@ -62,6 +62,7 @@ export const EditProfileButton = styled.div`
     }
 `;
 
+
 export const DeactivateButton = styled.div`
     width: 100%;
     height: 2em;
@@ -109,6 +110,7 @@ export const StyledTextArea = styled(TextArea)`
     border-radius: 5px;
     border-color: transparent;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    
 
 `;
 
@@ -122,7 +124,7 @@ export const StyledUpload = styled.div`
     justify-content: center;
     align-items: center;
     margin-left:120px;
-    margin-top:20px;
+   
 `;
 
 export const UserPhoto = styled.img`
@@ -130,6 +132,7 @@ export const UserPhoto = styled.img`
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
+    
 `;
 
 export const StyledLabel = styled.div`
@@ -245,6 +248,7 @@ const EditProfilePage = () => {
                   }
                   wrapperCol={{ span: 24 }
                   }
+                  
                   >
                   <StyledUpload>
                   <Upload
@@ -266,9 +270,10 @@ const EditProfilePage = () => {
                 />
               ) : (
                 uploadButton
-              )}
+              )} 
             </Upload>
                   </StyledUpload>
+                 
                   <StyledFormItem
                     label={ <StyledLabel style={{fontSize:"18px"}}>Ime</StyledLabel> }
                     name="name"
