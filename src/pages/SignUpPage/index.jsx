@@ -159,6 +159,7 @@ const SignUpPage = () => {
             type: 'success',
             content: 'Korisnik uspješno registrovan!',
           });
+          navigate("/editprofile");
         } catch (error) {
           console.log(error);
         }
