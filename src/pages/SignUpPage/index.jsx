@@ -115,7 +115,7 @@ const SignUpPage = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState();
-    const [messageApi, contextHolder] = message.useMessage();
+    
     const dispatch = useDispatch();
 
       const uploadButton = (
@@ -151,18 +151,12 @@ const SignUpPage = () => {
           phoneNumber: phonenumber,
         })
           .then((response) => {
-            console.log(response.data);
-            sessionStorage.setItem("korisnik", JSON.stringify(response.data));
+           // console.log(response.data);
+           // sessionStorage.setItem("korisnik", JSON.stringify(response.data));
             navigate("/menupage");
           })
           .catch((e) => {
-            messageApi.open({
-              type: "error",
-              content: "error",
-              duration: 0,
-              style: { fontSize: "large" },
-            });
-            setTimeout(messageApi.destroy, 4000);
+            console.log("error");
           });
       };
 

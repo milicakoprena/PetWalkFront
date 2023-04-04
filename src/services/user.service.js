@@ -31,7 +31,7 @@ const securedInstance = base.service(true);
         email: user.email,
         phoneNumber: user.phoneNumber,
       };
-      return client.post("/sign-up", u);
+      instance.post("/sign-up", { u });
     }
   
 
