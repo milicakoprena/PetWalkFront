@@ -22,7 +22,7 @@ export const StyledTable = styled(Table) `
 
 
 export const Page = styled.div`
-    height: 100vh;
+    height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -98,13 +98,13 @@ for (let i = 0; i < 50; i++) {
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
-                minHeight: '100vh',
-                minWidth: ''
+                maxHeight: '103vh'
                 }}>
           <MainMenu></MainMenu>
         </Sider>
-        <Layout className="site-layout">
-          <Content>
+          <Content style={{
+                maxHeight: '103vh'
+                }}>
           <Page>
             <Cover>
             <StyledTable
@@ -136,7 +136,6 @@ for (let i = 0; i < 50; i++) {
           </Page>
                 
         </Content>
-        </Layout>
         </Layout>
     );
 };

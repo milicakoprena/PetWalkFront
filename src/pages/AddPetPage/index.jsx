@@ -166,14 +166,16 @@ const AddPetPage = () => {
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
-                maxHeight: '100vh',
+                maxHeight: '103vh',
                 minWidth: ''
                 }}>
-          <MainMenu></MainMenu>
+          <MainMenu/>
         </Sider>
           <Content>
           <Page>
-            <Cover>
+            <Cover style={{
+                maxHeight: '103vh'
+                }}>
                 <StyledForm
                   form={form}
                   size="large"
