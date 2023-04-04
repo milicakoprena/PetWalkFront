@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React from 'react';
+import { useState } from 'react';
+import MainMenu from '../../components/MainMenu';
 import { Form, Input, Select, Space, Button } from "antd";
 import TextArea from "rc-textarea";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Modal, Upload, message, Layout, Row, Col } from 'antd';
 import styled from "styled-components";
-import MainMenu from "../../components/MainMenu";
+ export{};
 
 const { Header, Content, Sider } = Layout;
 
@@ -37,7 +39,6 @@ export const Page = styled.div`
     align-items: center;
     position: relative;
 `;
-
 export const Cover = styled.div`
     background-color:rgba(0, 33, 64, 0.59);
     height: 100%;
@@ -151,7 +152,7 @@ export const StyledCol1 = styled(Col)`
     height: 100%;
     width: 33.33%;
     padding: 4%;
-    margin-top:10.3%;
+    margin-top:18%;
     align-content: center;
 `;
 
@@ -165,16 +166,20 @@ function getOption(label, value) {
 const options = [
   getOption('Čuvanje', 'cuvanje'),
   getOption('Šetanje', 'setanje'),
-  getOption('Uređivanje', 'uredjivanje'),
+  
 ]
 
 const handleChange1 = (value) => {
   console.log(`selected ${value}`);
 };
 
-const EditProfilePage = () => {
+
+const EditProfileOwnerPage = () => {
+
+ 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi1, contextHolder1] = message.useMessage();
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -186,6 +191,13 @@ const EditProfilePage = () => {
   };
   const success = () => {
     messageApi.open({
+      type: 'success',
+      content: 'Promjene uspješno sačuvane.',
+    });
+  };
+
+  const success1 = () => {
+    messageApi1.open({
       type: 'success',
       content: 'Promjene uspješno sačuvane.',
     });
@@ -228,16 +240,17 @@ const EditProfilePage = () => {
     const [form] = Form.useForm();
     const [collapsed, setCollapsed] = useState(false);
     return (
-      <Layout hasSider>
-        <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
+        <Layout hasSider>
+            <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
+                    minHeight: '103vh',
+                    }}>
+                <MainMenu></MainMenu>
+            </Sider>
+
+            <Content style={{
                 maxHeight: '103vh'
                 }}>
-          <MainMenu/>
-        </Sider>
-          <Content style={{
-                maxHeight: '103vh'
-                }} >
-            <Cover>
+                <Cover>
               <Row>
                 <StyledCol>
                 <StyledForm
@@ -323,12 +336,7 @@ const EditProfilePage = () => {
                     >
                       <StyledInput type="password"/>
                     </StyledFormItem>
-                    <StyledFormItem
-                    label={ <StyledLabel style={{fontSize:"18px"}}>Cijena</StyledLabel> }
-                    name="price"
-                    >
-                  <StyledInput/>
-                  </StyledFormItem>
+                    
                   {contextHolder}
                   <Space style={{ justifyContent: 'center', marginLeft:80 }} >
                     <Button  style={{
@@ -347,10 +355,11 @@ const EditProfilePage = () => {
                     wrapperCol={{ span: 24 }
                     }>
                     <StyledFormItem
-                    name="description"
                     label={ <StyledLabel style={{fontSize:"18px"}}>Opis</StyledLabel> }
+                    name="description"
                     >
-                  <StyledTextArea/>
+                      <StyledInput/>
+                
                   </StyledFormItem>
                   <StyledFormItem
                     name="location"
@@ -388,7 +397,7 @@ const EditProfilePage = () => {
                   
                   </StyledForm>
                   <>
-                    <DeactivateButton type="primary" onClick={showModal}>
+                  <DeactivateButton type="primary" onClick={showModal}>
                       Deaktiviraj nalog
                     </DeactivateButton>
                     <Modal title="Deaktiviraj nalog" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="Potvrdi"
@@ -401,9 +410,9 @@ const EditProfilePage = () => {
                 </StyledCol1>
               </Row>
             </Cover>
-        </Content>
+            </Content>
         </Layout>
     );
-};
+}
 
-export default EditProfilePage;
+export default EditProfileOwnerPage;
