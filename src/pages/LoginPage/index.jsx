@@ -94,9 +94,12 @@ const LoginPage = () => {
             type: 'success',
             content: 'Prijava je uspješna!',
           });
-          
+          navigate("/editprofile",
+          {
+            state: {user}
+          });
           return {...user, token: null};
-          navigate("/editprofile");
+          
         } catch (error) {
           console.error(error);
           messageApi.open({

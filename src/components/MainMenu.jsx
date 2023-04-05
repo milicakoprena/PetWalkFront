@@ -11,8 +11,10 @@ import {
 import { Menu, Radio, Space } from 'antd';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router';
-  
+import { useNavigate, useLocation } from 'react-router';
+import "../util.js/constants";
+import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER } from '../util.js/constants';
+import axios from "axios";
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -42,8 +44,7 @@ const walkerItems = [
 ]
 
 const adminItems = [
-    getItem('Lista vlasnika', "/ownerlist", <UnorderedListOutlined />),
-    getItem('Lista čuvara', "/walkerlist", <TeamOutlined />),
+    getItem('Lista naloga', "/userlist", <UnorderedListOutlined />),
     getItem('Izvještaji', "/reportpage", <FormOutlined />),
     getItem('Recenzije', "/reviewpage", <StarOutlined />),
     getItem('Mapa', "/mappage", <EnvironmentOutlined />),
@@ -59,6 +60,17 @@ export const HeaderImage = styled.img`
 `;
 
 const MainMenu = () => {
+    const userState = useLocation();
+    const user = userState.state.user;
+    let isAdmin = false;
+    const role = user.role;
+    if(role == ROLE_ADMIN) {
+        items = adminItems;
+        isAdmin = true;
+    }
+    else if(role == ROLE_OWNER) items = ownerItems;
+    else if (role == ROLE_WALKER) items = walkerItems;
+    
 
     if(items===walkerItems)
     {
@@ -68,19 +80,38 @@ const MainMenu = () => {
     {
         selectedValue=2;
     }
+    const changeRole = async (event) => {
+        
+      };
+    
 
     const navigate=useNavigate();
     const [value, setValue] = useState(selectedValue);
-    const onChange = (e) => {
-        console.log('radio checked', e.target.value);
+    const onChange = async (e) => {
+      //  //ovdje ustvari treba napraviti da se poziva funckija changeRole, jer sad zbog 
+      //  //uloga nece da radi na prethodni nacin
+      //  console.log('radio checked', e.target.value);
         setValue(e.target.value);
-        if (e.target.value===1)
-        {
-            items=walkerItems;
-        }
-        else if(e.target.value===2)
-        {
-            items=ownerItems;
+      //  if (e.target.value===1)
+      //  {
+      //      items=walkerItems;
+      //  }
+      //  else if(e.target.value===2)
+      //  {
+      //      items=ownerItems;
+      //  }
+      e.preventDefault();
+        try {
+          const role = (user.role == ROLE_WALKER? ROLE_OWNER : ROLE_WALKER);
+          const id = user.id;
+          const auth = user.token;
+          console.log(role);
+          console.log(user);
+          console.log(auth);
+          console.log('http://localhost:9000/korisnici/' + id + '/role');
+          await axios.post('http://localhost:9000/korisnici/' + id + '/role', id, role, auth);
+        } catch (error) {
+          console.log(error);
         }
     };
 
@@ -99,13 +130,22 @@ const MainMenu = () => {
                 }}>
                 <HeaderImage src={require('../pages/resources/walking-the-dog.png')} />
             </div>
-            <Menu theme="dark"  mode="inline" items={items} onClick={({key}) => navigate(key)} />
-            <Radio.Group onChange={onChange} value={value} size="middle" style={{ display: 'flex', marginLeft: '11%' }}>
+            <Menu theme="dark"  mode="inline" items={items} onClick={({key}) => navigate(key,
+             {
+             state: {user}
+             })} />
+
+            { (!isAdmin) ? (
+                <Radio.Group onChange={onChange} value={value} size="middle" style={{ display: 'flex', marginLeft: '11%' }}>
                 <Space direction="vertical">
                     <Radio value={1} style={{ color: '#919aa3', fontWeight: '490', padding: '5%' }} >Čuvar</Radio>
                     <Radio value={2} style={{ color: '#919aa3', fontWeight: '490', marginLeft: '5%' }} >Vlasnik</Radio>
                 </Space>
-            </Radio.Group>
+            </Radio.Group> 
+            ) : (
+                <div></div>
+            )}
+            
         </div>
     );
 };

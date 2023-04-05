@@ -34,7 +34,7 @@ export const Cover = styled.div`
 
 const customMarker = new L.icon({
     iconUrl: require('../resources/location-pin.png'),
-    iconSize: [40, 52],
+    iconSize: [40, 40],
     iconAnchor: [20, 50],
 }); 
 
@@ -50,11 +50,6 @@ const MyMarkersList = ({ markers }) => {
     ))
     return <Fragment>{items}</Fragment>
 }
-
-
-const markers = [
-]
-
 
 
 
@@ -130,9 +125,7 @@ const MapPage = () => {
                         "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                     }
                 />
-              <MyMarkersList markers={markers}
-               
-               />
+              
                
                 <LeafletgeoSearch/>
             </MapContainer>

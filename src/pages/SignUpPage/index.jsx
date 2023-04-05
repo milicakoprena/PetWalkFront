@@ -133,7 +133,6 @@ const SignUpPage = () => {
           </div>
         </div>
       );
-
       const saveFile = ({ file, onSuccess }) => {
         setTimeout(() => {
           onSuccess("ok");
@@ -258,6 +257,7 @@ const SignUpPage = () => {
                     <SignUpButton type="submit" onClick={handleSubmit}>Registruj se</SignUpButton>
                   </StyledFormItem>
                 </StyledForm>
+                
             </Cover>
         </Page>
     );
