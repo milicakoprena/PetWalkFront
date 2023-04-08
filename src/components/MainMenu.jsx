@@ -153,10 +153,10 @@ const MainMenu = () => {
                    <Radio value={1} style={{ color: '#919aa3', fontWeight: '490', padding: '5%' }} >Čuvar</Radio>
                    <Radio value={2} style={{ color: '#919aa3', fontWeight: '490', marginLeft: '5%' }} >Vlasnik</Radio>
                </Space>
-               <Modal title="Promjeni ulogu" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="Potvrdi"
+               <Modal title="Promijeni ulogu" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="Potvrdi"
                       cancelText="Otkaži">
                     
-                      <p>Da li ste sigurni da želite da promjenite ulogu?
+                      <p>Da li ste sigurni da želite da promijenite ulogu?
                         Pri promjeni uloge potrebno je ponovo se prijaviti na nalog.
                       </p>
                       

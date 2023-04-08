@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Modal, Layout, Button, Rate, Input } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
@@ -8,9 +8,9 @@ import axios from "axios";
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import { useNavigate, useLocation } from 'react-router';
+import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER, STATUS_ACTIVE, STATUS_BLOCKED, STATUS_REQUESTED } from '../../util.js/constants';
 const { Content, Sider } = Layout;
 
-const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
 const { TextArea } = Input;
 
 const onChange = (e) => {
@@ -24,6 +24,7 @@ export const WalkerIcon = styled.img `
 
 export const StyledTable = styled(Table) `
     width: 100%;
+    height: 97%;
 `;
 
 
@@ -70,135 +71,116 @@ export const AddReviewButton = styled.div`
 const AccountListPage = () => {
     const userState = useLocation();
     const user = userState.state.user;
-    
-    
-    const [selectedWalker, setSelectedWalker] = useState(null);
+    const [assets, setAssets] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    let buttonText = "";
   const columns = [
    // {
    //     title: '',
-   //     dataIndex: 'imageURL',
+   //     dataIndex: 'imageUrl',
    //     width: '5%',
    //     render: theImageURL => <WalkerIcon alt={theImageURL} src={theImageURL} ></WalkerIcon>
    // },
     {
       title: 'Ime',
       dataIndex: 'firstName',
-      width: '20%',
+      width: '15%',
     },
     {
         title: 'Prezime',
         dataIndex: 'lastName',
-        width: '20%',
+        width: '15%',
       },
     {
       title: 'Korisničko ime',
       dataIndex: 'username',
-      width: '20%',
+      width: '15%',
     },
     {
       title: 'Email',
       dataIndex: 'email',
+      width: '20%',
+    },
+    {
+      title: 'Uloga',
+      dataIndex: 'role',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
     },
     {
         title: '',
         dataIndex: 'action',
         render: (_, record) => (
             <Space size="middle">
-              <a onClick={() => showModal(record)}>Deaktiviraj</a>
+              <a onClick={() => {
+            setSelectedUser(record);
+            console.log(record);
+            setIsModalVisible(true);
+          }}>Promijeni status</a>
             </Space>
           ),
       },
   ];
 
-  const getData = async () => {
-    let data =[];
-    await axios.get(`http://localhost:9000/korisnici`, {
+  
+
+useEffect( () => {
+   axios.get(`http://localhost:9000/korisnici`, {
       headers: {
           Authorization: `Bearer ${user.token}`,
       },
-    }).then((resp) => {console.log("success")
-        
-        data.push(resp.data);
-        //console.log(data);
     })
-      .catch((e) => {
-        console.log(user.token);
-        console.log(data);
-      });
-      return data;
-  };
+    .then((res) => {
+      let temp = [];
+      for(let i = 0; i < res.data.length; i++)
+      {
+        if(res.data.at(i).role === ROLE_WALKER || res.data.at(i).role === ROLE_OWNER)
+          temp.push(res.data.at(i));
+      }
+         
+      setAssets(temp);
+    })
+    .catch((e) => console.log(e));
+    //console.log(assets)
+}, []);
 
-  const getSource = () => {
-    let dataPromise = [];
-    dataPromise = getData();
-    let dataSource='';
-      Promise.resolve(dataPromise).then(value=>{
-      //console.log('value:',value)
-      dataSource=value;
-      //console.log(dataSource.at(0).length);
-      }) 
-    return dataSource;
-  }
-
-  const setData = (data) => {
-    let dataPromise = [];
-    dataPromise = getData();
-    let dataSource='';
-      Promise.resolve(dataPromise).then(value=>{
-      console.log('value:',value)
-      dataSource=value;
-      console.log(dataSource.at(0).length);
-      console.log(dataSource);
-    for (let i = 0; i < dataSource.at(0).length; i++) {
-      
-      data.push({
-        //imageURL: require('../resources/owner.png'),
-        key: dataSource.at(0).at(i).id,
-        firstName: dataSource.at(0).at(i).firstName,
-        lastName: dataSource.at(0).at(i).lastName,
-        username: dataSource.at(0).at(i).username,
-        email: dataSource.at(0).at(i).email,
-        
-      });
-      console.log(data.at(i));
-    }
-      }) 
     
+  const changeStatus = () => {
+    console.log("USERRR:",selectedUser);
+    
+    const request = {
+      status: selectedUser.status === STATUS_ACTIVE? STATUS_BLOCKED : STATUS_ACTIVE,
+    };
+   
+    axios
+      .patch(`http://localhost:9000/korisnici/${selectedUser.id}/status`, request, {
+          headers: {
+              Authorization: `Bearer ${user.token}`,
+          },
+        })
+      .then(() => {
+        console.log(selectedUser.id)
+          console.log(request); 
+          setSelectedUser(null);
+          window.location.reload(true);
+      })
+      .catch((e) => console.log(e));    
     
   }
 
-  let data = [];
-  setData(data);
-
-  console.log(data);
 
   
-
-
-
-  
-  const showModal = (walker) => {
-    setSelectedWalker(walker);
-    setIsModalOpen(true);
-  };
-  const showModal1 = (walker) => {
-    setSelectedWalker(walker);
-    setIsModalOpen1(true);
-  };
   const handleOk = () => {
-    setIsModalOpen(false);
+    changeStatus();
   };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalVisible(false);
   };
-  const handleOk1 = () => {
-    setIsModalOpen1(false);
-  };
-  const handleCancel1 = () => {
-    setIsModalOpen1(false);
-  };
+ 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpen1, setIsModalOpen1] = useState(false);
     
     const [collapsed, setCollapsed] = useState(false);
     const [value, setValue] = useState(3);
@@ -215,55 +197,21 @@ const AccountListPage = () => {
           <Page>
             <Cover>
             <StyledTable
-                  dataSource={data}
                   columns={columns}
+                  dataSource={assets}
                   pageSize={7}
-                  pagination={{
-                    pageSize: 20,
-                  }}
                   scroll={{
                     y: 600,
                   }}
              >
               
              </StyledTable>
-             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={650} 
-             okText="Izaberi"
+             <Modal title="Promjena statusa" open={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={650} 
+             okText="Promijeni"
              cancelText="Otkaži"
-             
              >
-             <Descriptions title="" size="default" column={2}>
-               <Descriptions.Item>
-                 <Avatar size={130} icon={<UserOutlined />} />
-               </Descriptions.Item>
-               <Descriptions.Item label="Ime i prezime">Marko Marković</Descriptions.Item>
-               <Descriptions.Item label="Lokacija">Centar</Descriptions.Item>
-               <Descriptions.Item label="Broj telefona">065/123-456</Descriptions.Item>
-               <Descriptions.Item label="Opis">blablababalbalablablablalabal</Descriptions.Item>
-               <Descriptions.Item label="Cijena">6KM/h</Descriptions.Item>
-             </Descriptions>
-             <Button type="link" onClick={showModal1} >
-                Dodaj recenziju 
-              </Button>
-              <Modal title="Dodaj recenziju" open={isModalOpen1} onOk={handleOk1} onCancel={handleCancel1} okText="Dodaj"
-                    cancelText="Otkaži">
-                     
-                
-                <TextArea
-                  showCount
-                  maxLength={100}
-                  style={{
-                    height: 120,
-                    resize: 'none',
-                  }}
-                  onChange={onChange}
-                  placeholder="Unesite komentar (opciono)"
-                />
-                <span>
-               <Rate tooltips={desc} onChange={setValue} value={value} />
-                 {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
-             </span>
-              </Modal>
+             Da li stvarno želiš da promijeniš status ovog naloga?
+            
             </Modal>
             </Cover>
           </Page>
