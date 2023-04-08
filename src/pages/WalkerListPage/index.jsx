@@ -2,17 +2,22 @@ import React, { useState } from "react";
 import { Modal, Layout, Button, Rate, Input } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
-import { Space, Table, Tag } from 'antd';
+import { Space, Table, Tag, FloatButton, Select } from 'antd';
 import { Descriptions } from 'antd';
-
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, FilterOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
+import { LocationOptions, UslugaOptions } from "../EditProfilePage";
+
 const { Content, Sider } = Layout;
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
 const { TextArea } = Input;
 
 const onChange = (e) => {
   console.log('Change:', e.target.value);
+};
+
+const handleChange1 = (value) => {
+  console.log(`selected ${value}`);
 };
 
 export const WalkerIcon = styled.img `
@@ -124,6 +129,9 @@ const WalkerListPage = () => {
     setSelectedWalker(walker);
     setIsModalOpen1(true);
   };
+  const showModal2 = () => {
+    setIsModalOpen2(true);
+  };
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -136,12 +144,18 @@ const WalkerListPage = () => {
   const handleCancel1 = () => {
     setIsModalOpen1(false);
   };
+  const handleOk2 = () => {
+    setIsModalOpen2(false);
+  };
+  const handleCancel2 = () => {
+    setIsModalOpen2(false);
+  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [selectedWalker, setSelectedWalker] = useState(null);
-    
-    const [collapsed, setCollapsed] = useState(false);
-    const [value, setValue] = useState(3);
+  const [collapsed, setCollapsed] = useState(false);
+  const [value, setValue] = useState(3);
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
@@ -165,6 +179,7 @@ const WalkerListPage = () => {
                     y: 600,
                   }}
              />
+
              <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={650} 
              okText="Izaberi"
              cancelText="Otkaži"
@@ -202,6 +217,29 @@ const WalkerListPage = () => {
                  {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
              </span>
               </Modal>
+            </Modal>
+            <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 19 }} onClick={showModal2} />
+            <Modal title="Filtriranje" open={isModalOpen2} onOk={handleOk2} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
+                <Select size="middle" 
+                    placeholder="Izaberite lokacije"
+                    mode="multiple"
+                    allowClear
+                    style={{
+                      width: '100%',
+                      marginBottom: '3%',
+                      marginTop: '3%'
+                    }}
+                    onChange={handleChange1}
+                    options={LocationOptions}/>
+                <Select size="middle" 
+                    placeholder="Izaberite usluge"
+                    mode="multiple"
+                    allowClear
+                    style={{
+                      width: '100%',
+                    }}
+                    onChange={handleChange1}
+                    options={UslugaOptions}/>
             </Modal>
             </Cover>
           </Page>

@@ -47,7 +47,7 @@ const walkerItems = [
 ]
 
 const adminItems = [
-    getItem('Lista naloga', "/userlist", <UnorderedListOutlined />),
+    getItem('Lista naloga', "/accountlistpage", <UnorderedListOutlined />),
     getItem('Izvještaji', "/reportpage", <FormOutlined />),
     getItem('Recenzije', "/reviewpage", <StarOutlined />),
     getItem('Mapa', "/mappage", <EnvironmentOutlined />),
@@ -77,12 +77,12 @@ const MainMenu = () => {
     const user = userState.state.user;
     let isAdmin = false;
     const role = user.role;
-    if(role == ROLE_ADMIN) {
+    if(role === ROLE_ADMIN) {
         items = adminItems;
         isAdmin = true;
     }
-    else if(role == ROLE_OWNER) items = ownerItems;
-    else if (role == ROLE_WALKER) items = walkerItems;
+    else if(role === ROLE_OWNER) items = ownerItems;
+    else if (role === ROLE_WALKER) items = walkerItems;
     
 
     if(items===walkerItems)

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Form, Input, Select, Space, Button } from "antd";
+import { Form, Input, Select, Space, Button, InputNumber, Cascader } from "antd";
 import TextArea from "rc-textarea";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Modal, Upload, message, Layout, Row, Col } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
+import axios from "axios";
 
 const { Header, Content, Sider } = Layout;
 
@@ -68,7 +69,7 @@ export const DeactivateButton = styled.div`
     height: 2em;
     display: flex;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     padding:0;
     transition: 0.5s;
@@ -78,7 +79,7 @@ export const DeactivateButton = styled.div`
     color:rgba(19, 19, 20, 0.704);
     position: relative;
     border: 0pc;
-    margin-top: 12%;
+    margin-top: 8%;
     background-color: transparent;
     &:hover {
         transform: scale(1.15);
@@ -106,7 +107,7 @@ export const StyledInput = styled(Input)`
 export const StyledTextArea = styled(TextArea)`
     font-size:15px;
     width:353px;
-    height:60px;
+    height:80px;
     border-radius: 5px;
     border-color: transparent;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -162,15 +163,32 @@ function getOption(label, value) {
   };
 }
 
-const options = [
-  getOption('Čuvanje', 'cuvanje'),
+export const LocationOptions = [
+  getOption('Mejdan', 'mejdan'),
+  getOption('Borik', 'borik'),
+  getOption('Starčevica', 'starcevica'),
+  getOption('Budžak', 'budzak'),
+]
+
+export const UslugaOptions = [
   getOption('Šetanje', 'setanje'),
+  getOption('Čuvanje', 'cuvanje'),
   getOption('Uređivanje', 'uredjivanje'),
 ]
 
 const handleChange1 = (value) => {
   console.log(`selected ${value}`);
 };
+
+//const response = axios.get('http://localhost:9000/usluge');
+//const usluge = response.data;
+
+//let UslugaOptions;
+
+//for(let i=1; i<=usluge.size; i++) {
+  //UslugaOptions[i]=getOption(usluge[i].naziv, i)
+//}
+
 
 const EditProfilePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -327,7 +345,7 @@ const EditProfilePage = () => {
                     label={ <StyledLabel style={{fontSize:"18px"}}>Cijena</StyledLabel> }
                     name="price"
                     >
-                  <StyledInput/>
+                  <StyledInput addonBefore={<Select placeholder="usluga"  style={{ width: 100 }} options={UslugaOptions} />}  style={{ fontSize: '15px' }} suffix="KM" />
                   </StyledFormItem>
                   {contextHolder}
                   <Space style={{ justifyContent: 'center', marginLeft:80 }} >
@@ -364,12 +382,8 @@ const EditProfilePage = () => {
                     style={{
                       width: '100%',
                     }}
-                    onChange={handleChange1}>
-                     <Option value="mejdan">Mejdan</Option>
-                     <Option value="borik">Borik</Option>
-                     <Option value="starcevica">Starčevica</Option>
-                     <Option value="laus">Lauš</Option>
-                     <Option value="budzak">Budžak</Option>
+                    onChange={handleChange1}
+                    options={LocationOptions}>
                   </StyledSelect>
                   </StyledFormItem>
                   
@@ -383,7 +397,7 @@ const EditProfilePage = () => {
                       width: '100%',
                     }}
                     onChange={handleChange1}
-                    options={options} />
+                    options={UslugaOptions} />
                   </StyledFormItem>
                   
                   </StyledForm>

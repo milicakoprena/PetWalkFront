@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Modal, Layout } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
-import { Space, Table } from 'antd';
+import { Space, Table, FloatButton, Select } from 'antd';
 import { Descriptions, Button, Input } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, FilterOutlined } from '@ant-design/icons';
 import { Avatar, DatePicker } from 'antd';
+import { LocationOptions, UslugaOptions } from "../EditProfilePage";
 
 const { TextArea } = Input;
 
@@ -17,6 +18,10 @@ const onChangeDate = (date, dateString) => {
 
 const onChange = (e) => {
   console.log('Change:', e.target.value);
+};
+
+const handleChange1 = (value) => {
+  console.log(`selected ${value}`);
 };
 
 export const PetIcon = styled.img `
@@ -145,14 +150,24 @@ for (let i = 0; i < 50; i++) {
     setmodaldata(walker);
     setIsModalOpen1(true);
   };
+  const showModal2 = () => {
+    setIsModalOpen2(true);
+  };
   const handleOk1 = () => {
     setIsModalOpen1(false);
   };
   const handleCancel1 = () => {
     setIsModalOpen1(false);
   }
+  const handleOk2 = () => {
+    setIsModalOpen2(false);
+  };
+  const handleCancel2 = () => {
+    setIsModalOpen2(false);
+  };
    
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
 
@@ -223,6 +238,29 @@ for (let i = 0; i < 50; i++) {
                 />
                 <DatePicker onChange={onChangeDate} style={{ marginTop: '3%' }} placeholder="Izaberite datum" />
               </Modal>
+            </Modal>
+            <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 11 }} onClick={showModal2} />
+            <Modal title="Filtriranje" open={isModalOpen2} onOk={handleOk2} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
+                <Select size="middle" 
+                    placeholder="Izaberite lokacije"
+                    mode="multiple"
+                    allowClear
+                    style={{
+                      width: '100%',
+                      marginBottom: '3%',
+                      marginTop: '3%'
+                    }}
+                    onChange={handleChange1}
+                    options={LocationOptions}/>
+                <Select size="middle" 
+                    placeholder="Izaberite vrste"
+                    mode="multiple"
+                    allowClear
+                    style={{
+                      width: '100%',
+                    }}
+                    onChange={handleChange1}
+                    options={UslugaOptions}/>
             </Modal>
             </Cover>
           </Page>
