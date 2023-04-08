@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Layout, Button, Rate, Input } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table, Tag } from 'antd';
 import { Descriptions } from 'antd';
-
+import axios from "axios";
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
+import { useNavigate, useLocation } from 'react-router';
 const { Content, Sider } = Layout;
+
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
 const { TextArea } = Input;
 
@@ -66,21 +68,26 @@ export const AddReviewButton = styled.div`
 `;
 
 const AccountListPage = () => {
+    const userState = useLocation();
+    const user = userState.state.user;
+    
+    
+    const [selectedWalker, setSelectedWalker] = useState(null);
   const columns = [
-    {
-        title: '',
-        dataIndex: 'imageURL',
-        width: '5%',
-        render: theImageURL => <WalkerIcon alt={theImageURL} src={theImageURL} ></WalkerIcon>
-    },
+   // {
+   //     title: '',
+   //     dataIndex: 'imageURL',
+   //     width: '5%',
+   //     render: theImageURL => <WalkerIcon alt={theImageURL} src={theImageURL} ></WalkerIcon>
+   // },
     {
       title: 'Ime',
-      dataIndex: 'firstname',
+      dataIndex: 'firstName',
       width: '20%',
     },
     {
         title: 'Prezime',
-        dataIndex: 'lastname',
+        dataIndex: 'lastName',
         width: '20%',
       },
     {
@@ -102,17 +109,72 @@ const AccountListPage = () => {
           ),
       },
   ];
-  const data = [];
-  for (let i = 0; i < 50; i++) {
-    data.push({
-      imageURL: require('../resources/owner.png'),
-      key: i,
-      firstname: `Marko ${i}`,
-      lastname: `Marković ${i}`,
-      username: 'marko',
-      email: 'marko@mail.com',
-    });
+
+  const getData = async () => {
+    let data =[];
+    await axios.get(`http://localhost:9000/korisnici`, {
+      headers: {
+          Authorization: `Bearer ${user.token}`,
+      },
+    }).then((resp) => {console.log("success")
+        
+        data.push(resp.data);
+        //console.log(data);
+    })
+      .catch((e) => {
+        console.log(user.token);
+        console.log(data);
+      });
+      return data;
+  };
+
+  const getSource = () => {
+    let dataPromise = [];
+    dataPromise = getData();
+    let dataSource='';
+      Promise.resolve(dataPromise).then(value=>{
+      //console.log('value:',value)
+      dataSource=value;
+      //console.log(dataSource.at(0).length);
+      }) 
+    return dataSource;
   }
+
+  const setData = (data) => {
+    let dataPromise = [];
+    dataPromise = getData();
+    let dataSource='';
+      Promise.resolve(dataPromise).then(value=>{
+      console.log('value:',value)
+      dataSource=value;
+      console.log(dataSource.at(0).length);
+      console.log(dataSource);
+    for (let i = 0; i < dataSource.at(0).length; i++) {
+      
+      data.push({
+        //imageURL: require('../resources/owner.png'),
+        key: dataSource.at(0).at(i).id,
+        firstName: dataSource.at(0).at(i).firstName,
+        lastName: dataSource.at(0).at(i).lastName,
+        username: dataSource.at(0).at(i).username,
+        email: dataSource.at(0).at(i).email,
+        
+      });
+      console.log(data.at(i));
+    }
+      }) 
+    
+    
+  }
+
+  let data = [];
+  setData(data);
+
+  console.log(data);
+
+  
+
+
 
   
   const showModal = (walker) => {
@@ -137,7 +199,6 @@ const AccountListPage = () => {
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
-  const [selectedWalker, setSelectedWalker] = useState(null);
     
     const [collapsed, setCollapsed] = useState(false);
     const [value, setValue] = useState(3);
@@ -154,8 +215,8 @@ const AccountListPage = () => {
           <Page>
             <Cover>
             <StyledTable
-                  columns={columns}
                   dataSource={data}
+                  columns={columns}
                   pageSize={7}
                   pagination={{
                     pageSize: 20,
@@ -163,7 +224,9 @@ const AccountListPage = () => {
                   scroll={{
                     y: 600,
                   }}
-             />
+             >
+              
+             </StyledTable>
              <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={650} 
              okText="Izaberi"
              cancelText="Otkaži"
