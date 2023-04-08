@@ -10,6 +10,7 @@ import PetListPage from "./pages/PetListPage";
 import WalkerListPage from "./pages/WalkerListPage";
 import ReviewPage from "./pages/ReviewPage";
 import ReportPage from "./pages/ReportPage";
+import AccountListPage from "./pages/AccountListPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="/reportpage" element={<ReportPage />} />
           <Route path="/reviewpage" element={<ReviewPage />} />
           <Route path="/reportpage" element={<ReportPage />} />
+          <Route path="/accountlistpage" element={<AccountListPage />} />
         </Routes>
       </Router>
       

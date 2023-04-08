@@ -8,13 +8,16 @@ import {
     ExclamationCircleOutlined,
     TeamOutlined
 } from '@ant-design/icons';
-import { Menu, Radio, Space } from 'antd';
+import { Menu, Radio, Space, Popconfirm, Modal } from 'antd';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router';
 import "../util.js/constants";
 import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER } from '../util.js/constants';
 import axios from "axios";
+import base from "../services/base.service";
+
+
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -60,6 +63,16 @@ export const HeaderImage = styled.img`
 `;
 
 const MainMenu = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+        setIsModalOpen(true);
+      };
+      const handleOk = () => {
+        onChange();
+      };
+      const handleCancel = () => {
+        setIsModalOpen(false);
+      };
     const userState = useLocation();
     const user = userState.state.user;
     let isAdmin = false;
@@ -80,39 +93,38 @@ const MainMenu = () => {
     {
         selectedValue=2;
     }
-    const changeRole = async (event) => {
-        
-      };
-    
+
+
 
     const navigate=useNavigate();
     const [value, setValue] = useState(selectedValue);
-    const onChange = async (e) => {
-      //  //ovdje ustvari treba napraviti da se poziva funckija changeRole, jer sad zbog 
-      //  //uloga nece da radi na prethodni nacin
-      //  console.log('radio checked', e.target.value);
-        setValue(e.target.value);
-      //  if (e.target.value===1)
-      //  {
-      //      items=walkerItems;
-      //  }
-      //  else if(e.target.value===2)
-      //  {
-      //      items=ownerItems;
-      //  }
-      e.preventDefault();
-        try {
-          const role = (user.role == ROLE_WALKER? ROLE_OWNER : ROLE_WALKER);
-          const id = user.id;
-          const auth = user.token;
-          console.log(role);
-          console.log(user);
-          console.log(auth);
-          console.log('http://localhost:9000/korisnici/' + id + '/role');
-          await axios.post('http://localhost:9000/korisnici/' + id + '/role', id, role, auth);
-        } catch (error) {
-          console.log(error);
-        }
+
+    
+
+    const onChange = async () => {
+      
+       
+      const request = {
+        id: user.id,
+        role: user.role === ROLE_OWNER ? ROLE_WALKER : ROLE_OWNER,
+      };
+     
+      console.log(request);
+      console.log(user.token);
+      return await axios
+        .patch(`http://localhost:9000/korisnici/${user.id}/role`, request, {
+            headers: {
+                Authorization: `Bearer ${user.token}`,
+            },
+          })
+        .then(() => {
+            console.log(request);
+            navigate("/loginpage",
+          {
+            state: {user}
+          }); 
+        })
+        .catch((e) => console.log(e));
     };
 
     return (
@@ -134,17 +146,29 @@ const MainMenu = () => {
              {
              state: {user}
              })} />
-
-            { (!isAdmin) ? (
-                <Radio.Group onChange={onChange} value={value} size="middle" style={{ display: 'flex', marginLeft: '11%' }}>
-                <Space direction="vertical">
-                    <Radio value={1} style={{ color: '#919aa3', fontWeight: '490', padding: '5%' }} >Čuvar</Radio>
-                    <Radio value={2} style={{ color: '#919aa3', fontWeight: '490', marginLeft: '5%' }} >Vlasnik</Radio>
-                </Space>
-            </Radio.Group> 
-            ) : (
-                <div></div>
-            )}
+             
+           { (!isAdmin) ? (
+               <Radio.Group onChange={showModal} value={value} size="middle" style={{ display: 'flex', marginLeft: '11%' }}>
+               <Space direction="vertical">
+                   <Radio value={1} style={{ color: '#919aa3', fontWeight: '490', padding: '5%' }} >Čuvar</Radio>
+                   <Radio value={2} style={{ color: '#919aa3', fontWeight: '490', marginLeft: '5%' }} >Vlasnik</Radio>
+               </Space>
+               <Modal title="Promjeni ulogu" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="Potvrdi"
+                      cancelText="Otkaži">
+                    
+                      <p>Da li ste sigurni da želite da promjenite ulogu?
+                        Pri promjeni uloge potrebno je ponovo se prijaviti na nalog.
+                      </p>
+                      
+                    </Modal>
+               </Radio.Group> 
+              
+              
+           ) : (
+               <div>
+                
+               </div>
+           )}
             
         </div>
     );

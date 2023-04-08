@@ -6,6 +6,7 @@ import userService from "../../services/user.service";
 import { login } from "../../redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { ROLE_ADMIN } from "../../util.js/constants";
 
 
 export const Page = styled.div`
@@ -89,15 +90,23 @@ const LoginPage = () => {
           });
           const user = response.data;
           console.log(user);
-          localStorage.setItem('auth', user.token);
+          sessionStorage.setItem('auth', user.token);
           messageApi.open({
             type: 'success',
             content: 'Prijava je uspješna!',
           });
-          navigate("/editprofile",
+          if(user.role===ROLE_ADMIN)
+             navigate("/accountlistpage",
+             {
+               state: {user}
+             });
+          else
           {
-            state: {user}
-          });
+            navigate("/editprofile",
+             {
+               state: {user}
+             });
+          }
           return {...user, token: null};
           
         } catch (error) {
