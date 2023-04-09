@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Form, Input } from "antd";
+import { Form, Input, Select, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Modal, Upload, message } from 'antd';
@@ -45,24 +45,20 @@ export const Page = styled.div`
     height: 100vh;
     width: 100%;
     display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     position: relative;
 `;
 
 export const Cover = styled.div`
-    background-color:rgba(0, 33, 64, 0.59);  
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
+background-color:rgba(0, 33, 64, 0.59);
+height: 100%;
+width: 100%
 `;
 
 export const SignUpButton = styled.div`
-    width: 100%;
+    width: 30%;
     height: 2em;
     background-color: rgba(0,21,41,255);
     display: flex;
@@ -73,14 +69,23 @@ export const SignUpButton = styled.div`
     transition: 0.5s;
     color: aliceblue;
     font-size: 1.7em;
-    margin-top: -20px;
-    margin-bottom: 100px;
     &:hover {
         transform: scale(1.15);
     }
+    margin-left: 35%;
 `;
 
+export const StyledCol = styled(Col)`
+    align-content: center;
+    margin-left:270px;
+    margin-top: -50px;
+`;
 
+export const StyledCol1 = styled(Col)`
+    align-content: center;
+    margin-left:180px;
+    margin-top: 73px;
+`;
 
 
 
@@ -90,9 +95,9 @@ export const Icon = styled.img`
 `;
 
 export const StyledForm = styled(Form)`
-    margin-top:-50px;
+    margin-top:-10px;
     width:400px;
-    margin-bottom: 0px;
+    
 `;
 
 export const StyledFormItem = styled(Form.Item)`
@@ -101,6 +106,17 @@ export const StyledFormItem = styled(Form.Item)`
 
 export const StyledInput = styled(Input)`
     font-size:20px;
+`;
+
+export const StyledSelect = styled(Select)`
+    margin-top:15px;
+    font-size:18px;
+    width:360px;
+    heigth:150px;
+`;
+
+export const StyledLabel = styled.div`
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 `;
 
 
@@ -167,13 +183,21 @@ const SignUpPage = () => {
 
     return (
         <Page>
+            
             <Cover>
-                <StyledForm 
+              <Row>
+                <StyledCol>
+                <StyledForm
                   form={form}
                   size="large"
+                  labelCol={
+                    { span: 24 }
+                  }
+                  wrapperCol={{ span: 24 }
+                  }
                   
                   >
-                    <StyledUpload>
+                  <StyledUpload>
                   <Upload
               name="avatar"
               customRequest={saveFile}
@@ -182,7 +206,6 @@ const SignUpPage = () => {
               showUploadList={false}
               action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               beforeUpload={beforeUpload}
-              
             >
               {imageUrl ? (
                 <UserPhoto
@@ -192,73 +215,99 @@ const SignUpPage = () => {
                 />
               ) : (
                 uploadButton
-              )}
+              )} 
             </Upload>
                   </StyledUpload>
+                 
                   <StyledFormItem
-                    name="firstname"
-                    rules={[{ required: true, message: "Polje je obavezno!"}]}
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Ime</StyledLabel> }
+                    name="name"
                     >
                   
-                  <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Ime"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                 />
-                  
+                  <StyledInput/>
                   </StyledFormItem>
-
                   <StyledFormItem
-                    name="lastname"
-                    rules={[{ required: true, message: "Polje je obavezno!"}]}
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Prezime</StyledLabel> }
+                    name="surname"
                     >
                   
-                  <StyledInput prefix={<Icon  src={require('../resources/user.png')}/>} placeholder="Prezime" 
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}/>
-                  
+                  <StyledInput/>
                   </StyledFormItem>
-                  <StyledFormItem
-                    name="username"
-                    rules={[{ required: true, message: "Polje je obavezno!"}]}
-                    >
-                  
-                  <StyledInput prefix={<Icon  src={require('../resources/mail.png')}/>} placeholder="Korisničko ime" 
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}/>
-                  </StyledFormItem>
-                  <StyledFormItem
+                    <StyledFormItem
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Email</StyledLabel> }
                     name="email"
+                    >
+                      <StyledInput/>
+                    </StyledFormItem>
+
+                  </StyledForm>
+                </StyledCol>
+                <StyledCol1>
+                  <StyledForm form={form}
+                    size="large"
+                    labelCol={
+                      { span: 24 }
+                    }
+                    wrapperCol={{ span: 24 }
+                    }>
+                      <StyledFormItem
+                    name="place"
+                    label={ <StyledLabel style={{fontSize:"18px", marginTop:"25px"}}>Naselje</StyledLabel> }
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
-                  <StyledInput prefix={<Icon  src={require('../resources/arroba.png')}/>} placeholder="Email adresa" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}/>
+                  <StyledSelect size="large" 
+                    mode="multiple"
+                    allowClear
+                    style={{
+                      width: '100%',
+                    }}
+                    >
+                  </StyledSelect>
                   </StyledFormItem>
-                  <StyledFormItem
+                    
+                    <StyledFormItem
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Broj telefona</StyledLabel> }
+                    name="phonenumber"
+                    >
+                      <StyledInput/>
+                    </StyledFormItem>
+                    <StyledFormItem
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Korisničko ime</StyledLabel> }
+                    name="username"
+                    >
+                      <StyledInput/>
+                    </StyledFormItem>
+                    <StyledFormItem
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Lozinka</StyledLabel> }
                     name="password"
-                    rules={[{ required: true, message: "Polje je obavezno!" }]}
                     >
-                    <StyledInput type="password" prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}/>
-                  </StyledFormItem>
-                  <StyledFormItem
-                    name="number"
-                    rules={[{ required: true, message: "Polje je obavezno!"}]}
-                    >
+                      <StyledInput type="password"/>
+                    </StyledFormItem>
+                    
                   
-                  <StyledInput prefix={<Icon  src={require('../resources/phone.png')}/>} placeholder="Broj telefona"
-                   value={phoneNumber}
-                   onChange={(e) => setPhoneNumber(e.target.value)}/>
-                  </StyledFormItem>
-                  <StyledFormItem>
-                  {contextHolder}
-                    <SignUpButton type="submit" onClick={handleSubmit}>Registruj se</SignUpButton>
-                  </StyledFormItem>
-                </StyledForm>
+                  </StyledForm>
                 
+                  <StyledForm form={form}
+                    size="large"
+                    labelCol={
+                      { span: 24 }
+                    }
+                    wrapperCol={{ span: 24 }
+                    }>
+                   
+                  
+                  
+                  </StyledForm>
+                  <>
+                   
+                  </>
+                </StyledCol1>
+                
+              </Row>
+              <SignUpButton>Registruj se</SignUpButton>
             </Cover>
+        
         </Page>
     );
 };

@@ -24,7 +24,7 @@ export const WalkerIcon = styled.img `
 
 export const StyledTable = styled(Table) `
     width: 100%;
-    height: 97%;
+    height: 99%;
 `;
 
 
