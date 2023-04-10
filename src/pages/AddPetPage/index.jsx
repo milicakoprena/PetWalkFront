@@ -138,6 +138,7 @@ const AddPetPage = () => {
   const [selectedType, setSelectedType] = useState('');
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState();
+    const [image, setImage] = useState('');
 
     const selectType = (event) => {
       console.log(event);
@@ -146,26 +147,28 @@ const AddPetPage = () => {
       console.log(typeId);
     };
 
-    const addPet = () => {
-      const ljubimacRequest = {
+    const addPet = async () => {
+      
+
+      let ljubimacRequest = {
         ime: name,
-        opis: description,
-        slika: imageUrl,
+        opis: description, 
+        slika: image,
         korisnikId: user.id,
         vrstaId: typeId,
       }
-      axios.post(`http://localhost:9000/ljubimci`, ljubimacRequest, {
-         headers: {
-             Authorization: `Bearer ${user.token}`,
-         },
+       const response = await fetch('http://localhost:9000/ljubimci', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+         'Authorization': `Bearer ${user.token}`,
+       },
+       body: JSON.stringify(ljubimacRequest),
        })
-       .then((response) => {
-        console.log(response);
-       })
-       .catch((e) => {
-        console.log(e);
-       })
-    };
+       .catch((e) => console.log(e));
+       //const ljubimac = await response.json();
+       console.log(response);
+       };
 
     useEffect( () => {
       axios.get(`http://localhost:9000/vrste`, {
@@ -190,15 +193,19 @@ const AddPetPage = () => {
    }, []);
     
     const handleChange = (info) => {
+      console.log(info);
         if (info.file.status === 'uploading') {
+          console.log("uploading");
           setLoading(true);
           return;
         }
         if (info.file.status === 'done') {
+          console.log("done");
           // Get this url from response in real world.
           getBase64(info.file.originFileObj, (url) => {
             setLoading(false);
             setImageUrl(url);
+            console.log("IMAGE URL:",imageUrl);
           });
         }
       };
@@ -216,9 +223,9 @@ const AddPetPage = () => {
         </div>
       );
       const saveFile = ({ file, onSuccess }) => {
-        setTimeout(() => {
-          onSuccess("ok");
-        }, 0);
+        
+        console.log(file.name);
+        setImage(file.name);
       };
     const [form] = Form.useForm();
     const [collapsed, setCollapsed] = useState(false);
@@ -244,6 +251,7 @@ const AddPetPage = () => {
                   wrapperCol={{ span: 24 }
                   }
                   >
+                  <StyledFormItem>
                   <StyledUpload>
                   <Upload
               name="avatar"
@@ -267,6 +275,7 @@ const AddPetPage = () => {
               )}
             </Upload>
                   </StyledUpload>
+                  </StyledFormItem>
                   <StyledFormItem
                     label={ <StyledLabel style={{fontSize:"18px"}}>Ime</StyledLabel> }
                     name="name"

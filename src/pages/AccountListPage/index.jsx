@@ -71,7 +71,7 @@ export const AddReviewButton = styled.div`
 const AccountListPage = () => {
     const userState = useLocation();
     const user = userState.state.user;
-    const [assets, setAssets] = useState([]);
+    const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     let buttonText = "";
@@ -141,7 +141,7 @@ useEffect( () => {
           temp.push(res.data.at(i));
       }
          
-      setAssets(temp);
+      setUsers(temp);
     })
     .catch((e) => console.log(e));
     //console.log(assets)
@@ -198,7 +198,7 @@ useEffect( () => {
             <Cover>
             <StyledTable
                   columns={columns}
-                  dataSource={assets}
+                  dataSource={users}
                   pageSize={7}
                   scroll={{
                     y: 600,
