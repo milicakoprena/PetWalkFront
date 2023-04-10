@@ -143,33 +143,28 @@ const MainMenu = () => {
                 <HeaderImage src={require('../pages/resources/walking-the-dog.png')} />
             </div>
             <Menu theme="dark"  mode="inline" items={items} onClick={({key}) => navigate(key,
-             {
-             state: {user}
-             })} />
-             
-           { (!isAdmin) ? (
-               <Radio.Group onChange={showModal} value={value} size="middle" style={{ display: 'flex', marginLeft: '11%' }}>
-               <Space direction="vertical">
-                   <Radio value={1} style={{ color: '#919aa3', fontWeight: '490', padding: '5%' }} >Čuvar</Radio>
-                   <Radio value={2} style={{ color: '#919aa3', fontWeight: '490', marginLeft: '5%' }} >Vlasnik</Radio>
-               </Space>
-               <Modal title="Promjeni ulogu" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="Potvrdi"
-                      cancelText="Otkaži">
-                    
-                      <p>Da li ste sigurni da želite da promjenite ulogu?
-                        Pri promjeni uloge potrebno je ponovo se prijaviti na nalog.
-                      </p>
-                      
+                {
+                    state: {user}
+                })} />
+            { (!isAdmin) ? (
+                <Radio.Group onChange={showModal} value={value} size="middle" style={{ display: 'flex', marginLeft: '11%' }}>
+                    <Space direction="vertical">
+                        <Radio value={1} style={{ color: '#919aa3', fontWeight: '490', padding: '5%' }} >Čuvar</Radio>
+                        <Radio value={2} style={{ color: '#919aa3', fontWeight: '490', marginLeft: '5%' }} >Vlasnik</Radio>
+                    </Space>
+                    <Modal title="Promjeni ulogu" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="Potvrdi"
+                        cancelText="Otkaži">
+                        
+                        <p>Da li ste sigurni da želite da promjenite ulogu?
+                            Pri promjeni uloge potrebno je ponovo se prijaviti na nalog.
+                        </p>  
                     </Modal>
-               </Radio.Group> 
-              
-              
-           ) : (
+                </Radio.Group> 
+            ) : (
                <div>
                 
                </div>
-           )}
-            
+            )}
         </div>
     );
 };
