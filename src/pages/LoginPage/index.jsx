@@ -6,6 +6,7 @@ import userService from "../../services/user.service";
 import { login } from "../../redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER } from "../../util.js/constants";
 
 
@@ -78,10 +79,13 @@ export const StyledInput = styled(Input)`
 
 
 const LoginPage = () => {
+    const locationIdState = useLocation();
+    const locationId = locationIdState.state.locationId;
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [messageApi, contextHolder] = message.useMessage();
     const handleSubmit = async (event) => {
+      console.log(locationId);
         event.preventDefault();
         try {
           const response = await axios.post('http://localhost:9000/login', {
@@ -95,6 +99,28 @@ const LoginPage = () => {
             type: 'success',
             content: 'Prijava je uspješna!',
           });
+
+          
+
+          if(locationId!='') {
+            let mjestoRequest = {
+              mjestoId: locationId,
+              korisnikId: user.id, 
+            }
+             const response2 = fetch('http://localhost:9000/lokacije', {
+             method: 'POST',
+             headers: {
+               'Content-Type': 'application/json',
+               'Authorization': `Bearer ${user.token}`,
+             },
+             body: JSON.stringify(mjestoRequest),
+             })
+             .catch((e) => console.log(e));
+               
+          }
+          
+          
+        
           if(user.role===ROLE_ADMIN)
              navigate("/accountlistpage",
              {

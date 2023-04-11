@@ -7,6 +7,7 @@ import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
 import pozadina from "../resources/pozadina2.jpg"
 
 const { Content, Sider } = Layout;
@@ -126,12 +127,13 @@ export const StyledLabel = styled.div`
   color: rgba(19, 19, 20, 0.704);
 `;
 
-const AddPetPage = () => {
+
+const AddPetPage = (props) => {
   const userState = useLocation();
   const user = userState.state.user;
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  
+  const identificator = props.identificator;
   const [typeId, setTypeId] = useState('');
   const [types, setTypes] = useState([]);
   const [selectedType, setSelectedType] = useState('');
@@ -146,27 +148,28 @@ const AddPetPage = () => {
     console.log(typeId);
   };
 
-  const addPet = async () => {
-    let ljubimacRequest = {
-      ime: name,
-      opis: description, 
-      slika: image,
-      korisnikId: user.id,
-      vrstaId: typeId,
-    }
+    const addPet = async (props) => {
+      
 
-    const response = await fetch('http://localhost:9000/ljubimci', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${user.token}`,
-    },
-    body: JSON.stringify(ljubimacRequest),
-    })
-    .catch((e) => console.log(e));
-    //const ljubimac = await response.json();
-    console.log(response);
-    };
+      let ljubimacRequest = {
+        ime: name,
+        opis: description, 
+        slika: image,
+        korisnikId: user.id,
+        vrstaId: typeId,
+      }
+       const response = await fetch('http://localhost:9000/ljubimci', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+         'Authorization': `Bearer ${user.token}`,
+       },
+       body: JSON.stringify(ljubimacRequest),
+       })
+       .catch((e) => console.log(e));
+       //const ljubimac = await response.json();
+       console.log(response);
+       };
 
     useEffect( () => {
       axios.get(`http://localhost:9000/vrste`, {
@@ -190,43 +193,44 @@ const AddPetPage = () => {
        //console.log(assets)
    }, []);
     
-  const handleChange = (info) => {
-    console.log(info);
-      if (info.file.status === 'uploading') {
-        console.log("uploading");
-        setLoading(true);
-        return;
-      }
-      if (info.file.status === 'done') {
-        console.log("done");
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, (url) => {
-          setLoading(false);
-          setImageUrl(url);
-          console.log("IMAGE URL:",imageUrl);
-        });
-      }
-    };
-
-    const uploadButton = (
-      <div>
-        {loading ? <LoadingOutlined /> : <PlusOutlined/>
+    const handleChange = (info) => {
+      console.log(info);
+        if (info.file.status === 'uploading') {
+          console.log("uploading");
+          setLoading(true);
+          return;
         }
-        <div
-          style={{
-            marginTop: 8,
-          }}
-        >
-          Upload
+        if (info.file.status === 'done') {
+          console.log("done");
+          // Get this url from response in real world.
+          getBase64(info.file.originFileObj, (url) => {
+            setLoading(false);
+            setImageUrl(url);
+            console.log("IMAGE URL:",imageUrl);
+          });
+        }
+      };
+      const uploadButton = (
+        <div>
+          {loading ? <LoadingOutlined /> : <PlusOutlined/>
+          }
+          <div
+            style={{
+              marginTop: 8,
+            }}
+          >
+            Upload
+          </div>
         </div>
-      </div>
-    );
+      );
 
-    const saveFile = ({ file, onSuccess }) => {
-      console.log(file.name);
-      setImage(file.name);
-    };
+      
 
+      const saveFile = ({ file, onSuccess }) => {
+        
+        console.log(file);
+        setImage(file.name);
+      };
     const [form] = Form.useForm();
     const [collapsed, setCollapsed] = useState(false);
 
