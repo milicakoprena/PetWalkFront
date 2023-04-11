@@ -2,7 +2,6 @@ import StartPage from "./pages/StartPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import AddPetPage from "./pages/AddPetPage";
-import MenuPage from "./pages/MenuPage";
 import MapPage from "./pages/MapPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import ReportProblem from "./pages/ReportProblem";
@@ -10,6 +9,7 @@ import PetListPage from "./pages/PetListPage";
 import WalkerListPage from "./pages/WalkerListPage";
 import ReviewPage from "./pages/ReviewPage";
 import ReportPage from "./pages/ReportPage";
+import EditProfileOwnerPage from "./pages/EditProfileOwnerPage";
 import AccountListPage from "./pages/AccountListPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -23,7 +23,7 @@ function App() {
           <Route exact path="/loginpage" element={<LoginPage />} />
           <Route exact path="/signuppage" element={<SignUpPage />} />
           <Route exact path="/addpetpage" element={<AddPetPage />} />
-          <Route exact path="/menupage" element={<MenuPage />} />
+          <Route exact path="/editprofileownerpage" element={<EditProfileOwnerPage />} />
           <Route path="/mappage" element={<MapPage />} />
           <Route path="/editprofile" element={<EditProfilePage />} />
           <Route path="/reportproblem" element={<ReportProblem />} />
