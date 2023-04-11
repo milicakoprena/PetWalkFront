@@ -120,21 +120,52 @@ export const StyledLabel = styled.div`
 `;
 
 
+
+
+
 const SignUpPage = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [locationId, setLocationId] = useState('');
+    const [locations, setLocations] = useState('');
+    const [user, setUser] = useState('');
+
+    const [errorMessage, setErrorMessage] = useState('');
     const [messageApi, contextHolder] = message.useMessage();
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState();
-    
-    const dispatch = useDispatch();
+    const [photo, setPhoto] = useState('');
+
+    const selectLocation = (event) => {
+      console.log(event);
+      setLocationId(event);
+      console.log(event);
+      console.log(locationId);
+    };
+
+    useEffect( () => {
+      axios.get(`http://localhost:9000/mjesta`)
+       .then((res) => {
+        console.log(res.data.length);
+         let temp = [];
+         for(let i = 0; i < res.data.length; i++){
+          temp.push({
+            value: res.data.at(i).id,
+            label: res.data.at(i).naziv,
+          })
+         }
+         setLocations(temp);
+         console.log(locations);
+       })
+       .catch((e) => console.log(e));
+       //console.log(assets)
+   }, []);
 
       const uploadButton = (
         <div>
@@ -150,32 +181,35 @@ const SignUpPage = () => {
         </div>
       );
       const saveFile = ({ file, onSuccess }) => {
-        setTimeout(() => {
-          onSuccess("ok");
-        }, 0);
+       console.log(file);
+        setPhoto(file.name);
       };
 
       
-      
+  
 
       const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-          const user = {
+          const request = {
             firstName,
             lastName,
             username,
             password,
             email,
             phoneNumber,
+            photo,
           };
-          await axios.post('http://localhost:9000/sign-up', user);
-          messageApi.open({
-            type: 'success',
-            content: 'Korisnik uspješno registrovan!',
-          });
-          navigate("/editprofile");
-        } catch (error) {
+          await axios.post('http://localhost:9000/sign-up', request)
+          .then(() => {
+            navigate("/loginpage",
+            {
+              state: {locationId}
+            });
+          })
+          .catch((e) => console.log(e)); 
+        }
+        catch (error) {
           console.log(error);
         }
       };
@@ -224,20 +258,23 @@ const SignUpPage = () => {
                     name="name"
                     >
                   
-                  <StyledInput/>
+                  <StyledInput value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}/>
                   </StyledFormItem>
                   <StyledFormItem
                     label={ <StyledLabel style={{fontSize:"18px"}}>Prezime</StyledLabel> }
                     name="surname"
                     >
                   
-                  <StyledInput/>
+                  <StyledInput value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}/>
                   </StyledFormItem>
                     <StyledFormItem
                     label={ <StyledLabel style={{fontSize:"18px"}}>Email</StyledLabel> }
                     name="email"
                     >
-                      <StyledInput/>
+                      <StyledInput value={email}
+                    onChange={(e) => setEmail(e.target.value)}/>
                     </StyledFormItem>
 
                   </StyledForm>
@@ -257,11 +294,13 @@ const SignUpPage = () => {
                     >
                   
                   <StyledSelect size="large" 
-                    mode="multiple"
                     allowClear
                     style={{
                       width: '100%',
                     }}
+                    options={locations}
+                    defaultValue={locations[0]} 
+                    onChange={selectLocation}
                     >
                   </StyledSelect>
                   </StyledFormItem>
@@ -270,42 +309,36 @@ const SignUpPage = () => {
                     label={ <StyledLabel style={{fontSize:"18px"}}>Broj telefona</StyledLabel> }
                     name="phonenumber"
                     >
-                      <StyledInput/>
+                      <StyledInput value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}/>
                     </StyledFormItem>
                     <StyledFormItem
                     label={ <StyledLabel style={{fontSize:"18px"}}>Korisničko ime</StyledLabel> }
                     name="username"
                     >
-                      <StyledInput/>
+                      <StyledInput value={username}
+                    onChange={(e) => setUsername(e.target.value)}/>
                     </StyledFormItem>
                     <StyledFormItem
                     label={ <StyledLabel style={{fontSize:"18px"}}>Lozinka</StyledLabel> }
                     name="password"
                     >
-                      <StyledInput type="password"/>
+                      <StyledInput type="password" 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}/>
                     </StyledFormItem>
                     
                   
                   </StyledForm>
                 
-                  <StyledForm form={form}
-                    size="large"
-                    labelCol={
-                      { span: 24 }
-                    }
-                    wrapperCol={{ span: 24 }
-                    }>
+                  
+                 
                    
                   
-                  
-                  </StyledForm>
-                  <>
-                   
-                  </>
                 </StyledCol1>
                 
               </Row>
-              <SignUpButton>Registruj se</SignUpButton>
+              <SignUpButton onClick={handleSubmit}>Registruj se</SignUpButton>
             </Cover>
         
         </Page>

@@ -7,6 +7,7 @@ import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const { Content, Sider } = Layout;
 
@@ -127,12 +128,12 @@ export const StyledLabel = styled.div`
 `;
 
 
-const AddPetPage = () => {
+const AddPetPage = (props) => {
   const userState = useLocation();
   const user = userState.state.user;
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  
+  const identificator = props.identificator;
   const [typeId, setTypeId] = useState('');
   const [types, setTypes] = useState([]);
   const [selectedType, setSelectedType] = useState('');
@@ -147,7 +148,7 @@ const AddPetPage = () => {
       console.log(typeId);
     };
 
-    const addPet = async () => {
+    const addPet = async (props) => {
       
 
       let ljubimacRequest = {
@@ -222,9 +223,12 @@ const AddPetPage = () => {
           </div>
         </div>
       );
+
+      
+
       const saveFile = ({ file, onSuccess }) => {
         
-        console.log(file.name);
+        console.log(file);
         setImage(file.name);
       };
     const [form] = Form.useForm();
