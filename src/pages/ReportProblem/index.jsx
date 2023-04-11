@@ -1,9 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
 import MainMenu from '../../components/MainMenu';
-import { Layout, Input, Button } from 'antd';
+import { Layout, Input, Button, Card } from 'antd';
 import { Page } from '../AddPetPage';
 import styled from 'styled-components';
+import pozadina from "../resources/pozadina2.jpg"
+
 
 const { TextArea } = Input;
 
@@ -15,7 +17,9 @@ export const StyledText = styled.p`
 `;
 
 export const Cover = styled.div`
-    background-color:rgba(0, 33, 64, 0.59);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     width: 100%;
     height: 100%;
     position: absolute;
@@ -44,22 +48,35 @@ const ReportProblem = () => {
                     maxHeight: '103vh'
                     }}>
                     <Page>
-                        <Cover>
-                            <StyledText>Opis problema:</StyledText>
-                            <TextArea
-                                showCount
-                                maxLength={500}
-                                style={{
-                                    height: '500px',
-                                    width: '650px',
-                                    resize: 'none',
-                                }}
-                                placeholder="Unesite opis problema"
-                            />
-                            <Button type="primary" style={{
-                                    backgroundColor: 'rgba(0,21,41,255)',
-                                    marginTop: '15px'
-                            }}>Pošalji</Button>
+                        <Cover style={{
+                            maxHeight: '103vh',
+                            backgroundImage: `url(${pozadina})`,
+                            }}>
+                                <Card title="Prijava problema" bordered={false} 
+                                    style={{ 
+                                        boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)',
+                                        justifyContent: 'center',
+                                        width: '750px',
+                                        height: '630px',
+                                        marginTop: '-20px'
+                                    }} >
+                                <TextArea
+                                    showCount
+                                    maxLength={500}
+                                    style={{
+                                        height: '460px',
+                                        width: '650px',
+                                        resize: 'none',
+                                        marginLeft: '3.5%',
+                                    }}
+                                    placeholder="Unesite opis problema"
+                                />
+                                <Button type="primary" style={{
+                                        backgroundColor: 'rgba(0,21,41,255)',
+                                        marginTop: '30px',
+                                        fontSize: '17px',
+                                        marginLeft: '43%'}}>Pošalji</Button>
+                            </Card>
                         </Cover>
                     </Page>
                 </Content>

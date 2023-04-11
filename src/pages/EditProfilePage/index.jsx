@@ -6,6 +6,7 @@ import { Modal, Upload, message, Layout, Row, Col, Card, Image } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import axios from "axios";
+import pozadina from "../resources/pozadina2.jpg"
 
 const { Header, Content, Sider } = Layout;
 
@@ -40,30 +41,14 @@ export const Page = styled.div`
 `;
 
 export const Cover = styled.div`
-  background-color: whitesmoke;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
   height: 100%;
-  justify-content: space-evenly;
-`;
-
-export const EditProfileButton = styled.div`
-  width: 300px;
-  height: 2em;
-  background-color: rgba(0,21,41,255);
-  display: flex;
-  justify-content: center;
   align-items: center;
-  border-radius: 0.25em;
-  cursor: pointer;
-  transition: 0.5s;
-  color: aliceblue;
-  font-size: 1.4em;
-  margin-top:640px;
-  margin-left:780px;
-  &:hover {
-    transform: scale(1.15);
-  }
+  justify-content: space-around;
 `;
-
 
 export const DeactivateButton = styled.div`
   width: 100%;
@@ -245,7 +230,10 @@ const EditProfilePage = () => {
         <MainMenu/>
       </Sider>
       <Content style={{ maxHeight: '103vh' }}>
-        <Cover>
+        <Cover style={{
+                  maxHeight: '103vh',
+                  backgroundImage: `url(${pozadina})`,
+                  }}>
           <Row gutter={16}>
             <Col span={8}>
               <Card title="Profilna slika" bordered={false}

@@ -6,7 +6,7 @@ import userService from "../../services/user.service";
 import { login } from "../../redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { ROLE_ADMIN } from "../../util.js/constants";
+import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER } from "../../util.js/constants";
 
 
 export const Page = styled.div`
@@ -100,7 +100,14 @@ const LoginPage = () => {
              {
                state: {user}
              });
-          else
+          else if(user.role===ROLE_OWNER)
+          {
+            navigate("/editprofileownerpage",
+             {
+               state: {user}
+             });
+          }
+          else if(user.role===ROLE_WALKER)
           {
             navigate("/editprofile",
              {

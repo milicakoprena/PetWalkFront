@@ -4,7 +4,7 @@ import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table } from 'antd';
 import { Descriptions } from 'antd';
-
+import pozadina from "../resources/pozadina2.jpg"
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 
@@ -17,6 +17,7 @@ export const UserIcon = styled.img `
 
 export const StyledTable = styled(Table) `
     width: 70%;
+    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%);
 `;
 
 
@@ -31,7 +32,9 @@ export const Page = styled.div`
 `;
 
 export const Cover = styled.div`
-    background-color:rgba(101,120,139,255);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     width: 100%;
     height: 100%;
     position: absolute;
@@ -106,7 +109,10 @@ for (let i = 0; i < 50; i++) {
                 maxHeight: '103vh'
                 }}>
           <Page>
-            <Cover>
+            <Cover style={{
+                  maxHeight: '103vh',
+                  backgroundImage: `url(${pozadina})`,
+                  }} >
             <StyledTable
                   columns={columns}
                   dataSource={data}

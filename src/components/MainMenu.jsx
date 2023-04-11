@@ -30,7 +30,7 @@ function getItem(label, key, icon, children, type) {
 }
 
 const ownerItems = [
-    getItem('Uredi profil', "/editprofile", <EditOutlined />),
+    getItem('Uredi profil', "/editprofileownerpage", <EditOutlined />),
     getItem('Dodaj ljubimca', "/addpetpage", <PlusCircleOutlined />),
     getItem('Lista čuvara', "/walkerlist", <TeamOutlined />),
     getItem('Izvještaji', "/reportpage", <FormOutlined />),
