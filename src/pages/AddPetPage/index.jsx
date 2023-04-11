@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Select } from "antd";
 import TextArea from "rc-textarea";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Upload, message, Layout } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const { Content, Sider } = Layout;
 
@@ -62,7 +64,7 @@ export const AddPetButton = styled.div`
     transition: 0.5s;
     color: aliceblue;
     font-size: 1.7em;
-    margin-top:-30px;
+    margin-top:-170px;
     &:hover {
         transform: scale(1.15);
     }
@@ -126,20 +128,84 @@ export const StyledLabel = styled.div`
 
 
 const AddPetPage = () => {
-    
+  const userState = useLocation();
+  const user = userState.state.user;
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  
+  const [typeId, setTypeId] = useState('');
+  const [types, setTypes] = useState([]);
+  const [selectedType, setSelectedType] = useState('');
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState();
+    const [image, setImage] = useState('');
+
+    const selectType = (event) => {
+      console.log(event);
+      setTypeId(event);
+      console.log(event);
+      console.log(typeId);
+    };
+
+    const addPet = async () => {
+      
+
+      let ljubimacRequest = {
+        ime: name,
+        opis: description, 
+        slika: image,
+        korisnikId: user.id,
+        vrstaId: typeId,
+      }
+       const response = await fetch('http://localhost:9000/ljubimci', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+         'Authorization': `Bearer ${user.token}`,
+       },
+       body: JSON.stringify(ljubimacRequest),
+       })
+       .catch((e) => console.log(e));
+       //const ljubimac = await response.json();
+       console.log(response);
+       };
+
+    useEffect( () => {
+      axios.get(`http://localhost:9000/vrste`, {
+         headers: {
+             Authorization: `Bearer ${user.token}`,
+         },
+       })
+       .then((res) => {
+        console.log(res.data.length);
+         let temp = [];
+         for(let i = 0; i < res.data.length; i++){
+          temp.push({
+            value: res.data.at(i).id,
+            label: res.data.at(i).naziv,
+          })
+         }
+         setTypes(temp);
+         console.log(types);
+       })
+       .catch((e) => console.log(e));
+       //console.log(assets)
+   }, []);
     
     const handleChange = (info) => {
+      console.log(info);
         if (info.file.status === 'uploading') {
+          console.log("uploading");
           setLoading(true);
           return;
         }
         if (info.file.status === 'done') {
+          console.log("done");
           // Get this url from response in real world.
           getBase64(info.file.originFileObj, (url) => {
             setLoading(false);
             setImageUrl(url);
+            console.log("IMAGE URL:",imageUrl);
           });
         }
       };
@@ -157,9 +223,9 @@ const AddPetPage = () => {
         </div>
       );
       const saveFile = ({ file, onSuccess }) => {
-        setTimeout(() => {
-          onSuccess("ok");
-        }, 0);
+        
+        console.log(file.name);
+        setImage(file.name);
       };
     const [form] = Form.useForm();
     const [collapsed, setCollapsed] = useState(false);
@@ -185,6 +251,7 @@ const AddPetPage = () => {
                   wrapperCol={{ span: 24 }
                   }
                   >
+                  <StyledFormItem>
                   <StyledUpload>
                   <Upload
               name="avatar"
@@ -194,7 +261,7 @@ const AddPetPage = () => {
               showUploadList={false}
               action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               beforeUpload={beforeUpload}
-              onChange={handleChange}
+              onSelect={handleChange}
               
             >
               {imageUrl ? (
@@ -208,41 +275,42 @@ const AddPetPage = () => {
               )}
             </Upload>
                   </StyledUpload>
+                  </StyledFormItem>
                   <StyledFormItem
                     label={ <StyledLabel style={{fontSize:"18px"}}>Ime</StyledLabel> }
                     name="name"
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
-                  <StyledInput/>
+                  <StyledInput value={name}
+                  onChange={(e) => setName(e.target.value)}/>
                   </StyledFormItem>
                   <StyledFormItem
                     name="description"
                     label={ <StyledLabel style={{fontSize:"18px"}}>Opis</StyledLabel> }
                     >
-                  <StyledTextArea/>
+                  <StyledTextArea value={description}
+                  onChange={(e) => setDescription(e.target.value)}/>
                   </StyledFormItem>
+                  
                   <StyledFormItem
-                    name="location"
-                    label={ <StyledLabel style={{fontSize:"18px"}}>Lokacija</StyledLabel> }
+                    name="type"
+                    label={ <StyledLabel style={{fontSize:"18px"}}>Vrsta ljubimca</StyledLabel> }
                     rules={[{ required: true, message: "Polje je obavezno!"}]}
                     >
                   
-                  <StyledSelect size="large">
-                     <Option value="mejdan">Mejdan</Option>
-                     <Option value="borik">Borik</Option>
-                  </StyledSelect>
-                  </StyledFormItem>
-                  <StyledFormItem
-                    name="note"
-                    label={ <StyledLabel style={{fontSize:"18px"}}>Napomena</StyledLabel> }
+                  <StyledSelect size="large"
+                    options={types}
+                    defaultValue={types[0]} 
+                    onChange={selectType}
                     >
-                  <StyledTextArea/>
+                     
+                  </StyledSelect>
                   </StyledFormItem>
                   
              
                 </StyledForm>
-                <AddPetButton>Dodaj ljubimca</AddPetButton>
+                <AddPetButton onClick={addPet}>Dodaj ljubimca</AddPetButton>
             </Cover>
         </Page>
         </Content>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Layout, Button, Rate, Input } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
@@ -7,6 +7,9 @@ import { Descriptions } from 'antd';
 import { UserOutlined, FilterOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import { LocationOptions, UslugaOptions } from "../EditProfilePage";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
+import { ROLE_WALKER, STATUS_ACTIVE } from '../../util.js/constants';
 
 const { Content, Sider } = Layout;
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
@@ -27,6 +30,7 @@ export const WalkerIcon = styled.img `
 
 export const StyledTable = styled(Table) `
     width: 100%;
+    height: 95%;
 `;
 
 
@@ -71,68 +75,85 @@ export const AddReviewButton = styled.div`
 `;
 
 const WalkerListPage = () => {
+  const userState = useLocation();
+  const user = userState.state.user;
+  const [walkers, setWalkers] = useState([]);
+  const [selectedWalker, setSelectedWalker] = useState('');
+  
   const columns = [
     {
-        title: '',
-        dataIndex: 'imageURL',
-        width: '5%',
-        render: theImageURL => <WalkerIcon alt={theImageURL} src={theImageURL} ></WalkerIcon>
-    },
-    {
       title: 'Ime',
-      dataIndex: 'firstname',
+      dataIndex: 'firstName',
       width: '20%',
     },
     {
         title: 'Prezime',
-        dataIndex: 'lastname',
+        dataIndex: 'lastName',
         width: '20%',
       },
-    {
-      title: 'Lokacija',
-      dataIndex: 'location',
-      width: '20%',
-    },
-    {
-      title: 'Cijena',
-      dataIndex: 'price',
-    },
+      {
+        title: 'Broj telefona',
+        dataIndex: 'phoneNumber',
+      },
+   //{
+   //  title: 'Lokacija',
+   //  dataIndex: 'location',
+   //  width: '20%',
+   //},
+    //{
+    //  title: 'Cijena',
+    //  dataIndex: 'price',
+    //},
     {
         title: '',
         dataIndex: 'action',
         render: (_, record) => (
             <Space size="middle">
-              <a onClick={() => showModal(record)}>Prikaži</a>
+              <a onClick={() => 
+                {
+                  setSelectedWalker(record);
+                  console.log(selectedWalker);
+                  showModal();
+                }
+              }>Prikaži</a>
             </Space>
           ),
       },
   ];
-  const data = [];
-  for (let i = 0; i < 50; i++) {
-    data.push({
-      imageURL: require('../resources/owner.png'),
-      key: i,
-      firstname: `Marko ${i}`,
-      lastname: `Marković ${i}`,
-      location: 'Centar',
-      price: '6KM/h',
-      username: `blablabla. ${i}`,
-    });
-  }
+  
+
+  useEffect( () => {
+    axios.get(`http://localhost:9000/korisnici`, {
+       headers: {
+           Authorization: `Bearer ${user.token}`,
+       },
+     })
+     .then((res) => {
+       let temp = [];
+       for(let i = 0; i < res.data.length; i++)
+       {
+         if(res.data.at(i).role === ROLE_WALKER && res.data.at(i).status === STATUS_ACTIVE)
+           temp.push(res.data.at(i));
+       }
+          
+       setWalkers(temp);
+     })
+     .catch((e) => console.log(e));
+ }, []);
+ 
 
   
-  const showModal = (walker) => {
-    setSelectedWalker(walker);
+  const showModal = () => {
     setIsModalOpen(true);
   };
-  const showModal1 = (walker) => {
-    setSelectedWalker(walker);
+  const showModal1 = () => {
     setIsModalOpen1(true);
   };
   const showModal2 = () => {
     setIsModalOpen2(true);
   };
   const handleOk = () => {
+    console.log("OK",selectedWalker);
     setIsModalOpen(false);
   };
   const handleCancel = () => {
@@ -153,7 +174,6 @@ const WalkerListPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
-  const [selectedWalker, setSelectedWalker] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [value, setValue] = useState(3);
     return (
@@ -170,7 +190,7 @@ const WalkerListPage = () => {
             <Cover>
             <StyledTable
                   columns={columns}
-                  dataSource={data}
+                  dataSource={walkers}
                   pageSize={7}
                   pagination={{
                     pageSize: 20,
@@ -189,11 +209,9 @@ const WalkerListPage = () => {
                <Descriptions.Item>
                  <Avatar size={130} icon={<UserOutlined />} />
                </Descriptions.Item>
-               <Descriptions.Item label="Ime i prezime">Marko Marković</Descriptions.Item>
-               <Descriptions.Item label="Lokacija">Centar</Descriptions.Item>
-               <Descriptions.Item label="Broj telefona">065/123-456</Descriptions.Item>
-               <Descriptions.Item label="Opis">blablababalbalablablablalabal</Descriptions.Item>
-               <Descriptions.Item label="Cijena">6KM/h</Descriptions.Item>
+               <Descriptions.Item label="Ime i prezime">{selectedWalker.firstName} {selectedWalker.lastName}</Descriptions.Item>
+               <Descriptions.Item label="Broj telefona">{selectedWalker.phoneNumber}</Descriptions.Item>
+
              </Descriptions>
              <Button type="link" onClick={showModal1} >
                 Dodaj recenziju 

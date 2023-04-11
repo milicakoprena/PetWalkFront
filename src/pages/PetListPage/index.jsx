@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Layout } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
@@ -7,6 +7,8 @@ import { Descriptions, Button, Input } from 'antd';
 import { UserOutlined, FilterOutlined } from '@ant-design/icons';
 import { Avatar, DatePicker } from 'antd';
 import { LocationOptions, UslugaOptions } from "../EditProfilePage";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const { TextArea } = Input;
 
@@ -31,6 +33,7 @@ export const PetIcon = styled.img `
 
 export const StyledTable = styled(Table) `
     width: 100%;
+    height: 95%;
 `;
 
 
@@ -90,54 +93,64 @@ export const Icon = styled.img`
 
 
 const PetListPage = () => {
-  const [modaldata, setmodaldata] = useState([]);
+  const userState = useLocation();
+  const user = userState.state.user;
+  const [pets, setPets] = useState([]);
+  const [selectedPet, setSelectedPet] = useState('');
   
   const columns = [
   {
-      title: '',
-      dataIndex: 'imageURL',
-      width: '5%',
-      render: theImageURL => <PetIcon alt={theImageURL} src={theImageURL} ></PetIcon>
-  },
-  {
     title: 'Ime',
-    dataIndex: 'name',
+    dataIndex: 'ime',
     width: '20%',
   },
-  {
-    title: 'Lokacija',
-    dataIndex: 'location',
-    width: '20%',
-  },
-  {
-    title: 'Ime vlasnika',
-    dataIndex: 'username',
-  },
+  //{
+  //  title: 'Lokacija',
+  //  dataIndex: 'location',
+  //  width: '20%',
+  //},
+  //{
+  //  title: 'Ime vlasnika',
+  //  dataIndex: 'username',
+  //},
   {
       title: '',
       dataIndex: 'action',
       render: (_, record) => (
           <Space size="middle">
-            <a onClick={() => showModal(record)}>Prikaži</a>
+            <a onClick={() => 
+            {
+                  setSelectedPet(record);
+                  console.log(selectedPet);
+                  showModal();
+            }}>Prikaži</a>
           </Space>
         ),
     },
 ];
-const data = [];
-for (let i = 0; i < 50; i++) {
-  data.push({
-    imageURL: require('../resources/track.png'),
-    key: i,
-    name: `Tedi ${i}`,
-    location: 'Centar',
-    username: `blablabla. ${i}`,
-  });
-}
+
+useEffect( () => {
+  axios.get(`http://localhost:9000/ljubimci`, {
+     headers: {
+         Authorization: `Bearer ${user.token}`,
+     },
+   })
+   .then((res) => {
+     let temp = [];
+     for(let i = 0; i < res.data.length; i++)
+     {
+         temp.push(res.data.at(i));
+     }
+    console.log(res.data.length);
+    setPets(temp);
+    console.log("pets:",pets);
+   })
+   .catch((e) => console.log(e));
+}, []);
 
   
   
-  const showModal = (record) => {
-    setmodaldata(record);
+  const showModal = () => {
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -146,8 +159,7 @@ for (let i = 0; i < 50; i++) {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const showModal1 = (walker) => {
-    setmodaldata(walker);
+  const showModal1 = () => {
     setIsModalOpen1(true);
   };
   const showModal2 = () => {
@@ -186,7 +198,7 @@ for (let i = 0; i < 50; i++) {
             <Cover>
             <StyledTable
                   columns={columns}
-                  dataSource={data}
+                  dataSource={pets}
                   pageSize={7}
                   pagination={{
                     pageSize: 20,
@@ -214,15 +226,10 @@ for (let i = 0; i < 50; i++) {
              >
              <Descriptions title="" size="default" column={2}>
                <Descriptions.Item>
-                 <Avatar size={130} icon={<UserOutlined />} src={require('../resources/cute-dog-headshot.jpg')}/>
+                 <Avatar size={130} icon={<UserOutlined />} src={selectedPet.slika}/>
                </Descriptions.Item>
-               <Descriptions.Item label="Ime">{modaldata.name}</Descriptions.Item>
-               <Descriptions.Item label="Ime vlasnika">{modaldata.username}</Descriptions.Item>
-               <Descriptions.Item label="Lokacija">{modaldata.location}</Descriptions.Item>
-               <Descriptions.Item label="Opis">blablababalbalablablablalabal</Descriptions.Item>
-               <Descriptions.Item label="Napomena">
-                blablabalbalbalablabalbalbalablabalaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-               </Descriptions.Item>
+               <Descriptions.Item label="Ime">{selectedPet.ime}</Descriptions.Item>
+               <Descriptions.Item label="Opis">{selectedPet.opis}</Descriptions.Item>
              </Descriptions>
              <Modal title="Dodaj izvještaj" open={isModalOpen1} onOk={handleOk1} onCancel={handleCancel1} okText="Dodaj"
                     cancelText="Otkaži">
