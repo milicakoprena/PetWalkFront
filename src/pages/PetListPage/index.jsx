@@ -97,6 +97,7 @@ const PetListPage = () => {
   const user = userState.state.user;
   const [pets, setPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState('');
+  const [type, setType] = useState('');
   
   const columns = [
   {
@@ -113,6 +114,11 @@ const PetListPage = () => {
   //  title: 'Ime vlasnika',
   //  dataIndex: 'username',
   //},
+  {
+    title: 'Vrsta',
+    dataIndex: 'vrsta',
+    width: '20%',
+  },
   {
       title: '',
       dataIndex: 'action',
@@ -137,9 +143,29 @@ useEffect( () => {
    })
    .then((res) => {
      let temp = [];
+     
      for(let i = 0; i < res.data.length; i++)
      {
-         temp.push(res.data.at(i));
+         let userId = res.data.at(i).korisnikId;
+         let id = res.data.at(i).vrstaId;
+         axios.get(`http://localhost:9000/vrste/${id}`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+         })
+         .then((res) => {
+          console.log(id)
+            console.log(res.data);
+            setType(res.data.naziv);
+            console.log("type",type);
+         })
+         .catch((e) => console.log(e));
+         console.log("type",type);
+         temp.push({
+          ime: res.data.at(i).ime,
+          vrsta: type,
+         })
+         console.log("TEMP",temp);
      }
     console.log(res.data.length);
     setPets(temp);

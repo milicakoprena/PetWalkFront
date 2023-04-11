@@ -80,7 +80,7 @@ export const StyledInput = styled(Input)`
 
 const LoginPage = () => {
     const locationIdState = useLocation();
-    const locationId = locationIdState.state.locationId;
+    const [locationId, setLocationId] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [messageApi, contextHolder] = message.useMessage();
@@ -143,6 +143,13 @@ const LoginPage = () => {
           });
         }
       };
+
+
+      useEffect(()=>{
+        console.log(locationIdState);
+        if(locationIdState.state)
+      	setLocationId(locationIdState.state.locationId);
+      })
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const { loading } = useSelector((state) => state.users);
