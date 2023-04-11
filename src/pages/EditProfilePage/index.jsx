@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Form, Input, Select, Space, Button, InputNumber, Cascader } from "antd";
+import { Form, Input, Select, Space, Button } from "antd";
 import TextArea from "rc-textarea";
-import { PlusOutlined, LoadingOutlined, UploadOutlined } from '@ant-design/icons';
-import { Modal, Upload, message, Layout, Row, Col, Card, Image } from 'antd';
+import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Modal, Upload, message, Layout, Row, Col, Card } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
-import axios from "axios";
+//import axios from "axios";
 import pozadina from "../resources/pozadina2.jpg"
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -27,8 +27,6 @@ const beforeUpload = (file) => {
   }
   return isJpgOrPng && isLt2M;
 };
-
-const Option = Select.Option;
 
 export const Page = styled.div`
   height: 100%;

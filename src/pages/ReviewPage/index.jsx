@@ -1,159 +1,146 @@
 import React, { useState } from "react";
-import { Modal, Layout, Rate } from 'antd';
-
+import { Modal, Layout, Rate, Descriptions, Space, Table, Avatar } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
-import { Space, Table } from 'antd';
-import { Descriptions } from 'antd';
-
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar } from 'antd';
 import pozadina from "../resources/pozadina2.jpg"
 
 const { Content, Sider } = Layout;
+
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
 
 export const UserIcon = styled.img `
-    heigth: 40px;
-    width: 40px;
+  heigth: 40px;
+  width: 40px;
 `;
 
 export const StyledTable = styled(Table) `
-    width: 70%;
-    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%);
+  width: 70%;
+  box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%);
 `;
 
-
 export const Page = styled.div`
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 `;
 
 export const Cover = styled.div`
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 `;
-
-
-
 
 const ReviewPage = () => {
   const showModal = (review) => {
     setSelectedReview(review);
     setIsModalOpen(true);
   };
+
   const handleOk = () => {
     setIsModalOpen(false);
   };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
    
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedReview, setSelectedReview] = useState(null);
+  const [selectedReview, setSelectedReview] = useState(null);
     
-const columns = [
-  {
+  const columns = [
+    {
       title: '',
       dataIndex: 'imageURL',
       width: '10%',
       render: theImageURL => <UserIcon alt={theImageURL} src={theImageURL} ></UserIcon>
-  },
-  {
-    title: 'Recenziju napisao:',
-    dataIndex: 'username',
-    width: '20%',
-  },
-  {
+    },
+    {
+      title: 'Recenziju napisao:',
+      dataIndex: 'username',
+      width: '20%',
+    },
+    {
       title: '',
       dataIndex: 'action',
       render: (_, record) => (
-          <Space size="middle">
-            <a onClick={() => showModal(record)}>Prikaži</a>
-          </Space>
-        ),
+        <Space size="middle">
+          <a onClick={() => showModal(record)}>Prikaži</a>
+        </Space>
+      ),
     },
-];
-const data = [];
-for (let i = 0; i < 50; i++) {
-  data.push({
-    key: i,
-    imageURL: require('../resources/owner.png'),
-    username: `Marko ${i}`,
-  });
-}
+  ];
 
-    
-    const [collapsed, setCollapsed] = useState(false);
-    const [value, setValue] = useState(3);
-    return (
-      <Layout hasSider>
-        <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
-                maxHeight: '103vh'
-                }}>
-          <MainMenu></MainMenu>
-        </Sider>
-          <Content style={{
-                maxHeight: '103vh'
-                }}>
-          <Page>
-            <Cover style={{
-                  maxHeight: '103vh',
-                  backgroundImage: `url(${pozadina})`,
-                  }} >
+  const data = [];
+
+  for (let i = 0; i < 50; i++) {
+    data.push({
+      key: i,
+      imageURL: require('../resources/owner.png'),
+      username: `Marko ${i}`,
+    });
+  }
+
+  const [collapsed, setCollapsed] = useState(false);
+  const [value, setValue] = useState(3);
+  return (
+    <Layout hasSider>
+      <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
+        style={{
+          maxHeight: '103vh'
+        }}>
+        <MainMenu/>
+      </Sider>
+      <Content style={{ maxHeight: '103vh' }}>
+        <Page>
+          <Cover style={{
+            maxHeight: '103vh',
+            backgroundImage: `url(${pozadina})`,
+          }} >
             <StyledTable
-                  columns={columns}
-                  dataSource={data}
-                  pageSize={7}
-                  pagination={{
-                    pageSize: 20,
-                  }}
-                  scroll={{
-                    y: 500,
-                  }}
-             />
-             <Modal title="Recenzija" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={530} 
-             okText="OK"
-             cancelText="Otkaži"
-             >
-             <Descriptions title="" size="default" column={2} >
-               <Descriptions.Item>
-                 <Avatar size={130} icon={<UserOutlined />}/>
-               </Descriptions.Item>
-               <Descriptions.Item label="Ime vlasnika">Marko</Descriptions.Item>
-               <span style={{
-              
-            }}>
-              <Rate tooltips={desc} onChange={setValue} value={value} />
-                 {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
-             </span>
+              columns={columns}
+              dataSource={data}
+              pageSize={7}
+              pagination={{
+                pageSize: 20,
+              }}
+              scroll={{
+                y: 500,
+              }}/>
 
-               <Descriptions.Item label="Tekst">
-                blablabalbalbalablabalbalbalablabalblalablbalbalbalbalbalbzudhwfvkuzdfvlwzfvxčifvw
-               </Descriptions.Item>
-                
-                
-                
-             </Descriptions>
+            <Modal title="Recenzija" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={530} 
+              okText="OK"
+              cancelText="Otkaži"
+            >
+              <Descriptions title="" size="default" column={2} >
+                <Descriptions.Item>
+                  <Avatar size={130} icon={<UserOutlined />}/>
+                </Descriptions.Item>
+                <Descriptions.Item label="Ime vlasnika">Marko</Descriptions.Item>
+                <span style={{ }}>
+                  <Rate tooltips={desc} onChange={setValue} value={value} />
+                    {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
+                </span>
+                <Descriptions.Item label="Tekst">
+                  blablabalbalbalablabalbalbalablabalblalablbalbalbalbalbalbzudhwfvkuzdfvlwzfvxčifvw
+                </Descriptions.Item>
+              </Descriptions>
             </Modal>
-            </Cover>
-          </Page>
-                
-        </Content>
-        </Layout>
-    );
+          </Cover>
+        </Page>    
+      </Content>
+    </Layout>
+  );
 };
 
 export default ReviewPage;
