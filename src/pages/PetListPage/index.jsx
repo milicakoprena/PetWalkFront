@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Modal, Layout } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
@@ -97,23 +97,25 @@ const PetListPage = () => {
   const user = userState.state.user;
   const [pets, setPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState('');
-  const [type, setType] = useState('');
-  
+  var [types, setTypes] = useState([]);
+  var [users, setUsers] = useState([]);
+  var [locations, setLocations] = useState([]);
+  var [places, setPlaces] = useState([]);
   const columns = [
   {
     title: 'Ime',
     dataIndex: 'ime',
     width: '20%',
   },
-  //{
-  //  title: 'Lokacija',
-  //  dataIndex: 'location',
-  //  width: '20%',
-  //},
-  //{
-  //  title: 'Ime vlasnika',
-  //  dataIndex: 'username',
-  //},
+  {
+    title: 'Lokacija',
+    dataIndex: 'lokacija',
+    width: '20%',
+  },
+  {
+    title: 'Ime vlasnika',
+    dataIndex: 'imevlasnika',
+  },
   {
     title: 'Vrsta',
     dataIndex: 'vrsta',
@@ -135,44 +137,88 @@ const PetListPage = () => {
     },
 ];
 
+
+
+
 useEffect( () => {
+  axios.get(`http://localhost:9000/korisnici`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+    console.log("users",res.data);
+    setUsers(res.data);
+   })
+   .catch((e) => console.log(e));
+
+   axios.get(`http://localhost:9000/lokacije`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+    console.log("locations",res.data);
+    setLocations(res.data);
+   })
+   .catch((e) => console.log(e));
+
+   axios.get(`http://localhost:9000/mjesta`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+    console.log("places",res.data);
+    setPlaces(res.data);
+   })
+   .catch((e) => console.log(e));
+
+  axios.get(`http://localhost:9000/vrste`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+    console.log("res",res.data);
+    setTypes(res.data);
+   })
+   .catch((e) => console.log(e));
+
   axios.get(`http://localhost:9000/ljubimci`, {
      headers: {
          Authorization: `Bearer ${user.token}`,
      },
    })
    .then((res) => {
-     let temp = [];
-     
+     let tempArray = [];
+     let tempPet = '';
      for(let i = 0; i < res.data.length; i++)
      {
          let userId = res.data.at(i).korisnikId;
-         let id = res.data.at(i).vrstaId;
-         axios.get(`http://localhost:9000/vrste/${id}`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-         })
-         .then((res) => {
-          console.log(id)
-            console.log(res.data);
-            setType(res.data.naziv);
-            console.log("type",type);
-         })
-         .catch((e) => console.log(e));
-         console.log("type",type);
-         temp.push({
+         let typeId = res.data.at(i).vrstaId;
+
+         let placeId = locations.find(element => element.korisnikId === userId).mjestoId;
+         
+         tempPet = {
           ime: res.data.at(i).ime,
-          vrsta: type,
-         })
-         console.log("TEMP",temp);
+          opis: res.data.at(i).opis,
+          imevlasnika: users.find(element => element.id === userId).firstName + " " + 
+           users.find(element => element.id === userId).lastName,
+          vrsta: types.find(element => element.id === typeId).naziv,
+          telefon: users.find(element => element.id === userId).phoneNumber,
+          lokacija: places.find(element => element.id === placeId).naziv,
+         }
+         
+         tempArray.push(tempPet);
+         console.log("TEMP",tempPet);
      }
     console.log(res.data.length);
-    setPets(temp);
+    setPets(tempArray);
     console.log("pets:",pets);
    })
    .catch((e) => console.log(e));
-}, []);
+}, [pets, types]);
 
   
   
@@ -233,7 +279,7 @@ useEffect( () => {
                     y: 600,
                   }}
              />
-             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={650}
+             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={350}
              footer={[
               <Button key="back" onClick={handleCancel}>
                 Otkaži
@@ -250,12 +296,16 @@ useEffect( () => {
               </Button>,
             ]}
              >
-             <Descriptions title="" size="default" column={2}>
+             <Descriptions title="" size="default" column={1}>
                <Descriptions.Item>
                  <Avatar size={130} icon={<UserOutlined />} src={selectedPet.slika}/>
                </Descriptions.Item>
                <Descriptions.Item label="Ime">{selectedPet.ime}</Descriptions.Item>
+               <Descriptions.Item label="Vrsta">{selectedPet.vrsta}</Descriptions.Item>
+               <Descriptions.Item label="Ime vlasnika">{selectedPet.imevlasnika}</Descriptions.Item>
                <Descriptions.Item label="Opis">{selectedPet.opis}</Descriptions.Item>
+               <Descriptions.Item label="Lokacija">{selectedPet.lokacija}</Descriptions.Item>
+               <Descriptions.Item label="Broj telefona">{selectedPet.telefon}</Descriptions.Item>
              </Descriptions>
              <Modal title="Dodaj izvještaj" open={isModalOpen1} onOk={handleOk1} onCancel={handleCancel1} okText="Dodaj"
                     cancelText="Otkaži">
