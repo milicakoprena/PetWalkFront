@@ -85,6 +85,9 @@ const WalkerListPage = () => {
   const [korisnikOdId,setKorisnikOdId]=useState(user.od_id);
   const [korisnikZaId,setKorisnikZaId]=useState(user.za_id);
 
+  const [locationId, setLocationId] = useState('');
+  const [locations, setLocations] = useState('');
+   
   
   const columns = [
     {
@@ -202,6 +205,7 @@ const WalkerListPage = () => {
       console.log(error);
     }
   };
+   
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
