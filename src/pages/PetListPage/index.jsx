@@ -101,6 +101,9 @@ const PetListPage = () => {
   var [users, setUsers] = useState([]);
   var [locations, setLocations] = useState([]);
   var [places, setPlaces] = useState([]);
+  var [placesFilter, setPlacesFilter] = useState([]);
+  var [typesFilter, setTypesFilter] = useState([]);
+  var [typeFilterName, setTypeFilterName] = useState('');
   const columns = [
   {
     title: 'Ime',
@@ -129,7 +132,6 @@ const PetListPage = () => {
             <a onClick={() => 
             {
                   setSelectedPet(record);
-                  console.log(selectedPet);
                   showModal();
             }}>Prikaži</a>
           </Space>
@@ -147,7 +149,6 @@ useEffect( () => {
     },
    })
    .then((res) => {
-    console.log("users",res.data);
     setUsers(res.data);
    })
    .catch((e) => console.log(e));
@@ -158,7 +159,6 @@ useEffect( () => {
     },
    })
    .then((res) => {
-    console.log("locations",res.data);
     setLocations(res.data);
    })
    .catch((e) => console.log(e));
@@ -169,7 +169,14 @@ useEffect( () => {
     },
    })
    .then((res) => {
-    console.log("places",res.data);
+    let temp = [];
+    for(let i = 0; i < res.data.length; i++){
+      temp.push({
+        value: res.data.at(i).id,
+        label: res.data.at(i).naziv,
+      })
+    }
+    setPlacesFilter(temp);
     setPlaces(res.data);
    })
    .catch((e) => console.log(e));
@@ -180,7 +187,14 @@ useEffect( () => {
     },
    })
    .then((res) => {
-    console.log("res",res.data);
+    let temp = [];
+    for(let i = 0; i < res.data.length; i++){
+      temp.push({
+        value: res.data.at(i).naziv,
+        label: res.data.at(i).naziv,
+      })
+    }
+    setTypesFilter(temp);
     setTypes(res.data);
    })
    .catch((e) => console.log(e));
@@ -211,11 +225,8 @@ useEffect( () => {
          }
          
          tempArray.push(tempPet);
-         console.log("TEMP",tempPet);
      }
-    console.log(res.data.length);
     setPets(tempArray);
-    console.log("pets:",pets);
    })
    .catch((e) => console.log(e));
 }, [pets, types]);
@@ -243,9 +254,6 @@ useEffect( () => {
   const handleCancel1 = () => {
     setIsModalOpen1(false);
   }
-  const handleOk2 = () => {
-    setIsModalOpen2(false);
-  };
   const handleCancel2 = () => {
     setIsModalOpen2(false);
   };
@@ -254,6 +262,28 @@ useEffect( () => {
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
+
+  const selectType = (event) => {
+    console.log("1:",event);
+    setTypeFilterName(typesFilter.at(event).label);
+    console.log(event);
+  };
+
+  const filterByType = () => {
+    console.log("Aaaaaaaa", user.token);
+    console.log(typeFilterName);
+    let naziv = typeFilterName;
+    axios.get(`http://localhost:9000/ljubimci/vrsteLjubimaca/${naziv}`, naziv, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+    setPets(res.data);
+   })
+   .catch((e) => console.log(e));
+
+  };
 
     return (
       <Layout hasSider>
@@ -323,10 +353,9 @@ useEffect( () => {
               </Modal>
             </Modal>
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 11 }} onClick={showModal2} />
-            <Modal title="Filtriranje" open={isModalOpen2} onOk={handleOk2} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
+            <Modal title="Filtriranje" open={isModalOpen2} onOk={filterByType} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
                 <Select size="middle" 
                     placeholder="Izaberite lokacije"
-                    mode="multiple"
                     allowClear
                     style={{
                       width: '100%',
@@ -334,16 +363,16 @@ useEffect( () => {
                       marginTop: '3%'
                     }}
                     onChange={handleChange1}
-                    options={LocationOptions}/>
+                    options={placesFilter}/>
                 <Select size="middle" 
                     placeholder="Izaberite vrste"
-                    mode="multiple"
                     allowClear
                     style={{
                       width: '100%',
                     }}
-                    onChange={handleChange1}
-                    options={UslugaOptions}/>
+                    options={typesFilter}
+                    defaultValue={typesFilter[0]} 
+                    onChange={selectType}/>
             </Modal>
             </Cover>
           </Page>
