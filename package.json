@@ -8,8 +8,12 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.3.1",
+<<<<<<< HEAD
     "axios": "^1.3.4",
     "buffer": "^6.0.3",
+=======
+    "axios": "^1.3.5",
+>>>>>>> 1002e8c (WalkerList-RecenzijaPost)
     "cors": "^2.8.5",
     "jimp": "^0.22.7",
     "js-cookie": "^3.0.1",
