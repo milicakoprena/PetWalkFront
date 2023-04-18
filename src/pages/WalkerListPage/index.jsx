@@ -79,6 +79,12 @@ const WalkerListPage = () => {
   const user = userState.state.user;
   const [walkers, setWalkers] = useState([]);
   const [selectedWalker, setSelectedWalker] = useState('');
+
+  const [komentar,setKomentar]=useState('');
+  const [ocjena,setOcjena]=useState('');
+  const [korisnikOdId,setKorisnikOdId]=useState(user.od_id);
+  const [korisnikZaId,setKorisnikZaId]=useState(user.za_id);
+
   
   const columns = [
     {
@@ -176,6 +182,26 @@ const WalkerListPage = () => {
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [value, setValue] = useState(3);
+
+  const postRecenzija = async (event) => {
+    event.preventDefault();
+    try {
+      const request = {
+        komentar,
+        ocjena,
+        korisnikOdId,
+        korisnikZaId
+      };
+      await axios.post('http://localhost:9000/recenzije', request)
+      .then(() => {
+        
+      })
+      .catch((e) => console.log(e)); 
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
@@ -216,7 +242,7 @@ const WalkerListPage = () => {
              <Button type="link" onClick={showModal1} >
                 Dodaj recenziju 
               </Button>
-              <Modal title="Dodaj recenziju" open={isModalOpen1} onOk={handleOk1} onCancel={handleCancel1} okText="Dodaj"
+              <Modal title="Dodaj recenziju" open={isModalOpen1} onOk={postRecenzija} onCancel={handleCancel1} okText="Dodaj"
                     cancelText="Otkaži">
                      
                 
@@ -227,11 +253,13 @@ const WalkerListPage = () => {
                     height: 120,
                     resize: 'none',
                   }}
-                  onChange={onChange}
+                  //onChange={onChange}
                   placeholder="Unesite komentar (opciono)"
+                  value={komentar}
+                  onChange={(e) => setKomentar(e.target.value)}
                 />
                 <span>
-               <Rate tooltips={desc} onChange={setValue} value={value} />
+               <Rate tooltips={desc} onChange={(e) => setOcjena(e.target.value)} value={ocjena} />
                  {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
              </span>
               </Modal>
