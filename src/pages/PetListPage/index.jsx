@@ -93,9 +93,11 @@ export const Icon = styled.img`
 
 
 const PetListPage = () => {
+  const [isCalled, setIsCalled] = useState(true);
   const userState = useLocation();
   const user = userState.state.user;
   const [pets, setPets] = useState([]);
+  const [petsTemp, setPetsTemp] = useState([]);
   const [selectedPet, setSelectedPet] = useState('');
   var [types, setTypes] = useState([]);
   var [users, setUsers] = useState([]);
@@ -139,10 +141,38 @@ const PetListPage = () => {
     },
 ];
 
+const filterByType = () => {
+  setIsCalled(false);
+  console.log(isCalled);
+  console.log("vrsta:",typeFilterName);
+  axios.get(`http://localhost:9000/ljubimci/vrsteLjubimaca/${typeFilterName}`, {
+  headers: {
+    Authorization: `Bearer ${user.token}`,
+  },
+ })
+ .then((res) => {
+  console.log(res.data);
+  let temp = [];
+  for(let i = 0; i < petsTemp.length; i++){
+    for(let j = 0; j < res.data.length; j++){
+      if(petsTemp.at(i).id === res.data.at(j).id)
+      {
+        console.log(petsTemp.at(i));
+        temp.push(petsTemp.at(i));
+      }
+    }
+  }
 
+  console.log(temp);
+  setPets(temp);
+ })
+ .catch((e) => console.log(e));
+
+};
 
 
 useEffect( () => {
+  
   axios.get(`http://localhost:9000/korisnici`, {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -205,31 +235,36 @@ useEffect( () => {
      },
    })
    .then((res) => {
-     let tempArray = [];
-     let tempPet = '';
-     for(let i = 0; i < res.data.length; i++)
-     {
-         let userId = res.data.at(i).korisnikId;
-         let typeId = res.data.at(i).vrstaId;
-
-         let placeId = locations.find(element => element.korisnikId === userId).mjestoId;
-         
-         tempPet = {
-          ime: res.data.at(i).ime,
-          opis: res.data.at(i).opis,
-          imevlasnika: users.find(element => element.id === userId).firstName + " " + 
-           users.find(element => element.id === userId).lastName,
-          vrsta: types.find(element => element.id === typeId).naziv,
-          telefon: users.find(element => element.id === userId).phoneNumber,
-          lokacija: places.find(element => element.id === placeId).naziv,
-         }
-         
-         tempArray.push(tempPet);
-     }
-    setPets(tempArray);
+    if(isCalled || typeFilterName===undefined){
+      let tempArray = [];
+      let tempPet = '';
+      for(let i = 0; i < res.data.length; i++)
+      {
+          let userId = res.data.at(i).korisnikId;
+          let typeId = res.data.at(i).vrstaId;
+ 
+          let placeId = locations.find(element => element.korisnikId === userId).mjestoId;
+          
+          tempPet = {
+           id: res.data.at(i).id,
+           ime: res.data.at(i).ime,
+           opis: res.data.at(i).opis,
+           imevlasnika: users.find(element => element.id === userId).firstName + " " + 
+            users.find(element => element.id === userId).lastName,
+           vrsta: types.find(element => element.id === typeId).naziv,
+           telefon: users.find(element => element.id === userId).phoneNumber,
+           lokacija: places.find(element => element.id === placeId).naziv,
+          }
+          
+          tempArray.push(tempPet);
+      }
+     setPets(tempArray);
+     setPetsTemp(pets);
+    } 
+     
    })
    .catch((e) => console.log(e));
-}, [pets, types]);
+}, [ pets, types, isCalled]);
 
   
   
@@ -264,26 +299,13 @@ useEffect( () => {
   const [isModalOpen1, setIsModalOpen1] = useState(false);
 
   const selectType = (event) => {
-    console.log("1:",event);
-    setTypeFilterName(typesFilter.at(event).label);
-    console.log(event);
+    console.log("1",event);
+    setTypeFilterName(event);
+    console.log("2",event);
+    console.log("3",typeFilterName);
   };
 
-  const filterByType = () => {
-    console.log("Aaaaaaaa", user.token);
-    console.log(typeFilterName);
-    let naziv = typeFilterName;
-    axios.get(`http://localhost:9000/ljubimci/vrsteLjubimaca/${naziv}`, naziv, {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-   })
-   .then((res) => {
-    setPets(res.data);
-   })
-   .catch((e) => console.log(e));
-
-  };
+  
 
     return (
       <Layout hasSider>
@@ -371,7 +393,6 @@ useEffect( () => {
                       width: '100%',
                     }}
                     options={typesFilter}
-                    defaultValue={typesFilter[0]} 
                     onChange={selectType}/>
             </Modal>
             </Cover>
