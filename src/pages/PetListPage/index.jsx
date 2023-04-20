@@ -9,6 +9,7 @@ import { Avatar, DatePicker } from 'antd';
 import { LocationOptions, UslugaOptions } from "../EditProfilePage";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import {Buffer} from 'buffer';
 
 const { TextArea } = Input;
 
@@ -106,7 +107,16 @@ const PetListPage = () => {
   var [placesFilter, setPlacesFilter] = useState([]);
   var [typesFilter, setTypesFilter] = useState([]);
   var [typeFilterName, setTypeFilterName] = useState('');
+  const [base64, setBase64] = useState('');
   const columns = [
+    {
+      title: '',
+      dataIndex: 'image',
+      width: '10%',
+      render: (_, record) => (
+        <img src={`data:application/octet-stream;base64,${record.image}`} />
+      ),
+    },
   {
     title: 'Ime',
     dataIndex: 'ime',
@@ -133,6 +143,7 @@ const PetListPage = () => {
           <Space size="middle">
             <a onClick={() => 
             {
+                  console.log("RECORD",record);
                   setSelectedPet(record);
                   showModal();
             }}>Prikaži</a>
@@ -172,6 +183,7 @@ const filterByType = () => {
 
 
 useEffect( () => {
+
   
   axios.get(`http://localhost:9000/korisnici`, {
     headers: {
@@ -240,12 +252,23 @@ useEffect( () => {
       let tempPet = '';
       for(let i = 0; i < res.data.length; i++)
       {
-          let userId = res.data.at(i).korisnikId;
-          let typeId = res.data.at(i).vrstaId;
- 
-          let placeId = locations.find(element => element.korisnikId === userId).mjestoId;
+        let userId = res.data.at(i).korisnikId;
+        let typeId = res.data.at(i).vrstaId;
+        let placeId = locations.find(element => element.korisnikId === userId).mjestoId;
+        axios.get(`http://localhost:9000/korisnici/image/${res.data.at(i).slika}`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": 'application/octet-stream',
+          },
+         })
+         .then((res) => {
+         setBase64(Buffer.from(res.data).toString('base64'));
+  })
+         .catch((e) => console.log(e));
+        
           
           tempPet = {
+           image: base64,
            id: res.data.at(i).id,
            ime: res.data.at(i).ime,
            opis: res.data.at(i).opis,
@@ -255,7 +278,6 @@ useEffect( () => {
            telefon: users.find(element => element.id === userId).phoneNumber,
            lokacija: places.find(element => element.id === placeId).naziv,
           }
-          
           tempArray.push(tempPet);
       }
      setPets(tempArray);
@@ -350,7 +372,7 @@ useEffect( () => {
              >
              <Descriptions title="" size="default" column={1}>
                <Descriptions.Item>
-                 <Avatar size={130} icon={<UserOutlined />} src={selectedPet.slika}/>
+                 <Avatar size={130} icon={<UserOutlined />} src={`data:application/octet-stream;base64,${selectedPet.image}`}/>
                </Descriptions.Item>
                <Descriptions.Item label="Ime">{selectedPet.ime}</Descriptions.Item>
                <Descriptions.Item label="Vrsta">{selectedPet.vrsta}</Descriptions.Item>

@@ -140,7 +140,8 @@ const SignUpPage = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState();
-    const [photo, setPhoto] = useState('');
+    const [image, setImage] = useState('');
+    const [imageFile, setImageFile] = useState('');
 
     const selectLocation = (event) => {
       console.log(event);
@@ -181,8 +182,9 @@ const SignUpPage = () => {
         </div>
       );
       const saveFile = ({ file, onSuccess }) => {
-       console.log(file);
-        setPhoto(file.name);
+        console.log(file);
+        setImage(file.name);
+        setImageFile(file);
       };
 
       
@@ -190,6 +192,7 @@ const SignUpPage = () => {
 
       const handleSubmit = async (event) => {
         event.preventDefault();
+        
         try {
           const request = {
             firstName,
@@ -198,13 +201,13 @@ const SignUpPage = () => {
             password,
             email,
             phoneNumber,
-            photo,
+            photo:image
           };
           await axios.post('http://localhost:9000/sign-up', request)
           .then(() => {
             navigate("/loginpage",
             {
-              state: {locationId}
+              state: {locationId, imageFile}
             });
           })
           .catch((e) => console.log(e)); 
