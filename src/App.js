@@ -35,6 +35,7 @@ function App() {
           <Route path="/reviewpage" element={<ReviewPage />} />
           <Route path="/reportpage" element={<ReportPage />} />
           <Route path="/accountlistpage" element={<AccountListPage />} />
+          <Route exact path="/problemview" element={<ProblemView />} />
           <Route exact path="/mypetslist" element={<MyPetsList />} />
           <Route exact path="/problemview" element={<ProblemView />} />
         </Routes>
