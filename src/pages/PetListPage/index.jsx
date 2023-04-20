@@ -107,16 +107,8 @@ const PetListPage = () => {
   var [placesFilter, setPlacesFilter] = useState([]);
   var [typesFilter, setTypesFilter] = useState([]);
   var [typeFilterName, setTypeFilterName] = useState('');
-  const [base64, setBase64] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const columns = [
-    {
-      title: '',
-      dataIndex: 'image',
-      width: '10%',
-      render: (_, record) => (
-        <img src={`data:application/octet-stream;base64,${record.image}`} />
-      ),
-    },
   {
     title: 'Ime',
     dataIndex: 'ime',
@@ -259,16 +251,20 @@ useEffect( () => {
           headers: {
             Authorization: `Bearer ${user.token}`,
             "Content-Type": 'application/octet-stream',
+            "response-type": 'blob'
           },
          })
-         .then((res) => {
-         setBase64(Buffer.from(res.data).toString('base64'));
-  })
+         .then((response) =>
+      {
+        const blob = new Blob([response.data], { type: 'image/jpeg' });
+        const url = URL.createObjectURL(blob);
+        setImageUrl(url);
+      })
          .catch((e) => console.log(e));
         
           
           tempPet = {
-           image: base64,
+           image: imageUrl,
            id: res.data.at(i).id,
            ime: res.data.at(i).ime,
            opis: res.data.at(i).opis,
@@ -372,7 +368,7 @@ useEffect( () => {
              >
              <Descriptions title="" size="default" column={1}>
                <Descriptions.Item>
-                 <Avatar size={130} icon={<UserOutlined />} src={`data:application/octet-stream;base64,${selectedPet.image}`}/>
+                 <Avatar size={130} icon={<UserOutlined />} src={selectedPet.image}/>
                </Descriptions.Item>
                <Descriptions.Item label="Ime">{selectedPet.ime}</Descriptions.Item>
                <Descriptions.Item label="Vrsta">{selectedPet.vrsta}</Descriptions.Item>
