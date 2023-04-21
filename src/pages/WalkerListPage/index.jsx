@@ -79,7 +79,11 @@ const WalkerListPage = () => {
   const user = userState.state.user;
   const [walkers, setWalkers] = useState([]);
   const [selectedWalker, setSelectedWalker] = useState('');
-
+  const [locations, setLocations] = useState([]);
+  const [places, setPlaces] = useState([]);
+  const [placesFilter, setPlacesFilter] = useState([]);
+  const [services, setServices] = useState([]);
+  const [prices, setPrices] = useState([]);
   const [komentar,setKomentar]=useState('');
   const [ocjena,setOcjena]=useState('');
   const [korisnikOdId,setKorisnikOdId]=useState(user.korisnikOdId);
@@ -87,11 +91,7 @@ const WalkerListPage = () => {
 
   const [locationId, setLocationId] = useState('');
    
-  const [locations, setLocations] = useState([]);
-  const [places, setPlaces] = useState([]);
-  const [placesFilter, setPlacesFilter] = useState([]);
-  const [services, setServices] = useState([]);
-  const [prices, setPrices] = useState([]);
+  
   const columns = [
     {
       title: 'Ime',
@@ -131,21 +131,6 @@ const WalkerListPage = () => {
             </Space>
           ),
       },
-  ];
-
-  const columnsServices = [
-    {
-      title: 'Usluga',
-      dataIndex: 'service',
-      key: 'service',
-      width: '33%',
-    },
-    {
-      title: 'Cijena (KM)',
-      dataIndex: 'price',
-      key: 'price',
-      width: '33%',
-    },
   ];
   
 
@@ -303,31 +288,6 @@ const WalkerListPage = () => {
   const [isModalOpen3, setIsModalOpen3] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [value, setValue] = useState(3);
-
-  const postRecenzija = async (event) => {
-    event.preventDefault();
-    try {
-      const request = {
-        komentar,
-        ocjena,
-        korisnikOdId,
-        korisnikZaId
-      };
-    await axios.post('http://localhost:9000/recenzije', request, {
-      headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
-    })
-      .then(() => {
-         console.log("Uspjesno");
-      })
-      .catch((e) => console.log(e)); 
-    }
-    catch (error) {
-      console.log(error);
-    }
-  };
-   
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
@@ -433,3 +393,7 @@ const WalkerListPage = () => {
 };
 
 export default WalkerListPage;
+
+
+ 
+           
