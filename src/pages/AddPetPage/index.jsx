@@ -141,6 +141,7 @@ const AddPetPage = (props) => {
   const [imageUrl, setImageUrl] = useState();
   const [image, setImage] = useState('');
   const [imageFile, setImageFile] = useState('');
+  const [messageApi, contextHolder] = message.useMessage();
 
   const selectType = (event) => {
     console.log(event);
@@ -149,7 +150,7 @@ const AddPetPage = (props) => {
     console.log(typeId);
   };
 
-    const addPet = async (props) => {
+    const addPet = async () => {
       console.log("IMAGEFILE",imageFile);
       const formData = new FormData();
       formData.append('file', imageFile);
@@ -179,9 +180,22 @@ const AddPetPage = (props) => {
        },
        body: JSON.stringify(ljubimacRequest),
        })
-       .catch((e) => console.log(e));
-       //const ljubimac = await response.json();
-       console.log(response);
+       .catch((e) =>{ 
+        console.log(e);
+      });
+       
+       if(response.ok===true){
+        messageApi.open({
+          type: 'success',
+          content: 'Ljubimac uspješno sačuvan!',
+        });
+       }
+       else {
+        messageApi.open({
+          type: 'error',
+          content: 'Nedostaju obavezni podaci!',
+        });
+       }
        };
 
     useEffect( () => {
@@ -325,6 +339,7 @@ const AddPetPage = (props) => {
                     >
                       <StyledTextArea value={description} onChange={(e) => setDescription(e.target.value)}/>
                     </StyledFormItem>
+                    {contextHolder}
                     <Button onClick={addPet} style={{
                           marginTop:5, marginLeft:110, minHeight:40, backgroundColor: 'rgba(0,21,41,255)', color:'white', fontSize: '16px'
                         }}

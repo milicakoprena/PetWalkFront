@@ -78,6 +78,7 @@ const WalkerListPage = () => {
   const userState = useLocation();
   const user = userState.state.user;
   const [walkers, setWalkers] = useState([]);
+  const [walkersTemp, setWalkersTemp] = useState([]);
   const [selectedWalker, setSelectedWalker] = useState('');
 
   const [komentar,setKomentar]=useState('');
@@ -94,7 +95,8 @@ const WalkerListPage = () => {
   const [ocjena,setOcjena]=useState('');
   const [korisnikOdId,setKorisnikOdId]=useState(user.id);
   //const [korisnikZaId,setKorisnikZaId]=useState('');
-
+  const [placeFilterName,setPlaceFilterName]=useState('');
+  const [isCalled,setIsCalled]=useState(true);
   const [locationId, setLocationId] = useState('');
    
   
@@ -130,7 +132,6 @@ const WalkerListPage = () => {
               <a onClick={() => 
                 {
                   setSelectedWalker(record);
-                  console.log(selectedWalker);
                   showModal();
                 }
               }>Prikaži</a>
@@ -166,6 +167,39 @@ const WalkerListPage = () => {
       console.log(error);
     }
   };
+
+  const selectPlace = (event) => {
+    console.log(event);
+    setPlaceFilterName(event);
+  };
+
+  const filterByPlace = () => {
+    setIsCalled(false);
+    axios.get(`http://localhost:9000/lokacije/trazenoMjesto/${placeFilterName}`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+    console.log("RES",placeFilterName);
+    console.log("RES",res.data);
+    let temp = [];
+    for(let i = 0; i < walkersTemp.length; i++){
+      for(let j = 0; j < res.data.length; j++){
+        if(walkersTemp.at(i).id === res.data.at(j).id)
+        {
+          temp.push(walkersTemp.at(i));
+        }
+      }
+    }
+  
+    setWalkers(temp);
+   })
+   .catch((e) => console.log(e));
+   setIsModalOpen2(false);
+  
+  };
+  
 
   const columnsServices = [
     {
@@ -209,27 +243,25 @@ const WalkerListPage = () => {
       }
       
       setLocations(temp);
-      console.log("locations",locations);
      })
      .catch((e) => console.log(e));
   
      axios.get(`http://localhost:9000/mjesta`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-     })
-     .then((res) => {
-      let temp = [];
-      for(let i = 0; i < res.data.length; i++){
-        temp.push({
-          id: res.data.at(i).id,
-          naziv: res.data.at(i).naziv,
-        })
-      }
-      setPlacesFilter(temp);
-      setPlaces(placesFilter);
-      console.log("places",places);
-     })
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+    let temp = [];
+    for(let i = 0; i < res.data.length; i++){
+      temp.push({
+        value: res.data.at(i).naziv,
+        label: res.data.at(i).naziv,
+      })
+    }
+    setPlacesFilter(temp);
+    setPlaces(res.data);
+   })
      .catch((e) => console.log(e));
 
     axios.get(`http://localhost:9000/korisnici`, {
@@ -240,7 +272,8 @@ const WalkerListPage = () => {
      .then((res) => {
 
        let temp = [];
-       for(let i = 0; i < res.data.length; i++)
+       if(isCalled || placeFilterName===undefined) {
+        for(let i = 0; i < res.data.length; i++)
        {
         let userId = res.data.at(i).id;
         let placeId = 0;
@@ -260,12 +293,14 @@ const WalkerListPage = () => {
             description: res.data.at(i).description,
            });
        }
-       console.log(temp);
           
        setWalkers(temp);
+       setWalkersTemp(walkers);
+       }
+       
      })
      .catch((e) => console.log(e));
- }, [walkers, places, services, postRecenzija]);
+ }, [walkers, places, services, postRecenzija, placeFilterName]);
  
 
   
@@ -431,27 +466,18 @@ const WalkerListPage = () => {
               </Modal>
             </Modal>
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 19 }} onClick={showModal2} />
-            <Modal title="Filtriranje" open={isModalOpen2} onOk={handleOk2} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
+            <Modal title="Filtriranje" open={isModalOpen2} onOk={filterByPlace} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
                 <Select size="middle" 
                     placeholder="Izaberite lokacije"
-                    mode="multiple"
                     allowClear
                     style={{
                       width: '100%',
                       marginBottom: '3%',
                       marginTop: '3%'
                     }}
-                    onChange={handleChange1}
-                    options={LocationOptions}/>
-                <Select size="middle" 
-                    placeholder="Izaberite usluge"
-                    mode="multiple"
-                    allowClear
-                    style={{
-                      width: '100%',
-                    }}
-                    onChange={handleChange1}
-                    options={UslugaOptions}/>
+                    options={placesFilter}
+                    onChange={selectPlace}/>
+                
             </Modal>
             </Cover>
           </Page>

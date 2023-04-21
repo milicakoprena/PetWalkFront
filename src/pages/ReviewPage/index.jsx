@@ -16,7 +16,7 @@ export const UserIcon = styled.img `
 `;
 
 export const StyledTable = styled(Table) `
-  width: 70%;
+  width: 50%;
   box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%);
 `;
 
@@ -69,14 +69,14 @@ const ReviewPage = () => {
    const [selectedWalker, setSelectedWalker] = useState('');   
   const columns = [
     {
-      title: 'Recenziju napisao:',
+      title: 'Recenziju napisao',
       dataIndex: 'korisnikOd',
-      width: '20%',
+      width: '30%',
     },
     {
-      title: 'Čuvar:',
+      title: 'Čuvar',
       dataIndex: 'korisnikZa',
-      width: '20%',
+      width: '30%',
     },
     {
       title: 'Ocjena',
