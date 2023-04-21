@@ -59,7 +59,9 @@ const ReviewPage = () => {
 
   const userState = useLocation();
   const user = userState.state.user;
-  var [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [tempReviews, setTempReviews] = useState([]);
   var [locations, setLocations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
@@ -67,14 +69,18 @@ const ReviewPage = () => {
    const [selectedWalker, setSelectedWalker] = useState('');   
   const columns = [
     {
-      title: '',
-      dataIndex: 'imageURL',
-      width: '10%',
-      render: theImageURL => <UserIcon alt={theImageURL} src={theImageURL} ></UserIcon>
+      title: 'Recenziju napisao:',
+      dataIndex: 'korisnikOd',
+      width: '20%',
     },
     {
-      title: 'Recenziju napisao:',
-      dataIndex: 'username',
+      title: 'Čuvar:',
+      dataIndex: 'korisnikZa',
+      width: '20%',
+    },
+    {
+      title: 'Ocjena',
+      dataIndex: 'ocjena',
       width: '20%',
     },
     {
@@ -88,28 +94,20 @@ const ReviewPage = () => {
     },
   ];
 
-  const data = [];
-
-  for (let i = 0; i < 50; i++) {
-    data.push({
-      key: i,
-      imageURL: require('../resources/owner.png'),
-      username: `Marko ${i}`,
-    });
-  }
+  
 
   const [collapsed, setCollapsed] = useState(false);
   const [value, setValue] = useState(3);
 
 useEffect( () => {
-
 axios.get(`http://localhost:9000/recenzije`, {
     headers: {
       Authorization: `Bearer ${user.token}`,
     },
    })
    .then((res) => {
-    setUsers(res.data);
+    setTempReviews(res.data);
+    console.log("temp",tempReviews);
    })
    .catch((e) => console.log(e));
   
@@ -122,9 +120,30 @@ axios.get(`http://localhost:9000/recenzije`, {
     setUsers(res.data);
    })
    .catch((e) => console.log(e));
+   console.log("USERS",tempReviews.length);
+   let temp = [];
+   for(let i = 0; i < tempReviews.length; i++){
+    
+    let korisnikOd = users.find(element => element.id === tempReviews.at(i).korisnikOdId).firstName + " " +
+      users.find(element => element.id === tempReviews.at(i).korisnikOdId).lastName;
+    console.log(korisnikOd);
+    let korisnikZa = users.find(element => element.id === tempReviews.at(i).korisnikZaId).firstName + " " +
+      users.find(element => element.id === tempReviews.at(i).korisnikZaId).lastName;
+    let ocjena = tempReviews.at(i).ocjena;
+    temp.push({
+      korisnikOd,
+      korisnikZa,
+      ocjena,
+    });
+    
+   }
+   console.log("T",temp);
+   setReviews(temp);
+   
 
-  }
-)
+
+
+  }, [reviews, users, tempReviews]);
 
   return (
     <Layout hasSider>
@@ -142,7 +161,7 @@ axios.get(`http://localhost:9000/recenzije`, {
           }} >
             <StyledTable
               columns={columns}
-              dataSource={data}
+              dataSource={reviews}
               pageSize={7}
               pagination={{
                 pageSize: 20,

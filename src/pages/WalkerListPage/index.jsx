@@ -86,8 +86,8 @@ const WalkerListPage = () => {
   const [prices, setPrices] = useState([]);
   const [komentar,setKomentar]=useState('');
   const [ocjena,setOcjena]=useState('');
-  const [korisnikOdId,setKorisnikOdId]=useState(user.korisnikOdId);
-  const [korisnikZaId,setKorisnikZaId]=useState(user.korisnikZaId);
+  const [korisnikOdId,setKorisnikOdId]=useState(user.id);
+  //const [korisnikZaId,setKorisnikZaId]=useState('');
 
   const [locationId, setLocationId] = useState('');
    
@@ -131,6 +131,49 @@ const WalkerListPage = () => {
             </Space>
           ),
       },
+  ];
+
+  const postRecenzija = async (event) => {
+    event.preventDefault();
+    let korisnikZaId=selectedWalker.id;
+    try {
+      const recenzijaRequest = {
+        komentar,
+        ocjena : 4,
+        korisnikOdId,
+        korisnikZaId
+      };
+      console.log("REQ",recenzijaRequest);
+      const response = await fetch('http://localhost:9000/recenzije', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+         'Authorization': `Bearer ${user.token}`,
+       },
+       body: JSON.stringify(recenzijaRequest),
+       })
+       .catch((e) => console.log(e));
+       
+       console.log(response);
+      
+    }catch (error) {
+      console.log(error);
+    }
+  };
+
+  const columnsServices = [
+    {
+      title: 'Usluga',
+      dataIndex: 'service',
+      key: 'service',
+      width: '33%',
+    },
+    {
+      title: 'Cijena (KM)',
+      dataIndex: 'price',
+      key: 'price',
+      width: '33%',
+    },
   ];
   
 
@@ -216,7 +259,7 @@ const WalkerListPage = () => {
        setWalkers(temp);
      })
      .catch((e) => console.log(e));
- }, [walkers, places, services]);
+ }, [walkers, places, services, postRecenzija]);
  
 
   
