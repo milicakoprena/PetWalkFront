@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { STATUS_ACTIVE, STATUS_BLOCKED } from '../../util.js/constants';
 import { useNavigate } from "react-router-dom";
+import { element } from "prop-types";
 
 const { Content, Sider } = Layout;
 
@@ -186,7 +187,7 @@ const EditProfilePage = () => {
   }
 
   const handleOk = () => {
-    deactivateProfile();
+    //deactivateProfile();
   };
 
   const handleCancel = () => {
@@ -247,7 +248,10 @@ const EditProfilePage = () => {
   const [imageUrl, setImageUrl] = useState();
   const selectLocation = (event) => {
     setLocationId(event);
-    setLocationName(places.find(element => element.id === locationId).naziv);
+    console.log(event);
+    let temp = places.find(element => element.value === event).label;
+    setLocationName(temp);
+    console.log(temp);
     console.log(locationName);
   };
 
@@ -307,7 +311,7 @@ const EditProfilePage = () => {
  .catch((e) => console.log(e));
 }, [locationName, locations, places, prices, services, user.id, user.korisnikId, user.token]);
 
-const deactivateProfile = () => {
+/*const deactivateProfile = () => {
     const request = {
       status: user.status === STATUS_ACTIVE? STATUS_BLOCKED : STATUS_ACTIVE,
     };
@@ -327,7 +331,7 @@ const deactivateProfile = () => {
         
       })
       .catch((e) => console.log(e));   
-}
+}*/
 
 const showModal1 = () => {
   axios.get(`http://localhost:9000/cijene`, {
@@ -374,6 +378,7 @@ const showModal1 = () => {
       })
       .then(() => {
         console.log("ok");
+        console.log(password);
       })
       .catch((e) => console.log(e));
 

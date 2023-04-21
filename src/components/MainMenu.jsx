@@ -34,6 +34,7 @@ const ownerItems = [
     getItem('Uredi profil', "/editprofileownerpage", <EditOutlined />),
     getItem('Dodaj ljubimca', "/addpetpage", <PlusCircleOutlined />),
     getItem('Lista čuvara', "/walkerlist", <TeamOutlined />),
+    getItem('Moji ljubimci', "/mypetslist", <UnorderedListOutlined />),
     getItem('Izvještaji', "/reportpage", <FormOutlined />),
     getItem('Mapa', "/mappage", <EnvironmentOutlined />),
     getItem('Prijava problema', "/reportproblem", <ExclamationCircleOutlined />),
