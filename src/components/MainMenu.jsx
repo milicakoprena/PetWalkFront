@@ -120,9 +120,9 @@ const MainMenu = () => {
         .then(() => {
             console.log(request);
             navigate("/loginpage",
-          {
-            state: {user}
-          }); 
+            {
+                state: {user}
+            }); 
         })
         .catch((e) => console.log(e));
     };
