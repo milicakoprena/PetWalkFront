@@ -79,7 +79,11 @@ const WalkerListPage = () => {
   const user = userState.state.user;
   const [walkers, setWalkers] = useState([]);
   const [selectedWalker, setSelectedWalker] = useState('');
-  
+  const [locations, setLocations] = useState([]);
+  const [places, setPlaces] = useState([]);
+  const [placesFilter, setPlacesFilter] = useState([]);
+  const [services, setServices] = useState([]);
+  const [prices, setPrices] = useState([]);
   const columns = [
     {
       title: 'Ime',
@@ -95,11 +99,11 @@ const WalkerListPage = () => {
         title: 'Broj telefona',
         dataIndex: 'phoneNumber',
       },
-   //{
-   //  title: 'Lokacija',
-   //  dataIndex: 'location',
-   //  width: '20%',
-   //},
+      {
+        title: 'Lokacija',
+        dataIndex: 'location',
+        width: '20%',
+      },
     //{
     //  title: 'Cijena',
     //  dataIndex: 'price',
@@ -120,26 +124,106 @@ const WalkerListPage = () => {
           ),
       },
   ];
+
+  const columnsServices = [
+    {
+      title: 'Usluga',
+      dataIndex: 'service',
+      key: 'service',
+      width: '33%',
+    },
+    {
+      title: 'Cijena (KM)',
+      dataIndex: 'price',
+      key: 'price',
+      width: '33%',
+    },
+  ];
   
 
   useEffect( () => {
+    axios.get(`http://localhost:9000/usluge`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+    })
+      .then((res) => {
+
+         setServices(res.data);
+    })
+    .catch((e) => console.log(e));
+    axios.get(`http://localhost:9000/lokacije`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+     })
+     .then((res) => {
+      let temp = [];
+      for(let i = 0; i < res.data.length; i++){
+        temp.push({
+          korisnikId: res.data.at(i).korisnikId,
+          mjesto: res.data.at(i).mjestoId,
+        })
+      }
+      
+      setLocations(temp);
+      console.log("locations",locations);
+     })
+     .catch((e) => console.log(e));
+  
+     axios.get(`http://localhost:9000/mjesta`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+     })
+     .then((res) => {
+      let temp = [];
+      for(let i = 0; i < res.data.length; i++){
+        temp.push({
+          id: res.data.at(i).id,
+          naziv: res.data.at(i).naziv,
+        })
+      }
+      setPlacesFilter(temp);
+      setPlaces(placesFilter);
+      console.log("places",places);
+     })
+     .catch((e) => console.log(e));
+
     axios.get(`http://localhost:9000/korisnici`, {
        headers: {
            Authorization: `Bearer ${user.token}`,
        },
      })
      .then((res) => {
+
        let temp = [];
        for(let i = 0; i < res.data.length; i++)
        {
+        let userId = res.data.at(i).id;
+        let placeId = 0;
+        for(let j = 0; j < locations.length; j++)
+        {
+          if (locations.at(j).korisnikId === userId)
+            placeId = locations.at(j).mjesto;
+        }
+        
          if(res.data.at(i).role === ROLE_WALKER && res.data.at(i).status === STATUS_ACTIVE)
-           temp.push(res.data.at(i));
+           temp.push({
+            id: res.data.at(i).id,
+            firstName: res.data.at(i).firstName,
+            lastName: res.data.at(i).lastName,
+            phoneNumber: res.data.at(i).phoneNumber,
+            location: places.find(element => element.id === placeId).naziv,
+            description: res.data.at(i).description,
+           });
        }
+       console.log(temp);
           
        setWalkers(temp);
      })
      .catch((e) => console.log(e));
- }, []);
+ }, [walkers, places, services]);
  
 
   
@@ -151,6 +235,34 @@ const WalkerListPage = () => {
   };
   const showModal2 = () => {
     setIsModalOpen2(true);
+  };
+  const showModal3 =  () => {
+    
+ 
+     axios.get(`http://localhost:9000/cijene`, {
+  headers: {
+    Authorization: `Bearer ${user.token}`,
+  },
+  })
+  .then((res) => {
+  let temp = [];
+  for(let i = 0; i < res.data.length; i++){
+    if(res.data.at(i).korisnikId===selectedWalker.id){
+      temp.push({
+        id: res.data.at(i).id,
+        price: res.data.at(i).cijena,
+        service: services.find(element => element.id === res.data.at(i).uslugaId).naziv,
+      })
+    }
+    
+    setPrices(temp);
+  }
+  })
+  .catch((e) => console.log(e));
+
+
+   
+    setIsModalOpen3(true);
   };
   const handleOk = () => {
     console.log("OK",selectedWalker);
@@ -168,12 +280,19 @@ const WalkerListPage = () => {
   const handleOk2 = () => {
     setIsModalOpen2(false);
   };
+  const handleOk3 = () => {
+    setIsModalOpen3(false);
+  };
   const handleCancel2 = () => {
     setIsModalOpen2(false);
+  };
+  const handleCancel3 = () => {
+    setIsModalOpen3(false);
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
+  const [isModalOpen3, setIsModalOpen3] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [value, setValue] = useState(3);
     return (
@@ -200,21 +319,28 @@ const WalkerListPage = () => {
                   }}
              />
 
-             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={650} 
+             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={450} 
              okText="Izaberi"
              cancelText="Otkaži"
              
              >
-             <Descriptions title="" size="default" column={2}>
+             <Descriptions title="" size="default" column={1}>
                <Descriptions.Item>
                  <Avatar size={130} icon={<UserOutlined />} />
                </Descriptions.Item>
                <Descriptions.Item label="Ime i prezime">{selectedWalker.firstName} {selectedWalker.lastName}</Descriptions.Item>
                <Descriptions.Item label="Broj telefona">{selectedWalker.phoneNumber}</Descriptions.Item>
-
+               <Descriptions.Item label="Lokacija">{selectedWalker.location}</Descriptions.Item>
+               <Descriptions.Item label="Opis">{selectedWalker.description}</Descriptions.Item>
              </Descriptions>
              <Button type="link" onClick={showModal1} >
                 Dodaj recenziju 
+              </Button>
+              <Button type="link" onClick={showModal3} >
+                Pregled usluga
+              </Button>
+              <Button type="link"  >
+                Pregled recenzija
               </Button>
               <Modal title="Dodaj recenziju" open={isModalOpen1} onOk={handleOk1} onCancel={handleCancel1} okText="Dodaj"
                     cancelText="Otkaži">
@@ -234,6 +360,10 @@ const WalkerListPage = () => {
                <Rate tooltips={desc} onChange={setValue} value={value} />
                  {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
              </span>
+              </Modal>
+              <Modal title="Pregled usluga" open={isModalOpen3} onOk={handleCancel3} onCancel={handleCancel3} okText="OK"
+                    cancelText="Zatvori">
+                     <Table columns={columnsServices} dataSource={prices}/>
               </Modal>
             </Modal>
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 19 }} onClick={showModal2} />
