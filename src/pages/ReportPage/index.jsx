@@ -106,9 +106,13 @@ const ReportPage = () => {
         sadrzaj,
         korisnikId
       };
-      await axios.post('http://localhost:9000/izvjestaji', request)
+      await axios.post('http://localhost:9000/izvjestaji', request, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+      },
+      })
       .then(() => {
-        
+        console.log("Uspjesno");
       })
       .catch((e) => console.log(e)); 
     }

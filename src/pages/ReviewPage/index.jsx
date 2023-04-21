@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Layout, Rate, Descriptions, Space, Table, Avatar } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { UserOutlined } from '@ant-design/icons';
 import pozadina from "../resources/pozadina2.jpg"
-
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 const { Content, Sider } = Layout;
 
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
@@ -55,9 +56,15 @@ const ReviewPage = () => {
     setIsModalOpen(false);
   };
    
+
+  const userState = useLocation();
+  const user = userState.state.user;
+  var [users, setUsers] = useState([]);
+  var [locations, setLocations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
-    
+   const [selectedPet, setSelectedPet] = useState('');
+   const [selectedWalker, setSelectedWalker] = useState('');   
   const columns = [
     {
       title: '',
@@ -93,6 +100,32 @@ const ReviewPage = () => {
 
   const [collapsed, setCollapsed] = useState(false);
   const [value, setValue] = useState(3);
+
+useEffect( () => {
+
+axios.get(`http://localhost:9000/recenzije`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+    setUsers(res.data);
+   })
+   .catch((e) => console.log(e));
+  
+  axios.get(`http://localhost:9000/korisnici`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+    setUsers(res.data);
+   })
+   .catch((e) => console.log(e));
+
+  }
+)
+
   return (
     <Layout hasSider>
       <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
@@ -126,13 +159,13 @@ const ReviewPage = () => {
                 <Descriptions.Item>
                   <Avatar size={130} icon={<UserOutlined />}/>
                 </Descriptions.Item>
-                <Descriptions.Item label="Ime vlasnika">Marko</Descriptions.Item>
+                <Descriptions.Item label="Ime vlasnika">{selectedWalker.ime}</Descriptions.Item>
                 <span style={{ }}>
                   <Rate tooltips={desc} onChange={setValue} value={value} />
                     {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
                 </span>
                 <Descriptions.Item label="Tekst">
-                  blablabalbalbalablabalbalbalablabalblalablbalbalbalbalbalbzudhwfvkuzdfvlwzfvxčifvw
+                {selectedWalker.recenzija}
                 </Descriptions.Item>
               </Descriptions>
             </Modal>
