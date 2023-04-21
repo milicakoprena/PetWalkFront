@@ -8,6 +8,9 @@ import { Modal, Upload, message, Layout, Row, Col, Card } from 'antd';
 import { LocationOptions } from '../EditProfilePage';
 import styled from "styled-components";
 import pozadina from "../resources/pozadina2.jpg"
+import { useLocation } from 'react-router';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const { Content, Sider } = Layout;
 
@@ -135,6 +138,21 @@ const handleChange1 = (value) => {
 const EditProfileOwnerPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const userState = useLocation();
+  const [locations, setLocations] = useState([]);
+  const [places, setPlaces] = useState([]);
+  const user = userState.state.user;
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [username, setUsername] = useState(user.username);
+  const [password, setPassword] = useState(user.password);
+  const [email, setEmail] = useState(user.email);
+  const [description, setDescription] = useState(user.description);
+  const [photo, setPhoto] = useState(user.photo);
+  const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
+  const [locationId, setLocationId] = useState('');
+  const [locationName, setLocationName] = useState('');
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -153,6 +171,12 @@ const EditProfileOwnerPage = () => {
     
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
+
+  const selectLocation = (event) => {
+    setLocationId(event);
+    setLocationName(places.find(element => element.value === locationId).label);
+    console.log(locationName);
+  };
     
   const handleChange = (info) => {
     if (info.file.status === 'uploading') {
@@ -165,6 +189,88 @@ const EditProfileOwnerPage = () => {
         setLoading(false);
         setImageUrl(url);
       });
+    }
+  };
+
+  useEffect(() => {
+    axios.get(`http://localhost:9000/lokacije`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+      //console.log("locations",res.data);
+      setLocations(res.data);
+   })
+   .catch((e) => console.log(e));
+
+   axios.get(`http://localhost:9000/mjesta`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+      //console.log(res.data.length);
+      let temp = [];
+      for(let i = 0; i < res.data.length; i++){
+        temp.push({
+          value: res.data.at(i).id,
+          label: res.data.at(i).naziv,
+        })
+      }
+      setPlaces(temp);
+      //console.log(places);
+      //console.log("locations", locations)
+      const placeId = locations.find(element => element.korisnikId === user.id).mjestoId;
+      const tempPN = places.find(element => element.value === placeId).label;
+      setLocationName(tempPN);
+      //console.log(locationName);
+   })
+   .catch((e) => console.log(e));
+  } )
+
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+    try {
+      const request = {
+        firstName,
+        lastName,
+        username,
+        password,
+        photo,
+        description,
+        email,
+        phoneNumber,
+      };
+      await axios.put(`http://localhost:9000/korisnici/${user.id}`, request, {
+        headers: {
+            Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then(() => {
+        console.log("ok");
+      })
+      .catch((e) => console.log(e));
+
+      const locationRequest = {
+        mjestoId: locationId,
+        korisnikId: user.id,
+      };
+      const tempId = locations.find(element => element.korisnikId === user.id).id;
+      console.log(tempId);
+      console.log(locationRequest);
+      await axios.put(`http://localhost:9000/lokacije/${tempId}`, locationRequest, {
+        headers: {
+            Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then(() => {
+        success();
+      })
+      .catch((e) => console.log(e));
+    }
+    catch (error) {
+      console.log(error);
     }
   };
 
@@ -185,6 +291,7 @@ const EditProfileOwnerPage = () => {
   const saveFile = ({ file, onSuccess }) => {
     setTimeout(() => {
       onSuccess("ok");
+      setPhoto(file.name);
     }, 0);
   };
 
@@ -258,31 +365,43 @@ const EditProfileOwnerPage = () => {
                         label={ <StyledLabel>Ime</StyledLabel> }
                         name="name"
                       >
-                        <StyledInput/>
+                        <StyledInput 
+                          defaultValue={user.firstName}
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)} />
                       </StyledFormItem>
                       <StyledFormItem
                         label={ <StyledLabel>Korisničko ime</StyledLabel> }
                         name="username"
                       >
-                        <StyledInput/>
+                        <StyledInput
+                          defaultValue={user.username}
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value)} />
                       </StyledFormItem>
                       <StyledFormItem
                         label={ <StyledLabel>Email</StyledLabel> }
                         name="email"
                       >
-                        <StyledInput/>
+                        <StyledInput
+                          defaultValue={user.email}
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)} />
                       </StyledFormItem>
                       <StyledFormItem
                         name="description"
                         label={ <StyledLabel>Opis</StyledLabel> }
                       >
-                        <StyledTextArea/>
+                        <StyledTextArea
+                          defaultValue={user.description}
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)} />
                       </StyledFormItem>
                       {contextHolder}
                       <Space style={{ justifyContent: 'center' }} >
                         <Button style={{
                           marginTop:40, minHeight:40, backgroundColor: 'rgba(0,21,41,255)', color:'white', fontSize: '16px'
-                        }}  onClick={success} >Sačuvaj promjene</Button>
+                        }}  onClick={handleUpdate} >Sačuvaj promjene</Button>
                       </Space>
                     </StyledForm>
                   </Col>
@@ -297,19 +416,27 @@ const EditProfileOwnerPage = () => {
                         label={ <StyledLabel>Prezime</StyledLabel> }
                         name="surname"
                       >
-                        <StyledInput/>
+                        <StyledInput
+                          defaultValue={user.lastName}
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)} />
                       </StyledFormItem>
                       <StyledFormItem
                         label={ <StyledLabel>Lozinka</StyledLabel> }
                         name="password"
                       >
-                        <StyledInput type="password"/>
+                        <StyledInput type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)} />
                       </StyledFormItem>
                       <StyledFormItem
                         label={ <StyledLabel>Broj telefona</StyledLabel> }
                         name="phonenumber"
                       >
-                        <StyledInput/>
+                        <StyledInput
+                          defaultValue={user.phoneNumber}
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)} />
                       </StyledFormItem>
                       <StyledFormItem
                         name="location"
@@ -317,13 +444,13 @@ const EditProfileOwnerPage = () => {
                         rules={[{ required: true, message: "Polje je obavezno!"}]}
                       >
                         <StyledSelect size="default" 
-                          mode="multiple"
                           allowClear
                           style={{
                             width: '100%',
                           }}
-                          onChange={handleChange1}
-                          options={LocationOptions}/>
+                          onChange={selectLocation}
+                          options={places}
+                          defaultValue={locationName}/>
                       </StyledFormItem>
                       <>
                         <DeactivateButton type="primary" onClick={showModal}>
