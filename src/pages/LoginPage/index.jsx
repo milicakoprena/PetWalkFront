@@ -84,6 +84,7 @@ const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [messageApi, contextHolder] = message.useMessage();
+    const [imageFile, setImageFile] = useState('');
     const handleSubmit = async (event) => {
       console.log(locationId);
         event.preventDefault();
@@ -118,6 +119,24 @@ const LoginPage = () => {
              .catch((e) => console.log(e));
                
           }
+
+          if(imageFile){
+            console.log("IMAGEFILE",imageFile);
+            const formData = new FormData();
+            formData.append('file', imageFile);
+            axios.post(`http://localhost:9000/korisnici/image`, formData,  {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+              "Content-Type": "multipart/form-data",
+            },
+            })
+            .then((res) => {
+              console.log("Uspjesno");
+            })
+           .catch((e) => console.log(e));
+          }
+
+          
           
           
         
@@ -155,7 +174,8 @@ const LoginPage = () => {
       useEffect(()=>{
         console.log(locationIdState);
         if(locationIdState.state)
-      	setLocationId(locationIdState.state.locationId);
+      	{setLocationId(locationIdState.state.locationId);
+      	setImageFile(locationIdState.state.imageFile);}
       })
     const navigate = useNavigate();
     const [form] = Form.useForm();
