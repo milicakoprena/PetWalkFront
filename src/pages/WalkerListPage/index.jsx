@@ -82,8 +82,8 @@ const WalkerListPage = () => {
 
   const [komentar,setKomentar]=useState('');
   const [ocjena,setOcjena]=useState('');
-  const [korisnikOdId,setKorisnikOdId]=useState(user.od_id);
-  const [korisnikZaId,setKorisnikZaId]=useState(user.za_id);
+  const [korisnikOdId,setKorisnikOdId]=useState(user.korisnikOdId);
+  const [korisnikZaId,setKorisnikZaId]=useState(user.korisnikZaId);
 
   const [locationId, setLocationId] = useState('');
   const [locations, setLocations] = useState('');
@@ -195,9 +195,13 @@ const WalkerListPage = () => {
         korisnikOdId,
         korisnikZaId
       };
-      await axios.post('http://localhost:9000/recenzije', request)
+    await axios.post('http://localhost:9000/recenzije', request, {
+      headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+    })
       .then(() => {
-        
+         console.log("Uspjesno");
       })
       .catch((e) => console.log(e)); 
     }
