@@ -140,6 +140,7 @@ const AddPetPage = (props) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
   const [image, setImage] = useState('');
+  const [imageFile, setImageFile] = useState('');
 
   const selectType = (event) => {
     console.log(event);
@@ -149,7 +150,19 @@ const AddPetPage = (props) => {
   };
 
     const addPet = async (props) => {
-      
+      console.log("IMAGEFILE",imageFile);
+      const formData = new FormData();
+      formData.append('file', imageFile);
+      axios.post(`http://localhost:9000/korisnici/image`, formData,  {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        })
+        .then((res) => {
+          console.log("Uspjesno");
+        })
+       .catch((e) => console.log(e));
 
       let ljubimacRequest = {
         ime: name,
@@ -227,9 +240,9 @@ const AddPetPage = (props) => {
       
 
       const saveFile = ({ file, onSuccess }) => {
-        
         console.log(file);
         setImage(file.name);
+        setImageFile(file);
       };
     const [form] = Form.useForm();
     const [collapsed, setCollapsed] = useState(false);
@@ -273,7 +286,6 @@ const AddPetPage = (props) => {
                           listType="picture-circle"
                           className="avatar-uploader"
                           showUploadList={false}
-                          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                           beforeUpload={beforeUpload}
                           onSelect={handleChange}
                         >
