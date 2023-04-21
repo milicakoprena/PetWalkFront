@@ -81,10 +81,7 @@ const WalkerListPage = () => {
   const [walkersTemp, setWalkersTemp] = useState([]);
   const [selectedWalker, setSelectedWalker] = useState('');
 
-  const [komentar,setKomentar]=useState('');
-  const [ocjena,setOcjena]=useState('');
-  const [korisnikOdId,setKorisnikOdId]=useState(user.od_id);
-  const [korisnikZaId,setKorisnikZaId]=useState(user.za_id);
+  
 
   const [locations, setLocations] = useState([]);
   const [places, setPlaces] = useState([]);
@@ -373,25 +370,7 @@ const WalkerListPage = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [value, setValue] = useState(3);
 
-  const postRecenzija = async (event) => {
-    event.preventDefault();
-    try {
-      const request = {
-        komentar,
-        ocjena,
-        korisnikOdId,
-        korisnikZaId
-      };
-      await axios.post('http://localhost:9000/recenzije', request)
-      .then(() => {
-        
-      })
-      .catch((e) => console.log(e)); 
-    }
-    catch (error) {
-      console.log(error);
-    }
-  };
+  
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
