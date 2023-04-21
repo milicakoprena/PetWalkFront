@@ -102,7 +102,7 @@ const LoginPage = () => {
 
           
 
-          if(locationId!='') {
+          if(locationId!=='') {
             let mjestoRequest = {
               mjestoId: locationId,
               korisnikId: user.id, 
