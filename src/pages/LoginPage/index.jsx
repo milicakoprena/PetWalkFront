@@ -180,7 +180,8 @@ const LoginPage = () => {
         if(locationIdState.state)
       	{setLocationId(locationIdState.state.locationId);
       	setImageFile(locationIdState.state.imageFile);}
-      })
+      }, [locationIdState])
+      
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const { loading } = useSelector((state) => state.users);

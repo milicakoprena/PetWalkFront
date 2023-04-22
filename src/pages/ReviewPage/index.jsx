@@ -6,6 +6,7 @@ import { UserOutlined } from '@ant-design/icons';
 import pozadina from "../resources/pozadina2.jpg"
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import { ROLE_ADMIN } from "../../util.js/constants";
 const { Content, Sider } = Layout;
 
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
@@ -107,7 +108,7 @@ axios.get(`http://localhost:9000/recenzije`, {
    })
    .then((res) => {
     setTempReviews(res.data);
-    console.log("temp",tempReviews);
+    //console.log("temp",tempReviews);
    })
    .catch((e) => console.log(e));
   
@@ -120,21 +121,39 @@ axios.get(`http://localhost:9000/recenzije`, {
     setUsers(res.data);
    })
    .catch((e) => console.log(e));
-   console.log("USERS",tempReviews.length);
+   //console.log("USERS",tempReviews.length);
    let temp = [];
+   let korisnikOd;
+   let korisnikZa;
+   let ocjena;
    for(let i = 0; i < tempReviews.length; i++){
-    
-    let korisnikOd = users.find(element => element.id === tempReviews.at(i).korisnikOdId).firstName + " " +
-      users.find(element => element.id === tempReviews.at(i).korisnikOdId).lastName;
-    console.log(korisnikOd);
-    let korisnikZa = users.find(element => element.id === tempReviews.at(i).korisnikZaId).firstName + " " +
-      users.find(element => element.id === tempReviews.at(i).korisnikZaId).lastName;
-    let ocjena = tempReviews.at(i).ocjena;
-    temp.push({
-      korisnikOd,
-      korisnikZa,
-      ocjena,
-    });
+    if(user.role===ROLE_ADMIN){
+      korisnikOd = users.find(element => element.id === tempReviews.at(i).korisnikOdId).firstName + " " +
+        users.find(element => element.id === tempReviews.at(i).korisnikOdId).lastName;
+      //console.log(korisnikOd);
+      korisnikZa = users.find(element => element.id === tempReviews.at(i).korisnikZaId).firstName + " " +
+        users.find(element => element.id === tempReviews.at(i).korisnikZaId).lastName;
+      ocjena = tempReviews.at(i).ocjena;
+      temp.push({
+        korisnikOd,
+        korisnikZa,
+        ocjena,
+      });
+    }
+    else{
+      if(user.id===tempReviews.at(i).korisnikZaId){
+        korisnikOd = users.find(element => element.id === tempReviews.at(i).korisnikOdId).firstName + " " +
+          users.find(element => element.id === tempReviews.at(i).korisnikOdId).lastName;
+        korisnikZa = user.firstName + " " + user.lastName;
+        ocjena = tempReviews.at(i).ocjena;
+        temp.push({
+          korisnikOd,
+          korisnikZa,
+          ocjena,
+        });
+      }
+    }
+  
     
    }
    console.log("T",temp);
@@ -143,7 +162,7 @@ axios.get(`http://localhost:9000/recenzije`, {
 
 
 
-  }, [reviews, users, tempReviews]);
+  }, [reviews, users, tempReviews, user.token, user.role, user.id, user.firstName, user.lastName]);
 
   return (
     <Layout hasSider>
