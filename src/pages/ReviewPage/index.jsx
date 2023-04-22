@@ -162,13 +162,9 @@ axios.get(`http://localhost:9000/recenzije`, {
             <StyledTable
               columns={columns}
               dataSource={reviews}
-              pageSize={7}
-              pagination={{
-                pageSize: 20,
-              }}
-              scroll={{
-                y: 500,
-              }}/>
+              pagination={false}
+              style={{ height: '300px', overflow: 'auto', backgroundColor: 'white', borderRadius: '10px' }}  
+            />
 
             <Modal title="Recenzija" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={530} 
               okText="OK"

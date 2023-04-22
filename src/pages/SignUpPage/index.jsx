@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import userService, { signUp } from "../../services/user.service";
 import axios from "axios";
+import { Logo } from "../StartPage";
+import pozadina from "../resources/pozadina-signup.jpg"
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -52,9 +54,12 @@ export const Page = styled.div`
 `;
 
 export const Cover = styled.div`
-background-color:rgba(0, 33, 64, 0.59);
-height: 100%;
-width: 100%
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color:rgba(0, 33, 64, 0.59);
+    height: 100%;
+    width: 100%
 `;
 
 export const SignUpButton = styled.div`
@@ -72,19 +77,19 @@ export const SignUpButton = styled.div`
     &:hover {
         transform: scale(1.15);
     }
-    margin-left: 35%;
+    margin-left: 48%;
 `;
 
 export const StyledCol = styled(Col)`
     align-content: center;
-    margin-left:270px;
-    margin-top: -50px;
+    margin-left:170px;
+    margin-top: -40px;
 `;
 
 export const StyledCol1 = styled(Col)`
     align-content: center;
-    margin-left:180px;
-    margin-top: 73px;
+    margin-left:100px;
+    margin-top: 91px;
 `;
 
 
@@ -96,7 +101,7 @@ export const Icon = styled.img`
 
 export const StyledForm = styled(Form)`
     margin-top:-10px;
-    width:400px;
+    width:380px;
     
 `;
 
@@ -221,12 +226,27 @@ const SignUpPage = () => {
     return (
         <Page>
             
-            <Cover>
+            <Cover style={{ backgroundImage: `url(${pozadina})` }} >
               <Row>
+                <Col>
+                  <img src={require('../resources/logo.png')} alt="logo" style={{width: '380px', height: 'auto', marginTop: '30%'}}/>
+                  <p style={{ 
+                      width: '250px',
+                      marginLeft: '16%',
+                      fontFamily:"cursive",
+                      fontStyle: 'oblique',
+                      textShadow: '1px 1px 2px darkblue',
+                      fontWeight: 'bold',
+                      fontSize: '30px',
+                      color: 'rgba(0, 33, 64, 0.59)',
+                      textAlign: 'center' }} >
+                    DOBRO DOŠLI!
+                  </p>
+                </Col>
                 <StyledCol>
                 <StyledForm
                   form={form}
-                  size="large"
+                  size="middle"
                   labelCol={
                     { span: 24 }
                   }
@@ -284,7 +304,7 @@ const SignUpPage = () => {
                 </StyledCol>
                 <StyledCol1>
                   <StyledForm form={form}
-                    size="large"
+                    size='middle'
                     labelCol={
                       { span: 24 }
                     }

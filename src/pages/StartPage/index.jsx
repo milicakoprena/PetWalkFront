@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
+import pozadina from "../resources/pozadina2.jpg"
 import { useNavigate } from "react-router-dom";
 
 export const Page = styled.div`
@@ -12,6 +12,9 @@ export const Page = styled.div`
 `;
 
 export const Cover = styled.div`
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     background-color:rgba(143, 115, 143, 0.581);
     width: 100%;
     height: 100%;
@@ -75,7 +78,7 @@ const StartPage = () => {
     const navigate = useNavigate();
     return (
         <Page>
-            <Cover>
+            <Cover style={{ backgroundImage: `url(${pozadina})` }} >
                 <Logo src={require('../resources/logo.png')}></Logo>
                 <LoginButton onClick={() => navigate("/loginpage")}>Prijavi se</LoginButton>
                 <SignUpButton onClick={() => navigate("/signuppage")}>Nemaš nalog? Registruj se ovdje!</SignUpButton>

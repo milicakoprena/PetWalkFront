@@ -704,7 +704,7 @@ const showModal1 = () => {
                           onCancel={handleCancel1} 
                           okText="Potvrdi"
                           cancelText="Otkaži">
-                          <Table columns={columns} dataSource={prices}/>
+                          <Table pagination={false} columns={columns} dataSource={prices} style={{ height: '80%', overflow: 'auto' }} />
                           <Button type="dashed" style={{ width: '100%' }} onClick={() => {showModal2(); setIsModalOpen1(false)}} >Dodaj uslugu</Button>                          
                         </Modal>
                         <Modal 

@@ -342,13 +342,8 @@ useEffect( () => {
             <StyledTable
                   columns={columns}
                   dataSource={pets}
-                  pageSize={7}
-                  pagination={{
-                    pageSize: 20,
-                  }}
-                  scroll={{
-                    y: 600,
-                  }}
+                  pagination={false}
+                  style={{ height: '100%', overflow: 'auto' }}
              />
              <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={350}
              footer={[

@@ -6,6 +6,7 @@ import userService from "../../services/user.service";
 import { login } from "../../redux/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import pozadina from "../resources/pozadina2darker.jpg"
 import { useLocation } from "react-router-dom";
 import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER } from "../../util.js/constants";
 
@@ -20,6 +21,9 @@ export const Page = styled.div`
 `;
 
 export const Cover = styled.div`
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     background-color:rgba(190,174,190,255);    
     width: 100%;
     height: 100%;
@@ -182,7 +186,7 @@ const LoginPage = () => {
     const { loading } = useSelector((state) => state.users);
     return (
         <Page>
-            <Cover>
+            <Cover style={{ backgroundImage: `url(${pozadina})` }} >
                 <Logo src={require('../resources/logo.png')}></Logo>
                 <StyledForm
                   form={form}

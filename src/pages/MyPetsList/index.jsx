@@ -228,13 +228,8 @@ const MyPetsList = () => {
                                 columns={columns}
                                 dataSource={pets}
                                 size="small"
-                                pageSize={7}
-                                pagination={{
-                                    pageSize: 20,
-                                }}
-                                scroll={{
-                                    y: 600,
-                                }}
+                                pagination={false}
+                                style={{height: '300px', overflow: 'auto'}}
                             />
                             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={350}
                                 okText="Da" cancelText="Ne" style={{ minWidth: '490px' }}

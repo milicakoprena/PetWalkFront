@@ -231,10 +231,8 @@ useEffect( () => {
             <StyledTable
                   columns={columns}
                   dataSource={users}
-                  pageSize={7}
-                  scroll={{
-                    y: 600,
-                  }}
+                  pagination={false}
+                  style={{ height: '100%', overflow: 'auto' }}
              >
               
              </StyledTable>
@@ -245,7 +243,7 @@ useEffect( () => {
              Da li stvarno želiš da promijeniš status ovog naloga?
             
             </Modal>
-            <FloatButton icon={<SearchOutlined />} type="primary" style={{ right: 40, top: 11 }} onClick={showModal} />
+            <FloatButton icon={<SearchOutlined />} type="primary" style={{ right: 40, top: 10 }} onClick={showModal} />
             <Modal title="Pretraživanje po korisničkom imenu" open={isModalOpen} onCancel={handleCancel}
             footer={[
               <Button key="1" onClick={searchByUsername} style={{ backgroundColor : "#9ac2f7"}}>Pretraži</Button>,

@@ -304,14 +304,6 @@ const WalkerListPage = () => {
     setIsModalOpen2(true);
   };
 
-  /*const reviews = [
-    { name: 'Marko', rating: 5, comment: "Fantastična usluga čuvanja životinja! Vlasnici su bili vrlo pažljivi i brižni prema mom psu, čak su mi poslali i slike dok sam bila odsutna." },
-    { name: 'Marko', rating: 4, comment: "Savršeno iskustvo čuvanja kućnih ljubimaca. Usluga je bila vrlo profesionalna i brzo su se snašli kada sam promijenila planove. Definitivno bih preporučila!" },
-    { name: 'Marko', rating: 5, comment: "Moji psi su bili vrlo sretni dok su boravili u ovom smještaju. Vlasnici su vrlo pažljivo pratili njihove potrebe i redovito mi slali ažuriranja. Hvala vam!" },
-    { name: 'Marko', rating: 3, comment: "Usluga čuvanja bila je solidna, ali imao sam neke probleme s kontaktom vlasnika. Morao sam čekati nekoliko dana da dobijem odgovor." },
-    { name: 'Marko', rating: 5, comment: "Vrlo sam impresioniran uslugom čuvanja. Vlasnici su bili vrlo ljubazni i pažljivi prema mom psu, a cijene su vrlo pristupačne. Definitivno ću ponovo koristiti ovu uslugu!" }
-  ];*/
-
   const showModal3 =  () => {
     axios.get(`http://localhost:9000/cijene`, {
       headers: {
@@ -418,13 +410,8 @@ const WalkerListPage = () => {
             <StyledTable
               columns={columns}
               dataSource={walkers}
-              pageSize={7}
-              pagination={{
-                pageSize: 20,
-              }}
-              scroll={{
-                y: 600,
-              }}
+              pagination={false}
+              style={{height: '100%', overflow: 'auto'}}
             />
             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={450} 
               okText="Izaberi"
@@ -469,7 +456,7 @@ const WalkerListPage = () => {
               </Modal>
               <Modal title="Pregled usluga" open={isModalOpen3} onOk={handleCancel3} onCancel={handleCancel3} okText="OK"
                 cancelText="Zatvori">
-                <Table columns={columnsServices} dataSource={prices}/>
+                <Table columns={columnsServices} dataSource={prices} pagination={false} style={{ height: '80%', overflow: 'auto' }} />
               </Modal>
               <Modal title="Pregled recenzija" open={isReviewModalOpen} onOk={handleCancel4} onCancel={handleCancel4} okText="OK"
                 cancelText="Zatvori">
@@ -497,7 +484,7 @@ const WalkerListPage = () => {
                 </div>
               </Modal>
             </Modal>
-            <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 19 }} onClick={showModal2} />
+            <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 10 }} onClick={showModal2} />
             <Modal title="Filtriranje" open={isModalOpen2} onOk={filterByPlace} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
               <Select size="middle" 
                 placeholder="Izaberite lokacije"

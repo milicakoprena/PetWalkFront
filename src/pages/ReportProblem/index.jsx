@@ -18,6 +18,9 @@ export const StyledText = styled.p`
 `;
 
 export const Cover = styled.div`
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     background-color:rgba(0, 33, 64, 0.59);
     width: 100%;
     height: 100%;
