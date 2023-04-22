@@ -170,6 +170,7 @@ const filterByType = () => {
   setPets(temp);
  })
  .catch((e) => console.log(e));
+ setIsModalOpen2(false);
 
 };
 
@@ -394,16 +395,7 @@ useEffect( () => {
             </Modal>
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 11 }} onClick={showModal2} />
             <Modal title="Filtriranje" open={isModalOpen2} onOk={filterByType} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
-                <Select size="middle" 
-                    placeholder="Izaberite lokacije"
-                    allowClear
-                    style={{
-                      width: '100%',
-                      marginBottom: '3%',
-                      marginTop: '3%'
-                    }}
-                    onChange={handleChange1}
-                    options={placesFilter}/>
+                
                 <Select size="middle" 
                     placeholder="Izaberite vrste"
                     allowClear

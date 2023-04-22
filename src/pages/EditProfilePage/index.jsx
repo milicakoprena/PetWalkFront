@@ -229,12 +229,6 @@ const EditProfilePage = () => {
 
   const columns = [
     {
-      title: ' ',
-      dataIndex: 'id',
-      key: 'id',
-      width: '0%',
-    },
-    {
       title: 'Usluga',
       dataIndex: 'service',
       key: 'service',

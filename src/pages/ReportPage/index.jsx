@@ -7,6 +7,8 @@ import { Descriptions } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import pozadina from "../resources/pozadina2.jpg"
 import { UserOutlined } from '@ant-design/icons';
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const { Content, Sider } = Layout;
 
@@ -60,6 +62,13 @@ const ReportPage = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 
+  const[sadrzaj,setSadrzaj]=useState('');
+  const[korisnikId,setKorisnikId]=useState(user.korisnikId);
+  const [locationId, setLocationId] = useState('');
+  const [locations, setLocations] = useState('');
+  const userState = useLocation();
+  const user = userState.state.user;
+
   let datee=new Date();
 
   for (let i = 0; i < 50; i++) {
@@ -89,6 +98,28 @@ const ReportPage = () => {
   useEffect(() => {
     loadMoreData();
   }, []);
+
+  const postReport = async (event) => {
+    event.preventDefault();
+    try {
+      const request = {
+        sadrzaj,
+        korisnikId
+      };
+      await axios.post('http://localhost:9000/izvjestaji', request, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+      },
+      })
+      .then(() => {
+        console.log("Uspjesno");
+      })
+      .catch((e) => console.log(e)); 
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
     
   return (
     <Layout hasSider>
@@ -143,7 +174,7 @@ const ReportPage = () => {
                         description={item.date}
                       />
                       <div>
-                        <Button type="ghost" style={{ color: 'blue' }} onClick={() => showModal()}>Prikaži</Button>
+                        <Button type="ghost" style={{ color: 'blue' }} onClick={(postReport) => showModal()}>Prikaži</Button>
                       </div>
                       
                     </List.Item>

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Layout, Rate, Descriptions, Space, Table, Avatar } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { UserOutlined } from '@ant-design/icons';
 import pozadina from "../resources/pozadina2.jpg"
-
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 const { Content, Sider } = Layout;
 
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
@@ -15,7 +16,7 @@ export const UserIcon = styled.img `
 `;
 
 export const StyledTable = styled(Table) `
-  width: 70%;
+  width: 50%;
   box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%);
 `;
 
@@ -55,19 +56,31 @@ const ReviewPage = () => {
     setIsModalOpen(false);
   };
    
+
+  const userState = useLocation();
+  const user = userState.state.user;
+  const [users, setUsers] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [tempReviews, setTempReviews] = useState([]);
+  var [locations, setLocations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
-    
+   const [selectedPet, setSelectedPet] = useState('');
+   const [selectedWalker, setSelectedWalker] = useState('');   
   const columns = [
     {
-      title: '',
-      dataIndex: 'imageURL',
-      width: '10%',
-      render: theImageURL => <UserIcon alt={theImageURL} src={theImageURL} ></UserIcon>
+      title: 'Recenziju napisao',
+      dataIndex: 'korisnikOd',
+      width: '30%',
     },
     {
-      title: 'Recenziju napisao:',
-      dataIndex: 'username',
+      title: 'Čuvar',
+      dataIndex: 'korisnikZa',
+      width: '30%',
+    },
+    {
+      title: 'Ocjena',
+      dataIndex: 'ocjena',
       width: '20%',
     },
     {
@@ -81,18 +94,57 @@ const ReviewPage = () => {
     },
   ];
 
-  const data = [];
-
-  for (let i = 0; i < 50; i++) {
-    data.push({
-      key: i,
-      imageURL: require('../resources/owner.png'),
-      username: `Marko ${i}`,
-    });
-  }
+  
 
   const [collapsed, setCollapsed] = useState(false);
   const [value, setValue] = useState(3);
+
+useEffect( () => {
+axios.get(`http://localhost:9000/recenzije`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+    setTempReviews(res.data);
+    console.log("temp",tempReviews);
+   })
+   .catch((e) => console.log(e));
+  
+  axios.get(`http://localhost:9000/korisnici`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+   })
+   .then((res) => {
+    setUsers(res.data);
+   })
+   .catch((e) => console.log(e));
+   console.log("USERS",tempReviews.length);
+   let temp = [];
+   for(let i = 0; i < tempReviews.length; i++){
+    
+    let korisnikOd = users.find(element => element.id === tempReviews.at(i).korisnikOdId).firstName + " " +
+      users.find(element => element.id === tempReviews.at(i).korisnikOdId).lastName;
+    console.log(korisnikOd);
+    let korisnikZa = users.find(element => element.id === tempReviews.at(i).korisnikZaId).firstName + " " +
+      users.find(element => element.id === tempReviews.at(i).korisnikZaId).lastName;
+    let ocjena = tempReviews.at(i).ocjena;
+    temp.push({
+      korisnikOd,
+      korisnikZa,
+      ocjena,
+    });
+    
+   }
+   console.log("T",temp);
+   setReviews(temp);
+   
+
+
+
+  }, [reviews, users, tempReviews]);
+
   return (
     <Layout hasSider>
       <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
@@ -109,7 +161,7 @@ const ReviewPage = () => {
           }} >
             <StyledTable
               columns={columns}
-              dataSource={data}
+              dataSource={reviews}
               pageSize={7}
               pagination={{
                 pageSize: 20,
@@ -126,13 +178,13 @@ const ReviewPage = () => {
                 <Descriptions.Item>
                   <Avatar size={130} icon={<UserOutlined />}/>
                 </Descriptions.Item>
-                <Descriptions.Item label="Ime vlasnika">Marko</Descriptions.Item>
+                <Descriptions.Item label="Ime vlasnika">{selectedWalker.ime}</Descriptions.Item>
                 <span style={{ }}>
                   <Rate tooltips={desc} onChange={setValue} value={value} />
                     {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
                 </span>
                 <Descriptions.Item label="Tekst">
-                  blablabalbalbalablabalbalbalablabalblalablbalbalbalbalbalbzudhwfvkuzdfvlwzfvxčifvw
+                {selectedWalker.recenzija}
                 </Descriptions.Item>
               </Descriptions>
             </Modal>

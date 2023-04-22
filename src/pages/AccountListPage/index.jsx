@@ -146,6 +146,7 @@ const AccountListPage = () => {
       setUsersResult([]);
       console.log("users:",users);
     }
+    setIsModalOpen(false);
     
   }
 
@@ -156,7 +157,7 @@ useEffect( () => {
       },
     })
     .then((res) => {
-      if(isCalled) {
+      if(isCalled && searchedUsername==='') {
         console.log(isCalled);
         
         let temp = [];
@@ -248,7 +249,11 @@ useEffect( () => {
             <Modal title="Pretraživanje po korisničkom imenu" open={isModalOpen} onCancel={handleCancel}
             footer={[
               <Button key="1" onClick={searchByUsername} style={{ backgroundColor : "#9ac2f7"}}>Pretraži</Button>,
-              <Button key="2" onClick={() => setIsCalled(true)} 
+              <Button key="2" onClick={() => {
+                setSearchedUsername('');
+                setIsCalled(true);
+                setIsModalOpen(false);}
+              } 
               style={{ backgroundColor : "#c6daf4"}}>Resetuj</Button>,
               <Button key="3" onClick={handleCancel}>Otkaži</Button>,
             ]}>
