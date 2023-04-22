@@ -152,16 +152,24 @@ const EditProfileOwnerPage = () => {
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
   const [locationId, setLocationId] = useState('');
   const [locationName, setLocationName] = useState('');
+  const [isPassModalOpen, setIsPassModalOpen] = useState('');
 
   const showModal = () => {
     setIsModalOpen(true);
   };
+  const showPassModal = () => {
+    setIsPassModalOpen(true);
+  }
   const handleOk = () => {
     setIsModalOpen(false);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  const handleCancel1 = () => {
+    setIsPassModalOpen(false);
+  };
+
   const success = () => {
     messageApi.open({
       type: 'success',
@@ -236,7 +244,6 @@ const EditProfileOwnerPage = () => {
         firstName,
         lastName,
         username,
-        password,
         photo,
         description,
         email,
@@ -248,30 +255,44 @@ const EditProfileOwnerPage = () => {
         },
       })
       .then(() => {
-        console.log("ok");
-      })
-      .catch((e) => console.log(e));
-
-      const locationRequest = {
-        mjestoId: locationId,
-        korisnikId: user.id,
-      };
-      const tempId = locations.find(element => element.korisnikId === user.id).id;
-      console.log(tempId);
-      console.log(locationRequest);
-      await axios.put(`http://localhost:9000/lokacije/${tempId}`, locationRequest, {
-        headers: {
-            Authorization: `Bearer ${user.token}`,
-        },
-      })
-      .then(() => {
-        success();
+        const locationRequest = {
+          mjestoId: locationId,
+          korisnikId: user.id,
+        };
+        const tempId = locations.find(element => element.korisnikId === user.id).id;
+        console.log(tempId);
+        console.log(locationRequest);
+        axios.put(`http://localhost:9000/lokacije/${tempId}`, locationRequest, {
+          headers: {
+              Authorization: `Bearer ${user.token}`,
+          },
+        })
+        .then(() => {
+          success();
+        })
+        .catch((e) => console.log(e));
       })
       .catch((e) => console.log(e));
     }
     catch (error) {
       console.log(error);
     }
+  };
+
+  const changePassword = () => {
+    const request = {
+      password,
+    };
+    axios.put(`http://localhost:9000/korisnici/${user.id}/${user.username}`, request, {
+      headers: {
+          Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then(() => {
+      console.log("sifra apdejtovana");
+      setIsPassModalOpen(false);
+    })
+    .catch((e) => console.log(e)); 
   };
 
   const uploadButton = (
@@ -422,14 +443,6 @@ const EditProfileOwnerPage = () => {
                           onChange={(e) => setLastName(e.target.value)} />
                       </StyledFormItem>
                       <StyledFormItem
-                        label={ <StyledLabel>Lozinka</StyledLabel> }
-                        name="password"
-                      >
-                        <StyledInput type="password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)} />
-                      </StyledFormItem>
-                      <StyledFormItem
                         label={ <StyledLabel>Broj telefona</StyledLabel> }
                         name="phonenumber"
                       >
@@ -451,6 +464,30 @@ const EditProfileOwnerPage = () => {
                           onChange={selectLocation}
                           options={places}
                           defaultValue={locationName}/>
+                      </StyledFormItem>
+                      <StyledFormItem name="password">
+                        <Button type="dashed"
+                          style={{ 
+                            width: '100%', 
+                            marginTop:'3%', 
+                            fontFamily:"'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif",
+                            fontSize: '17px',
+                            color: 'rgba(19, 19, 20, 0.704)' }}
+                            onClick={showPassModal}>
+                          Promijeni lozinku
+                        </Button>
+                        <Modal 
+                          title="Nova lozinka" 
+                          open={isPassModalOpen} 
+                          onOk={changePassword} 
+                          onCancel={handleCancel1} 
+                          okText="Potvrdi"
+                          cancelText="Otkaži">
+                            <p>Unesite novu lozinku</p>
+                            <StyledInput type="password"
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)} />                       
+                          </Modal>
                       </StyledFormItem>
                       <>
                         <DeactivateButton type="primary" onClick={showModal}>

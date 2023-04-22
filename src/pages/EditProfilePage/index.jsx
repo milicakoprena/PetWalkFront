@@ -156,6 +156,7 @@ const EditProfilePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
+  const [isPassModalOpen, setIsPassModalOpen] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [locations, setLocations] = useState([]);
   const [places, setPlaces] = useState([]);
@@ -186,6 +187,10 @@ const EditProfilePage = () => {
     setIsModalOpen2(true);
   }
 
+  const showPassModal = () => {
+    setIsPassModalOpen(true);
+  }
+
   const handleOk = () => {
     //deactivateProfile();
   };
@@ -204,6 +209,10 @@ const EditProfilePage = () => {
 
   const handleCancel2 = () => {
     setIsModalOpen2(false);
+  };
+
+  const handleCancel3 = () => {
+    setIsPassModalOpen(false);
   };
     
   const success = () => {
@@ -332,12 +341,28 @@ const EditProfilePage = () => {
        // console.log(user.id)
         console.log(request);
         //window.location.reload(true);
-        isModalOpen(false);
+        setIsModalOpen(false);
         navigate("/");
         
       })
       .catch((e) => console.log(e));   
 }*/
+
+const changePassword = () => {
+  const request = {
+    password,
+  };
+  axios.put(`http://localhost:9000/korisnici/${user.id}/${user.username}`, request, {
+    headers: {
+        Authorization: `Bearer ${user.token}`,
+    },
+  })
+  .then(() => {
+    console.log("sifra apdejtovana");
+    setIsPassModalOpen(false);
+  })
+  .catch((e) => console.log(e)); 
+};
 
 const showModal1 = () => {
   axios.get(`http://localhost:9000/cijene`, {
@@ -371,7 +396,6 @@ const showModal1 = () => {
         firstName,
         lastName,
         username,
-        password,
         photo,
         description,
         email,
@@ -383,25 +407,22 @@ const showModal1 = () => {
         },
       })
       .then(() => {
-        console.log("ok");
-        console.log(password);
-      })
-      .catch((e) => console.log(e));
-
-      const locationRequest = {
-        mjestoId: locationId,
-        korisnikId: user.id,
-      };
-      const tempId = locations.find(element => element.korisnikId === user.id).id;
-      console.log(tempId);
-      console.log(locationRequest);
-      await axios.put(`http://localhost:9000/lokacije/${tempId}`, locationRequest, {
-        headers: {
-            Authorization: `Bearer ${user.token}`,
-        },
-      })
-      .then(() => {
-        success();
+        const locationRequest = {
+          mjestoId: locationId,
+          korisnikId: user.id,
+        };
+        const tempId = locations.find(element => element.korisnikId === user.id).id;
+        console.log(tempId);
+        console.log(locationRequest);
+        axios.put(`http://localhost:9000/lokacije/${tempId}`, locationRequest, {
+          headers: {
+              Authorization: `Bearer ${user.token}`,
+          },
+        })
+        .then(() => {
+          success();
+        })
+        .catch((e) => console.log(e));
       })
       .catch((e) => console.log(e));
     }
@@ -618,15 +639,6 @@ const showModal1 = () => {
                           onChange={(e) => setLastName(e.target.value)} />
                       </StyledFormItem>
                       <StyledFormItem
-                        label={ <StyledLabel>Lozinka</StyledLabel> }
-                        name="password"
-                      >
-                        <StyledInput type="password"
-                          //defaultValue={user.password}
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)} />
-                      </StyledFormItem>
-                      <StyledFormItem
                         label={ <StyledLabel>Broj telefona</StyledLabel> }
                         name="phonenumber"
                       >
@@ -653,6 +665,30 @@ const showModal1 = () => {
                         >
                           
                         </StyledSelect>
+                      </StyledFormItem>
+                      <StyledFormItem name="password">
+                        <Button type="dashed"
+                          style={{ 
+                            width: '100%', 
+                            marginTop:'3%', 
+                            fontFamily:"'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif",
+                            fontSize: '17px',
+                            color: 'rgba(19, 19, 20, 0.704)' }}
+                            onClick={showPassModal}>
+                          Promijeni lozinku
+                        </Button>
+                        <Modal 
+                          title="Nova lozinka" 
+                          open={isPassModalOpen} 
+                          onOk={changePassword} 
+                          onCancel={handleCancel3} 
+                          okText="Potvrdi"
+                          cancelText="Otkaži">
+                            <p>Unesite novu lozinku</p>
+                            <StyledInput type="password"
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)} />                       
+                          </Modal>
                       </StyledFormItem>
                       <StyledFormItem
                         name="service"
