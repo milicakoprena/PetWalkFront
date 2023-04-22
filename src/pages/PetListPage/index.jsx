@@ -107,7 +107,7 @@ const PetListPage = () => {
   var [placesFilter, setPlacesFilter] = useState([]);
   var [typesFilter, setTypesFilter] = useState([]);
   var [typeFilterName, setTypeFilterName] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  
   const columns = [
   {
     title: 'Ime',
@@ -135,9 +135,31 @@ const PetListPage = () => {
           <Space size="middle">
             <a onClick={() => 
             {
-                  console.log("RECORD",record);
-                  setSelectedPet(record);
-                  showModal();
+               axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                    responseType: 'arraybuffer',
+                    "Content-Type": 'image/jpeg',
+                },
+              })
+              .then((response) => {
+                let temp = {
+                  image : `data:image/jpeg;base64,${response.data}`,
+                  imageName : record.imageName,
+                  id : record.id,
+                  ime : record.ime,
+                  opis : record.opis,
+                  imevlasnika : record.imevlasnika,
+                  vrsta : record.vrsta,
+                  telefon : record.telefon,
+                  lokacija : record.lokacija,
+                }
+                console.log(temp);
+                setSelectedPet(temp);
+              })
+              .catch((e) => console.log(e));
+                  
+             showModal();
             }}>Prikaži</a>
           </Space>
         ),
@@ -146,27 +168,22 @@ const PetListPage = () => {
 
 const filterByType = () => {
   setIsCalled(false);
-  console.log(isCalled);
-  console.log("vrsta:",typeFilterName);
   axios.get(`http://localhost:9000/ljubimci/vrsteLjubimaca/${typeFilterName}`, {
   headers: {
     Authorization: `Bearer ${user.token}`,
   },
  })
  .then((res) => {
-  console.log(res.data);
   let temp = [];
   for(let i = 0; i < petsTemp.length; i++){
     for(let j = 0; j < res.data.length; j++){
       if(petsTemp.at(i).id === res.data.at(j).id)
       {
-        console.log(petsTemp.at(i));
         temp.push(petsTemp.at(i));
       }
     }
   }
 
-  console.log(temp);
   setPets(temp);
  })
  .catch((e) => console.log(e));
@@ -176,7 +193,6 @@ const filterByType = () => {
 
 
 useEffect( () => {
-
   
   axios.get(`http://localhost:9000/korisnici`, {
     headers: {
@@ -248,24 +264,11 @@ useEffect( () => {
         let userId = res.data.at(i).korisnikId;
         let typeId = res.data.at(i).vrstaId;
         let placeId = locations.find(element => element.korisnikId === userId).mjestoId;
-        axios.get(`http://localhost:9000/korisnici/image/${res.data.at(i).slika}`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            "Content-Type": 'application/octet-stream',
-            "response-type": 'blob'
-          },
-         })
-         .then((response) =>
-      {
-        const blob = new Blob([response.data], { type: 'image/jpeg' });
-        const url = URL.createObjectURL(blob);
-        setImageUrl(url);
-      })
-         .catch((e) => console.log(e));
         
           
           tempPet = {
-           image: imageUrl,
+           imageName : res.data.at(i).slika,
+           image: '',
            id: res.data.at(i).id,
            ime: res.data.at(i).ime,
            opis: res.data.at(i).opis,
@@ -287,7 +290,7 @@ useEffect( () => {
 
   
   
-  const showModal = () => {
+  const showModal =  () => {
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -369,7 +372,7 @@ useEffect( () => {
              >
              <Descriptions title="" size="default" column={1}>
                <Descriptions.Item>
-                 <Avatar size={130} icon={<UserOutlined />} src={selectedPet.image}/>
+                 <Avatar size={130}  src={selectedPet.image}/>
                </Descriptions.Item>
                <Descriptions.Item label="Ime">{selectedPet.ime}</Descriptions.Item>
                <Descriptions.Item label="Vrsta">{selectedPet.vrsta}</Descriptions.Item>
