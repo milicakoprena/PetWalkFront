@@ -37,7 +37,6 @@ function App() {
           <Route path="/accountlistpage" element={<AccountListPage />} />
           <Route exact path="/problemview" element={<ProblemView />} />
           <Route exact path="/mypetslist" element={<MyPetsList />} />
-          <Route exact path="/problemview" element={<ProblemView />} />
         </Routes>
       </Router>
       

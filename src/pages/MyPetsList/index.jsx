@@ -21,6 +21,7 @@ export const StyledTable = styled(Table) `
     width: 70%;
     box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%);
     background-color: white;
+    border-radius: 10px;
 `;
 
 export const Page = styled.div`
@@ -74,10 +75,7 @@ const MyPetsList = () => {
     const [pets, setPets] = useState([]);
     const [selectedPet, setSelectedPet] = useState('');
     const [types, setTypes] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState();
-    const [image, setImage] = useState('');
-    const [imageFile, setImageFile] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
 

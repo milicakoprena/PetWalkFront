@@ -61,13 +61,13 @@ const ReportPage = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-
-  const[sadrzaj,setSadrzaj]=useState('');
-  const[korisnikId,setKorisnikId]=useState(user.korisnikId);
-  const [locationId, setLocationId] = useState('');
-  const [locations, setLocations] = useState('');
   const userState = useLocation();
   const user = userState.state.user;
+  const [sadrzaj, setSadrzaj]=useState('');
+  const [korisnikId, setKorisnikId]=useState(user.korisnikId);
+  const [locationId, setLocationId] = useState('');
+  const [locations, setLocations] = useState('');
+  
 
   let datee=new Date();
 
@@ -95,6 +95,7 @@ const ReportPage = () => {
         setLoading(false);
       });
   };
+  
   useEffect(() => {
     loadMoreData();
   }, []);
