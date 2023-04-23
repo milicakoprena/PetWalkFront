@@ -63,18 +63,16 @@ const ReportPage = () => {
   const [data, setData] = useState([]);
   const userState = useLocation();
   const user = userState.state.user;
-  const [sadrzaj, setSadrzaj]=useState('');
+ 
   const [korisnikId, setKorisnikId]=useState(user.korisnikId);
   const [locationId, setLocationId] = useState('');
   const [locations, setLocations] = useState('');
   
 
   const[sadrzaj,setSadrzaj]=useState('');
-  const[korisnikId,setKorisnikId]=useState(user.korisnikId);
-  const [locationId, setLocationId] = useState('');
-  const [locations, setLocations] = useState('');
-  const userState = useLocation();
-  const user = userState.state.user;
+
+ 
+
 
   let datee=new Date();
 

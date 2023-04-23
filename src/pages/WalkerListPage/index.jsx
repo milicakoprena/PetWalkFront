@@ -404,29 +404,7 @@ const WalkerListPage = () => {
 
   
 
-  const postRecenzija = async (event) => {
-    event.preventDefault();
-    try {
-      const request = {
-        komentar,
-        ocjena,
-        korisnikOdId,
-        korisnikZaId
-      };
-    await axios.post('http://localhost:9000/recenzije', request, {
-      headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
-    })
-      .then(() => {
-         console.log("Uspjesno");
-      })
-      .catch((e) => console.log(e)); 
-    }
-    catch (error) {
-      console.log(error);
-    }
-  };
+ 
    
   return (
     <Layout hasSider>
