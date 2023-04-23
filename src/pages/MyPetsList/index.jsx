@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Layout } from 'antd';
+import { Modal, Layout, Descriptions } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table } from 'antd';
@@ -77,8 +77,9 @@ const MyPetsList = () => {
     const [types, setTypes] = useState([]);
     const [imageUrl, setImageUrl] = useState();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen2, setIsModalOpen2] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
-
+    const [selectedPetPhoto, setSelectedPetPhoto] = useState('');
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -91,17 +92,19 @@ const MyPetsList = () => {
         setIsModalOpen(false);
     };
 
+    const showModal2 = () => {
+        setIsModalOpen2(true);
+    };
+
+    const handleOk2 = () => {
+        setIsModalOpen2(false);
+    };
+
+    const handleCancel2 = () => {
+        setIsModalOpen2(false);
+    };
+
     const columns = [
-    {
-        title:'',
-        dataIndex: 'image',
-        width: '15%',
-        render: (_, record) => (
-            <Space size="middle" >
-                <Avatar size={74} icon={<UserOutlined />} style={{ marginRight: '75%' }} />
-            </Space>
-        ),
-    },
     {
         title: 'Vrsta',
         dataIndex: 'vrsta',
@@ -119,13 +122,41 @@ const MyPetsList = () => {
     },
     {
         title: '',
+        dataIndex: 'show',
+        width: '15%',
+        render: (_, record) => (
+            <Space size="middle" >
+                <Button type="link" onClick={() => 
+                {
+                    console.log(record);
+                    axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                    responseType: 'arraybuffer',
+                    "Content-Type": 'image/jpeg',
+                },
+                })
+                .then((response) =>
+                {
+                    setSelectedPetPhoto({
+                        image: `data:image/jpeg;base64,${response.data}`,
+                    })
+                    console.log(selectedPetPhoto);
+                })
+                .catch((e) => console.log(e));
+                showModal2();
+                }}>Prikaži sliku</Button>
+            </Space>
+        ),
+    },
+    {
+        title: '',
         dataIndex: 'action',
         width: '15%',
         render: (_, record) => (
             <Space size="middle" >
                 <Button type="link" onClick={() => 
                 {
-                    console.log("RECORD",record);
                     setSelectedPet(record);
                     showModal();
                 }}>Obriši</Button>
@@ -162,26 +193,14 @@ const MyPetsList = () => {
             let tempPet = '';
             for(let i = 0; i < res.data.length; i++)
             {
+                let imageData = '';
                 let userId = res.data.at(i).korisnikId;
                 let typeId = res.data.at(i).vrstaId;
-                axios.get(`http://localhost:9000/korisnici/image/${res.data.at(i).slika}`, {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                    "Content-Type": 'application/octet-stream',
-                    "response-type": 'blob'
-                },
-                })
-                .then((response) =>
-                {
-                    const blob = new Blob([response.data], { type: 'image/jpeg' });
-                    const url = URL.createObjectURL(blob);
-                    setImageUrl(url);
-                })
-                .catch((e) => console.log(e));
                 
                 if(userId===user.id){
                     tempPet = {
-                        image: imageUrl,
+                        imageName: res.data.at(i).slika,
+                        image : '',
                         id: res.data.at(i).id,
                         ime: res.data.at(i).ime,
                         opis: res.data.at(i).opis,
@@ -235,6 +254,17 @@ const MyPetsList = () => {
                                 okText="Da" cancelText="Ne" style={{ minWidth: '490px' }}
                             >
                                 <p>Da li ste sigurni da želite da obrišete ljubimca?</p>    
+                            </Modal>
+                            <Modal title="" open={isModalOpen2} onOk={handleOk2} onCancel={handleCancel2} width={280}
+                                 
+                                footer={[]}
+                            >
+                                <Descriptions title="" size="default" column={1}>
+                                      <Descriptions.Item>
+                                        <Avatar size={200}  src={selectedPetPhoto.image}
+                                          style={{marginTop: '30px', marginLeft: '10px'}}/>
+                                      </Descriptions.Item>
+                                </Descriptions>  
                             </Modal>
                         </Cover>
                     </Page>

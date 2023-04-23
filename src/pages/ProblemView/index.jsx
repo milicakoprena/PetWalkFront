@@ -82,10 +82,11 @@ const ProblemView = () => {
                     console.log(userId);
 
                     tempProblem = {
+                        imageName: users.find(element => element.id === userId).photo,
+                        image: '',
                         firstName: users.find(element => element.id === userId).firstName,
                         lastName: users.find(element => element.id === userId).lastName,
                         key: i,
-                        imageURL: require('../resources/user.png'),
                         username: users.find(element => element.id === userId).username,
                         sadrzaj: res.data.at(i).sadrzaj,
                     }
@@ -124,7 +125,28 @@ const ProblemView = () => {
 
 
     const showModal = (problem) => {
-        setSelectedProblem(problem);
+        
+            axios.get(`http://localhost:9000/korisnici/image/${problem.imageName}`, {
+        headers: {
+            Authorization: `Bearer ${user.token}`,
+            responseType: 'arraybuffer',
+            "Content-Type": 'image/jpeg',
+        },
+        })
+        .then((response) =>
+        {
+            setSelectedProblem({
+                image: `data:image/jpeg;base64,${response.data}`,
+                imageName: problem.imageName,
+                firstName: problem.firstName,
+                lastName: problem.lastName,
+                key: problem.key,
+                username: problem.username,
+                sadrzaj: problem.sadrzaj,
+            })
+        })
+        .catch((e) => console.log(e));
+        
         setIsModalOpen(true);
     };
     const handleOk = () => {
@@ -155,7 +177,7 @@ const ProblemView = () => {
                             id="scrollableDiv"
                             style={{
                                 height: 400,
-                                width: '50%',
+                                width: '40%',
                                 overflow: 'auto',
                                 padding: '0 16px',
                                 border: '1px solid rgba(140, 140, 140, 0.35)',
@@ -185,7 +207,6 @@ const ProblemView = () => {
                                     renderItem={(item) => (
                                         <List.Item key={item.key}>
                                             <List.Item.Meta
-                                                avatar={<Avatar src={item.imageURL} />}
                                                 title={<a >{item.username}</a>}
                                             />
                                             <div>
@@ -196,15 +217,17 @@ const ProblemView = () => {
                                     )}
                                 />
                             </InfiniteScroll>
-                            <Modal title="Problem" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={400}
+                            <Modal title="Detalji o problemu" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={300}
                                 okText="OK"
                                 cancelText="Otkaži"
                             >
                                 <Descriptions title="" size="default" column={1} >
                                     <Descriptions.Item>
-                                        <Avatar size={130} icon={<UserOutlined />} />
+                                        <Avatar size={130} icon={<UserOutlined />} 
+                                            src={selectedProblem.image}/>
                                     </Descriptions.Item>
                                     <Descriptions.Item label="Ime i prezime">{selectedProblem.firstName} {selectedProblem.lastName}</Descriptions.Item>
+                                    <Descriptions.Item label="Korisničko ime">{selectedProblem.username}</Descriptions.Item>
                                     <Descriptions.Item label="Tekst">{selectedProblem.sadrzaj}</Descriptions.Item>
                                 </Descriptions>
                             </Modal>

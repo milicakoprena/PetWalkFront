@@ -353,9 +353,6 @@ useEffect( () => {
               <Button key="back" onClick={handleCancel}>
                 Otkaži
               </Button>,
-              <Button key="submit" type="primary" onClick={handleOk}>
-                Izaberi
-              </Button>,
               <Button
                 key="addreview"
                 type="primary"

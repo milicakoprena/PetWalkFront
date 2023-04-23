@@ -126,7 +126,30 @@ const WalkerListPage = () => {
         <Space size="middle">
           <a onClick={() => 
             {
-              setSelectedWalker(record);
+              
+                axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
+                 headers: {
+                     Authorization: `Bearer ${user.token}`,
+                     responseType: 'arraybuffer',
+                     "Content-Type": 'image/jpeg',
+                 },
+               })
+               .then((response) => { 
+                 let temp = {
+                   image : `data:image/jpeg;base64,${response.data}`,
+                   imageName : record.imageName,
+                   id : record.id,
+                   firstName : record.firstName,
+                   lastName : record.lastName,
+                   phoneNumber : record.phoneNumber,
+                   location : record.location,
+                   description : record.description,
+                 }
+                 setSelectedWalker(temp);
+                 console.log(selectedWalker);
+               })
+               .catch((e) => console.log(e));
+                   
               showModal();
             }
           }>Prikaži</a>
@@ -145,7 +168,6 @@ const WalkerListPage = () => {
         korisnikOdId,
         korisnikZaId
       };
-      console.log("REQ",recenzijaRequest);
       const response = await fetch('http://localhost:9000/recenzije', {
         method: 'POST',
         headers: {
@@ -176,8 +198,6 @@ const WalkerListPage = () => {
       },
     })
     .then((res) => {
-      console.log("RES",placeFilterName);
-      console.log("RES",res.data);
       let temp = [];
       for(let i = 0; i < walkersTemp.length; i++){
         for(let j = 0; j < res.data.length; j++){
@@ -277,6 +297,8 @@ const WalkerListPage = () => {
           }
           if(res.data.at(i).role === ROLE_WALKER && res.data.at(i).status === STATUS_ACTIVE)
             temp.push({
+              imageName : res.data.at(i).photo,
+              image: '',
               id: res.data.at(i).id,
               firstName: res.data.at(i).firstName,
               lastName: res.data.at(i).lastName,
@@ -414,12 +436,15 @@ const WalkerListPage = () => {
               style={{height: '100%', overflow: 'auto'}}
             />
             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={450} 
-              okText="Izaberi"
-              cancelText="Otkaži"
+              footer={[
+                <Button key="back" onClick={handleCancel}>
+                  Otkaži
+                </Button>,
+              ]}
             >
               <Descriptions title="" size="default" column={1}>
                 <Descriptions.Item>
-                  <Avatar size={130} icon={<UserOutlined />} />
+                  <Avatar size={130} icon={<UserOutlined />} src={selectedWalker.image}/>
                 </Descriptions.Item>
                 <Descriptions.Item label="Ime i prezime">{selectedWalker.firstName} {selectedWalker.lastName}</Descriptions.Item>
                 <Descriptions.Item label="Broj telefona">{selectedWalker.phoneNumber}</Descriptions.Item>
