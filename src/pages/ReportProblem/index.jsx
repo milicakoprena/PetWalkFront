@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import MainMenu from '../../components/MainMenu';
-import { Layout, Input, Button, Card } from 'antd';
+import { Layout, Input, Button, Card , message} from 'antd';
 import { Page } from '../AddPetPage';
 import styled from 'styled-components';
 import pozadina from "../resources/pozadina2.jpg"
@@ -41,6 +41,8 @@ const ReportProblem = () => {
     const user = userState.state.user;
     const [sadrzaj, setSadrzaj] = useState('');
     const [korisnikId, setKorisnikId] = useState(user.id);
+    const [messageApi, contextHolder] = message.useMessage();
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -56,8 +58,16 @@ const ReportProblem = () => {
             })
                 .then(() => {
                     console.log("Uspjesno");
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Problem uspješno prijavljen!',
+                      });
                 })
-                .catch((e) => console.log(e));
+                .catch((e) => {console.log(e);
+                    messageApi.open({
+                        type: 'error',
+                        content: 'Problem nije uspješno prijavljen!',
+                      });});
         }
         catch (error) {
             console.log(error);
@@ -101,6 +111,7 @@ const ReportProblem = () => {
                                 value={sadrzaj}
                                 onChange={(e) => setSadrzaj(e.target.value)}
                             />
+                            {contextHolder}
                             <Button type="primary" style={{
                                 backgroundColor: 'rgba(0,21,41,255)',
                                 marginTop: '30px',

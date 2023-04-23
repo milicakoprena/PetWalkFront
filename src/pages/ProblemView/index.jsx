@@ -95,6 +95,7 @@ const ProblemView = () => {
                 }
 
                 setProblems(temp);
+                console.log("PROBLEMS",problems);
             })
             .catch((e) => console.log(e));
     }
@@ -154,7 +155,7 @@ const ProblemView = () => {
                             id="scrollableDiv"
                             style={{
                                 height: 400,
-                                width: '70%',
+                                width: '50%',
                                 overflow: 'auto',
                                 padding: '0 16px',
                                 border: '1px solid rgba(140, 140, 140, 0.35)',
@@ -185,7 +186,7 @@ const ProblemView = () => {
                                         <List.Item key={item.key}>
                                             <List.Item.Meta
                                                 avatar={<Avatar src={item.imageURL} />}
-                                                title={<a href="https://ant.design">{item.username}</a>}
+                                                title={<a >{item.username}</a>}
                                             />
                                             <div>
                                                 <Button type="ghost" style={{ color: 'blue' }} onClick={() => showModal(item)}>Prikaži</Button>
@@ -195,11 +196,11 @@ const ProblemView = () => {
                                     )}
                                 />
                             </InfiniteScroll>
-                            <Modal title="Problem" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={450}
+                            <Modal title="Problem" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={400}
                                 okText="OK"
                                 cancelText="Otkaži"
                             >
-                                <Descriptions title="" size="default" column={2} >
+                                <Descriptions title="" size="default" column={1} >
                                     <Descriptions.Item>
                                         <Avatar size={130} icon={<UserOutlined />} />
                                     </Descriptions.Item>

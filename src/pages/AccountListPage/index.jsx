@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { Modal, Layout, Button, Rate, Input } from 'antd';
+import { Modal, Layout, Button, Rate, Input, FloatButton } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table, Tag } from 'antd';
 import { Descriptions } from 'antd';
 import axios from "axios";
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined , SearchOutlined} from '@ant-design/icons';
 import { Avatar } from 'antd';
 import { useNavigate, useLocation } from 'react-router';
 import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER, STATUS_ACTIVE, STATUS_BLOCKED, STATUS_REQUESTED } from '../../util.js/constants';
@@ -69,11 +69,18 @@ export const AddReviewButton = styled.div`
 `;
 
 const AccountListPage = () => {
+  const [isCalled, setIsCalled] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
+    const [collapsed, setCollapsed] = useState(false);
+    const [value, setValue] = useState(3);
     const userState = useLocation();
     const user = userState.state.user;
     const [users, setUsers] = useState([]);
+    const [usersTemp, setUsersTemp] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [searchedUsername, setSearchedUsername] = useState('');
+    const [usersResult, setUsersResult] = useState([]);
     let buttonText = "";
   const columns = [
    // {
@@ -118,14 +125,30 @@ const AccountListPage = () => {
               <a onClick={() => {
             setSelectedUser(record);
             console.log(record);
-            setIsModalVisible(true);
+            setIsModalOpen2(true);
           }}>Promijeni status</a>
             </Space>
           ),
       },
   ];
 
-  
+  const searchByUsername = () => {
+    setIsCalled(false);
+    console.log("isCalled",isCalled);
+    console.log(searchedUsername);
+    console.log("usersTemp:",usersTemp);
+    for(let i = 0; i < usersTemp.length; i++){
+      if(usersTemp.at(i).username.toLowerCase().includes(searchedUsername.toLowerCase())){
+        usersResult.push(usersTemp.at(i));
+      }
+      console.log("rezultat:",usersResult);
+      setUsers(usersResult);
+      setUsersResult([]);
+      console.log("users:",users);
+    }
+    setIsModalOpen(false);
+    
+  }
 
 useEffect( () => {
    axios.get(`http://localhost:9000/korisnici`, {
@@ -134,18 +157,24 @@ useEffect( () => {
       },
     })
     .then((res) => {
-      let temp = [];
-      for(let i = 0; i < res.data.length; i++)
-      {
-        if(res.data.at(i).role === ROLE_WALKER || res.data.at(i).role === ROLE_OWNER)
-          temp.push(res.data.at(i));
+      if(isCalled && searchedUsername==='') {
+        console.log(isCalled);
+        
+        let temp = [];
+        for(let i = 0; i < res.data.length; i++)
+        {
+          if(res.data.at(i).role === ROLE_WALKER || res.data.at(i).role === ROLE_OWNER)
+            temp.push(res.data.at(i));
+        }
+           
+        setUsers(temp);
+        setUsersTemp(users);
+        console.log("a",usersTemp);
       }
-         
-      setUsers(temp);
+      
     })
     .catch((e) => console.log(e));
-    //console.log(assets)
-}, []);
+}, [users, isCalled, searchByUsername]);
 
     
   const changeStatus = () => {
@@ -171,19 +200,22 @@ useEffect( () => {
     
   }
 
-
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
   
   const handleOk = () => {
     changeStatus();
   };
   const handleCancel = () => {
-    setIsModalVisible(false);
+    setIsModalOpen(false);
+  };
+
+  const handleCancel2 = () => {
+    setIsModalOpen2(false);
   };
  
-  const [isModalOpen, setIsModalOpen] = useState(false);
-    
-    const [collapsed, setCollapsed] = useState(false);
-    const [value, setValue] = useState(3);
+  
     return (
       <Layout hasSider>
         <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
@@ -206,12 +238,30 @@ useEffect( () => {
              >
               
              </StyledTable>
-             <Modal title="Promjena statusa" open={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={650} 
+             <Modal title="Promjena statusa" open={isModalOpen2} onOk={handleOk} onCancel={handleCancel2} width={650} 
              okText="Promijeni"
              cancelText="Otkaži"
              >
              Da li stvarno želiš da promijeniš status ovog naloga?
             
+            </Modal>
+            <FloatButton icon={<SearchOutlined />} type="primary" style={{ right: 40, top: 11 }} onClick={showModal} />
+            <Modal title="Pretraživanje po korisničkom imenu" open={isModalOpen} onCancel={handleCancel}
+            footer={[
+              <Button key="1" onClick={searchByUsername} style={{ backgroundColor : "#9ac2f7"}}>Pretraži</Button>,
+              <Button key="2" onClick={() => {
+                setSearchedUsername('');
+                setIsCalled(true);
+                setIsModalOpen(false);}
+              } 
+              style={{ backgroundColor : "#c6daf4"}}>Resetuj</Button>,
+              <Button key="3" onClick={handleCancel}>Otkaži</Button>,
+            ]}>
+                <Input
+                placeholder="Unesi korisničko ime"
+                value={searchedUsername}
+                onChange={(e) => setSearchedUsername(e.target.value)}
+                ></Input>
             </Modal>
             </Cover>
           </Page>

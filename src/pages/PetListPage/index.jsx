@@ -9,6 +9,7 @@ import { Avatar, DatePicker } from 'antd';
 import { LocationOptions, UslugaOptions } from "../EditProfilePage";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import {Buffer} from 'buffer';
 
 const { TextArea } = Input;
 
@@ -106,6 +107,7 @@ const PetListPage = () => {
   var [placesFilter, setPlacesFilter] = useState([]);
   var [typesFilter, setTypesFilter] = useState([]);
   var [typeFilterName, setTypeFilterName] = useState('');
+  
   const columns = [
   {
     title: 'Ime',
@@ -133,8 +135,31 @@ const PetListPage = () => {
           <Space size="middle">
             <a onClick={() => 
             {
-                  setSelectedPet(record);
-                  showModal();
+               axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                    responseType: 'arraybuffer',
+                    "Content-Type": 'image/jpeg',
+                },
+              })
+              .then((response) => {
+                let temp = {
+                  image : `data:image/jpeg;base64,${response.data}`,
+                  imageName : record.imageName,
+                  id : record.id,
+                  ime : record.ime,
+                  opis : record.opis,
+                  imevlasnika : record.imevlasnika,
+                  vrsta : record.vrsta,
+                  telefon : record.telefon,
+                  lokacija : record.lokacija,
+                }
+                console.log(temp);
+                setSelectedPet(temp);
+              })
+              .catch((e) => console.log(e));
+                  
+             showModal();
             }}>Prikaži</a>
           </Space>
         ),
@@ -143,30 +168,26 @@ const PetListPage = () => {
 
 const filterByType = () => {
   setIsCalled(false);
-  console.log(isCalled);
-  console.log("vrsta:",typeFilterName);
   axios.get(`http://localhost:9000/ljubimci/vrsteLjubimaca/${typeFilterName}`, {
   headers: {
     Authorization: `Bearer ${user.token}`,
   },
  })
  .then((res) => {
-  console.log(res.data);
   let temp = [];
   for(let i = 0; i < petsTemp.length; i++){
     for(let j = 0; j < res.data.length; j++){
       if(petsTemp.at(i).id === res.data.at(j).id)
       {
-        console.log(petsTemp.at(i));
         temp.push(petsTemp.at(i));
       }
     }
   }
 
-  console.log(temp);
   setPets(temp);
  })
  .catch((e) => console.log(e));
+ setIsModalOpen2(false);
 
 };
 
@@ -240,12 +261,14 @@ useEffect( () => {
       let tempPet = '';
       for(let i = 0; i < res.data.length; i++)
       {
-          let userId = res.data.at(i).korisnikId;
-          let typeId = res.data.at(i).vrstaId;
- 
-          let placeId = locations.find(element => element.korisnikId === userId).mjestoId;
+        let userId = res.data.at(i).korisnikId;
+        let typeId = res.data.at(i).vrstaId;
+        let placeId = locations.find(element => element.korisnikId === userId).mjestoId;
+        
           
           tempPet = {
+           imageName : res.data.at(i).slika,
+           image: '',
            id: res.data.at(i).id,
            ime: res.data.at(i).ime,
            opis: res.data.at(i).opis,
@@ -255,7 +278,6 @@ useEffect( () => {
            telefon: users.find(element => element.id === userId).phoneNumber,
            lokacija: places.find(element => element.id === placeId).naziv,
           }
-          
           tempArray.push(tempPet);
       }
      setPets(tempArray);
@@ -268,7 +290,7 @@ useEffect( () => {
 
   
   
-  const showModal = () => {
+  const showModal =  () => {
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -350,7 +372,7 @@ useEffect( () => {
              >
              <Descriptions title="" size="default" column={1}>
                <Descriptions.Item>
-                 <Avatar size={130} icon={<UserOutlined />} src={selectedPet.slika}/>
+                 <Avatar size={130}  src={selectedPet.image}/>
                </Descriptions.Item>
                <Descriptions.Item label="Ime">{selectedPet.ime}</Descriptions.Item>
                <Descriptions.Item label="Vrsta">{selectedPet.vrsta}</Descriptions.Item>
@@ -376,16 +398,7 @@ useEffect( () => {
             </Modal>
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 11 }} onClick={showModal2} />
             <Modal title="Filtriranje" open={isModalOpen2} onOk={filterByType} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
-                <Select size="middle" 
-                    placeholder="Izaberite lokacije"
-                    allowClear
-                    style={{
-                      width: '100%',
-                      marginBottom: '3%',
-                      marginTop: '3%'
-                    }}
-                    onChange={handleChange1}
-                    options={placesFilter}/>
+                
                 <Select size="middle" 
                     placeholder="Izaberite vrste"
                     allowClear

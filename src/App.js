@@ -11,6 +11,7 @@ import ReviewPage from "./pages/ReviewPage";
 import ReportPage from "./pages/ReportPage";
 import EditProfileOwnerPage from "./pages/EditProfileOwnerPage";
 import AccountListPage from "./pages/AccountListPage";
+import MyPetsList from "./pages/MyPetsList";
 import ProblemView from "./pages/ProblemView";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/reportpage" element={<ReportPage />} />
           <Route path="/accountlistpage" element={<AccountListPage />} />
           <Route exact path="/problemview" element={<ProblemView />} />
+          <Route exact path="/mypetslist" element={<MyPetsList />} />
         </Routes>
       </Router>
       
