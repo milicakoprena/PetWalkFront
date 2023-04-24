@@ -191,10 +191,6 @@ const EditProfilePage = () => {
     setIsPassModalOpen(true);
   }
 
-  const handleOk = () => {
-    //deactivateProfile();
-  };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -320,27 +316,7 @@ const EditProfilePage = () => {
  .catch((e) => console.log(e));
 }, [locationName, locations, places, prices, services, user.id, user.korisnikId, user.token]);
 
-/*const deactivateProfile = () => {
-    const request = {
-      status: user.status === STATUS_ACTIVE? STATUS_BLOCKED : STATUS_ACTIVE,
-    };
-   
-    axios
-      .patch(`http://localhost:9000/korisnici/${user.id}/status`, request, {
-          headers: {
-              Authorization: `Bearer ${user.token}`,
-          },
-        })
-      .then(() => {
-       // console.log(user.id)
-        console.log(request);
-        //window.location.reload(true);
-        setIsModalOpen(false);
-        navigate("/");
-        
-      })
-      .catch((e) => console.log(e));   
-}*/
+
 
 const changePassword = () => {
   const request = {
@@ -744,18 +720,7 @@ const showModal1 = () => {
                         </Modal>
                       </StyledFormItem>
                       <>
-                        <DeactivateButton type="primary" onClick={showModal}>
-                          Deaktiviraj nalog
-                        </DeactivateButton>
-                        <Modal 
-                          title="Deaktiviraj nalog" 
-                          open={isModalOpen} 
-                          onOk={handleOk} 
-                          onCancel={handleCancel} 
-                          okText="Potvrdi"
-                          cancelText="Otkaži">
-                          <p>Da li ste sigurni da želite da deaktivirate Vaš nalog</p>
-                        </Modal>
+                        
                       </>
                     </StyledForm>
                   </Col>
