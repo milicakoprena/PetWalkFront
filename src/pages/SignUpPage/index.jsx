@@ -154,6 +154,20 @@ const SignUpPage = () => {
       console.log(locationId);
     };
 
+    const handleChange = (info) => {
+      if (info.file.status === 'uploading') {
+        setLoading(true);
+        return;
+      }
+      if (info.file.status === 'done') {
+        // Get this url from response in real world.
+        getBase64(info.file.originFileObj, (url) => {
+          setLoading(false);
+          setImageUrl(url);
+        });
+      }
+    };
+
     useEffect( () => {
       axios.get(`http://localhost:9000/mjesta`)
        .then((res) => {
@@ -186,13 +200,13 @@ const SignUpPage = () => {
         </div>
       );
       const saveFile = ({ file, onSuccess }) => {
-        console.log(file);
-        setImage(file.name);
-        setImageFile(file);
+        setTimeout(() => {
+          onSuccess("ok");
+          setImage(file.name);
+          setImageFile(file);
+        }, 0);
       };
 
-      
-  
 
       const handleSubmit = async (event) => {
         event.preventDefault();
@@ -262,6 +276,7 @@ const SignUpPage = () => {
               showUploadList={false}
               action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               beforeUpload={beforeUpload}
+              onChange={handleChange}
             >
               {imageUrl ? (
                 <UserPhoto

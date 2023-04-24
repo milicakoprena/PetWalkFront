@@ -160,6 +160,7 @@ const EditProfilePage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [locations, setLocations] = useState([]);
   const [places, setPlaces] = useState([]);
+  const [selectServices, setSelectServices] = useState([]);
   const [services, setServices] = useState([]);
   const userState = useLocation();
   const user = userState.state.user;
@@ -176,15 +177,27 @@ const EditProfilePage = () => {
   const [prices, setPrices] = useState([]);
   const [uslugaId, setUslugaId] = useState('');
   const [cijena, setCijena] = useState('');
+  const [imageFile, setImageFile] = useState('');
   const [selectedPrice, setSelectedPrice] = useState('');
   const [remainServices, setRemainServices] = useState([]);
+  const [currentImage, setCurrentImage] = useState(''); 
+
   const navigate = useNavigate();
 
   const showModal = () => {
+    
     setIsModalOpen(true);
   };
 
   const showModal2 = () => {
+    for(let i = 0; i < services.length; i++){
+      
+      if(!prices.find(element => element.service === services.at(i).label)){
+        console.log("ima");
+        selectServices.push(services.at(i));
+      }
+  }
+    console.log(selectServices);
     setIsModalOpen2(true);
   }
 
@@ -205,6 +218,7 @@ const EditProfilePage = () => {
   };
 
   const handleCancel2 = () => {
+    setSelectServices([]);
     setIsModalOpen2(false);
   };
 
@@ -212,12 +226,7 @@ const EditProfilePage = () => {
     setIsPassModalOpen(false);
   };
     
-  const success = () => {
-    messageApi.open({
-      type: 'success',
-      content: 'Promjene uspješno sačuvane.',
-    });
-  };
+  
 
   const handleServiceChange = (event) => {
     setUslugaId(event);
@@ -266,6 +275,22 @@ const EditProfilePage = () => {
   };
 
   useEffect( () => {
+    axios.get(`http://localhost:9000/korisnici/image/${user.photo}`, {
+      headers: {
+          Authorization: `Bearer ${user.token}`,
+          responseType: 'arraybuffer',
+          "Content-Type": 'image/jpeg',
+      },
+    })
+    .then((response) => {
+      if(imageUrl===undefined){
+        console.log("bla");
+        setCurrentImage(`data:image/jpeg;base64,${response.data}`);
+      }
+        
+    })
+    .catch((e) => console.log(e));
+
     axios.get(`http://localhost:9000/lokacije`, {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -319,7 +344,7 @@ const EditProfilePage = () => {
       //console.log(services);
  })
  .catch((e) => console.log(e));
-}, [locationName, locations, places, prices, services, user.id, user.korisnikId, user.token]);
+}, [locationName, locations, places, prices, services, imageUrl, currentImage]);
 
 
 
@@ -364,8 +389,25 @@ const showModal1 = () => {
   setIsModalOpen1(true);
 };
 
+  const uploadPhoto = async () => {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+    await axios.post(`http://localhost:9000/korisnici/image`, formData,  {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+      "Content-Type": "multipart/form-data",
+    },
+    })
+    .then((res) => {
+      console.log("Uspjesno");
+    })
+    .catch((e) => console.log(e));
+  }
+
+
   const handleUpdate = async (event) => {
     event.preventDefault();
+    uploadPhoto();
     try {
       const request = {
         firstName,
@@ -471,6 +513,7 @@ const showModal1 = () => {
       getBase64(info.file.originFileObj, (url) => {
       setLoading(false);
       setImageUrl(url);
+      setCurrentImage(url);
       });
     }
   };
@@ -491,6 +534,7 @@ const showModal1 = () => {
     setTimeout(() => {
       onSuccess("ok");
       setPhoto(file.name);
+      setImageFile(file);
     }, 0);
   };
 
@@ -533,8 +577,8 @@ const showModal1 = () => {
                     beforeUpload={beforeUpload}
                     onChange={handleChange}
                   >
-                    {imageUrl ? (
-                      <UserPhoto src={imageUrl} alt="avatar"/>
+                    {currentImage ? (
+                      <UserPhoto src={currentImage} alt="avatar"/>
                     ) : (
                       uploadButton
                     )} 
@@ -723,7 +767,7 @@ const showModal1 = () => {
                                     fontSize: '15px',
                                   }}
                                   onChange={handleServiceChange}
-                                  options={services} />
+                                  options={selectServices} />
                               </Form.Item>
                               <Form.Item
                                 label={ <StyledLabel>Cijena</StyledLabel> }

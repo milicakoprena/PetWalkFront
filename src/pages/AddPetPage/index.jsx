@@ -226,23 +226,21 @@ const AddPetPage = (props) => {
        //console.log(assets)
    }, []);
     
-    const handleChange = (info) => {
-      console.log(info);
-        if (info.file.status === 'uploading') {
-          console.log("uploading");
-          setLoading(true);
-          return;
-        }
-        if (info.file.status === 'done') {
-          console.log("done");
-          // Get this url from response in real world.
-          getBase64(info.file.originFileObj, (url) => {
-            setLoading(false);
-            setImageUrl(url);
-            console.log("IMAGE URL:",imageUrl);
-          });
-        }
-      };
+   const handleChange = (info) => {
+    console.log(info);
+    if (info.file.status === 'uploading') {
+      setLoading(true);
+      return;
+    }
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, (url) => {
+        setLoading(false);
+        setImageUrl(url);
+      });
+    }
+  };
+
       const uploadButton = (
         <div>
           {loading ? <LoadingOutlined /> : <PlusOutlined/>
@@ -260,9 +258,11 @@ const AddPetPage = (props) => {
       
 
       const saveFile = ({ file, onSuccess }) => {
-        console.log(file);
-        setImage(file.name);
-        setImageFile(file);
+        setTimeout(() => {
+          onSuccess("ok");
+          setImage(file.name);
+          setImageFile(file);
+        }, 0);
       };
     const [form] = Form.useForm();
     const [collapsed, setCollapsed] = useState(false);
@@ -305,9 +305,10 @@ const AddPetPage = (props) => {
                           customRequest={saveFile}
                           listType="picture-circle"
                           className="avatar-uploader"
+                          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                           showUploadList={false}
                           beforeUpload={beforeUpload}
-                          onSelect={handleChange}
+                          onChange={handleChange}
                         >
                           {imageUrl ? (
                             <PetPhoto
