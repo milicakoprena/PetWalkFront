@@ -57,7 +57,6 @@ export const Cover = styled.div`
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    background-color:rgba(0, 33, 64, 0.59);
     height: 100%;
     width: 100%
 `;
@@ -171,7 +170,7 @@ const SignUpPage = () => {
        })
        .catch((e) => console.log(e));
        //console.log(assets)
-   }, []);
+   }, [locations]);
 
       const uploadButton = (
         <div>

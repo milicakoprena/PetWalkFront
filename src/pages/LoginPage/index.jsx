@@ -23,8 +23,7 @@ export const Page = styled.div`
 export const Cover = styled.div`
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center;
-    background-color:rgba(190,174,190,255);    
+    background-position: center;    
     width: 100%;
     height: 100%;
     position: absolute;
@@ -181,7 +180,7 @@ const LoginPage = () => {
       	{setLocationId(locationIdState.state.locationId);
       	setImageFile(locationIdState.state.imageFile);}
       }, [locationIdState])
-      
+
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const { loading } = useSelector((state) => state.users);

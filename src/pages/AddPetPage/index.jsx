@@ -94,10 +94,11 @@ export const StyledInput = styled(Input)`
 
 export const StyledTextArea = styled(TextArea)`
   font-size:15px;
-  width:353px;
-  height:60px;
+  width:360px;
+  height:80px;
   border-radius: 5px;
   border-color: #DEDDDD;
+  resize: none;
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 `;
 
@@ -280,7 +281,7 @@ const AddPetPage = (props) => {
                     boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)',
                     justifyContent: 'center',
                     width: '500px',
-                    height: '630px',
+                    height: '636px',
                     marginTop: '-20px'
                   }} >
                   <StyledForm
