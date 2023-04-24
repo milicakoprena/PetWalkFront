@@ -106,7 +106,7 @@ const ReportPage = () => {
             backgroundImage: `url(${pozadina})`,
           }} >
             <div style={{ maxHeight: '400px', width: '800px', overflow: 'auto', backgroundColor: 'white', borderRadius: '10px', 
-              boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)', padding: '2%' }}>
+              boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)', paddingLeft: '2%', paddingRight: '2%' }}>
               <List
                 itemLayout="horizontal"
                 dataSource={reports}

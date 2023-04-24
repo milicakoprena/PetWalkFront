@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Layout, Rate, Descriptions, Space, Table, Avatar, Button } from 'antd';
+import { Layout, Rate, List, Table } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
-import { UserOutlined } from '@ant-design/icons';
 import pozadina from "../resources/pozadina2.jpg"
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -99,51 +98,27 @@ const ReviewPage = () => {
         let ocjena;
         let komentar;
         for (let i = 0; i < tempReviews.length; i++) {
-          if (user.role === ROLE_ADMIN) {
+          if (user.id === tempReviews.at(i).korisnikZaId) {
             korisnikOd =
               users.find((element) => element.id === tempReviews.at(i).korisnikOdId)
                 .firstName +
               " " +
               users.find((element) => element.id === tempReviews.at(i).korisnikOdId)
                 .lastName;
-  
-            korisnikZa =
-              users.find((element) => element.id === tempReviews.at(i).korisnikZaId)
-                .firstName +
-              " " +
-              users.find((element) => element.id === tempReviews.at(i).korisnikZaId)
-                .lastName;
+            korisnikZa = user.firstName + " " + user.lastName;
             ocjena = tempReviews.at(i).ocjena;
             komentar = tempReviews.at(i).komentar;
+
             temp.push({
               korisnikOd,
               korisnikZa,
               ocjena,
               komentar,
             });
-          } else {
-            if (user.id === tempReviews.at(i).korisnikZaId) {
-              korisnikOd =
-                users.find((element) => element.id === tempReviews.at(i).korisnikOdId)
-                  .firstName +
-                " " +
-                users.find((element) => element.id === tempReviews.at(i).korisnikOdId)
-                  .lastName;
-              korisnikZa = user.firstName + " " + user.lastName;
-              ocjena = tempReviews.at(i).ocjena;
-              komentar = tempReviews.at(i).komentar;
-  
-              temp.push({
-                korisnikOd,
-                korisnikZa,
-                ocjena,
-                komentar,
-              });
-            }
           }
+        }
           setReviews(temp);
         }
-      }
       catch (e) {
         console.log(e);
       }
@@ -166,12 +141,30 @@ const ReviewPage = () => {
             maxHeight: '103vh',
             backgroundImage: `url(${pozadina})`,
           }} >
-            <StyledTable
-              columns={columns}
-              dataSource={reviews}
-              pagination={false}
-              style={{ height: '300px', overflow: 'auto', backgroundColor: 'white', borderRadius: '10px' }}  
-            />
+            <div style={{ maxHeight: '400px', width: '800px', overflow: 'auto', backgroundColor: 'white', borderRadius: '10px', 
+              boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)', paddingLeft: '2%', paddingRight: '2%' }}>
+                  <List
+                    itemLayout="horizontal"
+                    dataSource={reviews}
+                    pagination={false}
+                    renderItem={item => (
+                      <List.Item>
+                        <List.Item.Meta
+                          title={item.korisnikOd}
+                          description={
+                            <div style={{ display: "flex", flexDirection: 'column' }}>
+                              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} >
+                                <Rate disabled defaultValue={item.ocjena} />
+                                <text>({item.ocjena})</text>
+                              </div>
+                              <text>{item.komentar}</text>
+                            </div>
+                          }
+                        />
+                      </List.Item>
+                    )}
+                  />
+                </div>
           </Cover>
         </Page>    
       </Content>

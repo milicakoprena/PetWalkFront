@@ -166,7 +166,7 @@ const EditProfilePage = () => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [username, setUsername] = useState(user.username);
-  const [password, setPassword] = useState(user.password);
+  const [password, setPassword] = useState('');
   const [email, setEmail] = useState(user.email);
   const [description, setDescription] = useState(user.description);
   const [photo, setPhoto] = useState(user.photo);
@@ -177,6 +177,7 @@ const EditProfilePage = () => {
   const [uslugaId, setUslugaId] = useState('');
   const [cijena, setCijena] = useState('');
   const [selectedPrice, setSelectedPrice] = useState('');
+  const [remainServices, setRemainServices] = useState([]);
   const navigate = useNavigate();
 
   const showModal = () => {
@@ -220,7 +221,10 @@ const EditProfilePage = () => {
 
   const handleServiceChange = (event) => {
     setUslugaId(event);
+    let position=event-1;
+    remainServices.splice(position, 1);
     console.log("service id: ", uslugaId);
+    console.log("preostale:", remainServices);
   };
 
   const columns = [
@@ -243,7 +247,7 @@ const EditProfilePage = () => {
       width: '33%',
       render: (_, record) => (
         <Space size="middle">
-          <Button type="link" onClick={() => {deletePrice(); setSelectedPrice(record);}}>Obriši</Button>
+          <Button type="link" onClick={() => {deletePrice(record);}}>Obriši</Button>
         </Space>
         ),
     },
@@ -251,6 +255,7 @@ const EditProfilePage = () => {
     
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
+
   const selectLocation = (event) => {
     setLocationId(event);
     console.log(event);
@@ -334,6 +339,7 @@ const changePassword = () => {
   .catch((e) => console.log(e)); 
 };
 
+
 const showModal1 = () => {
   axios.get(`http://localhost:9000/cijene`, {
   headers: {
@@ -355,7 +361,6 @@ const showModal1 = () => {
   }
   })
   .catch((e) => console.log(e));
-
   setIsModalOpen1(true);
 };
 
@@ -427,11 +432,11 @@ const showModal1 = () => {
     }
   };
 
-  const deletePrice = async (event) => {
+  const deletePrice = async (selPrice) => {
     //event.preventDefault();
     try
     {
-      await axios.delete(`http://localhost:9000/cijene/${selectedPrice.id}`, {
+      await axios.delete(`http://localhost:9000/cijene/${selPrice.id}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -681,7 +686,10 @@ const showModal1 = () => {
                           okText="Potvrdi"
                           cancelText="Otkaži">
                           <Table pagination={false} columns={columns} dataSource={prices} style={{ height: '80%', overflow: 'auto' }} />
-                          <Button type="dashed" style={{ width: '100%' }} onClick={() => {showModal2(); setIsModalOpen1(false)}} >Dodaj uslugu</Button>                          
+                          {prices.length < services.length ? (
+                          <Button type="dashed" style={{ width: '100%' }} onClick={() => {showModal2(); setIsModalOpen1(false)}}>
+                            Dodaj uslugu
+                          </Button>) : null}                       
                         </Modal>
                         <Modal 
                           title="Dodaj uslugu" 

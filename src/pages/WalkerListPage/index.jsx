@@ -124,7 +124,7 @@ const WalkerListPage = () => {
       dataIndex: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={() => 
+          <Button type="link" onClick={() => 
             {
               
                 axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
@@ -152,7 +152,7 @@ const WalkerListPage = () => {
                    
               showModal();
             }
-          }>Prikaži</a>
+          }>Prikaži</Button>
         </Space>
       ),
     },

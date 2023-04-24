@@ -2,13 +2,14 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Modal, Layout, Button, Rate, Input, FloatButton } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
-import { Space, Table, Tag } from 'antd';
+import { Space, Table, List } from 'antd';
 import { Descriptions } from 'antd';
 import axios from "axios";
 import { UserOutlined , SearchOutlined} from '@ant-design/icons';
 import { Avatar } from 'antd';
 import { useNavigate, useLocation } from 'react-router';
 import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER, STATUS_ACTIVE, STATUS_BLOCKED, STATUS_REQUESTED } from '../../util.js/constants';
+import { async } from "q";
 const { Content, Sider } = Layout;
 
 const { TextArea } = Input;
@@ -72,16 +73,18 @@ const AccountListPage = () => {
   const [isCalled, setIsCalled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
-    const [collapsed, setCollapsed] = useState(false);
-    const [value, setValue] = useState(3);
-    const userState = useLocation();
-    const user = userState.state.user;
-    const [users, setUsers] = useState([]);
-    const [usersTemp, setUsersTemp] = useState([]);
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [searchedUsername, setSearchedUsername] = useState('');
-    const [usersResult, setUsersResult] = useState([]);
-    let buttonText = "";
+  const [isModalOpen3, setIsModalOpen3] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [value, setValue] = useState(3);
+  const userState = useLocation();
+  const user = userState.state.user;
+  const [users, setUsers] = useState([]);
+  const [usersTemp, setUsersTemp] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [searchedUsername, setSearchedUsername] = useState('');
+  const [usersResult, setUsersResult] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  let buttonText = "";
   const columns = [
    // {
    //     title: '',
@@ -122,11 +125,20 @@ const AccountListPage = () => {
         dataIndex: 'action',
         render: (_, record) => (
             <Space size="middle">
-              <a onClick={() => {
-            setSelectedUser(record);
-            console.log(record);
-            setIsModalOpen2(true);
-          }}>Promijeni status</a>
+              <Button type="link" onClick={() => {
+                setSelectedUser(record);
+                setIsModalOpen2(true);
+              }}>Promijeni status</Button>
+              {record.role===ROLE_WALKER ? (
+                <Button type="link" onClick={() => {
+                  console.log("record", record);
+                  setSelectedUser(record);
+                  console.log("SU", selectedUser);
+                  showModal3(record);
+                }}>Recenzije</Button>
+              ) : (
+                <div></div>
+              )}
             </Space>
           ),
       },
@@ -158,7 +170,7 @@ useEffect( () => {
     })
     .then((res) => {
       if(isCalled && searchedUsername==='') {
-        console.log(isCalled);
+        //console.log(isCalled);
         
         let temp = [];
         for(let i = 0; i < res.data.length; i++)
@@ -169,16 +181,16 @@ useEffect( () => {
            
         setUsers(temp);
         setUsersTemp(users);
-        console.log("a",usersTemp);
+        //console.log("a",usersTemp);
       }
       
     })
     .catch((e) => console.log(e));
-}, [users, isCalled, searchByUsername]);
+}, [users, isCalled, user.token, searchedUsername]);
 
     
   const changeStatus = () => {
-    console.log("USERRR:",selectedUser);
+    //console.log("USERRR:",selectedUser);
     
     const request = {
       status: selectedUser.status === STATUS_ACTIVE? STATUS_BLOCKED : STATUS_ACTIVE,
@@ -191,14 +203,42 @@ useEffect( () => {
           },
         })
       .then(() => {
-        console.log(selectedUser.id)
-          console.log(request); 
+        //console.log(selectedUser.id)
+          //console.log(request); 
           setSelectedUser(null);
           window.location.reload(true);
       })
       .catch((e) => console.log(e));    
     
   }
+
+  const showModal3 = (selUser) => {
+    axios.get(`http://localhost:9000/recenzije`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((res) => {
+        //let temp = [];
+        console.log("leng", res.data.length);
+        if (res.data.length>0) {
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.data.at(i).korisnikZaId === selUser.id) {
+              reviews.push({
+                korisnikOd: users.find((element) => element.id === res.data.at(i).korisnikOdId).firstName +
+                  " " + users.find((element) => element.id === res.data.at(i).korisnikOdId).lastName,
+                korisnikZa: selUser.firstName + " " + selUser.lastName,
+                ocjena: res.data.at(i).ocjena,
+                komentar: res.data.at(i).komentar,
+              })
+              console.log("R", reviews);
+            }
+          }
+        }
+      })
+      .catch((e) => console.log(e));
+      setIsModalOpen3(true);
+  };
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -213,6 +253,11 @@ useEffect( () => {
 
   const handleCancel2 = () => {
     setIsModalOpen2(false);
+  };
+
+  const handleCancel3 = () => {
+    setIsModalOpen3(false);
+    setReviews([]);
   };
  
   
@@ -242,6 +287,35 @@ useEffect( () => {
              >
              Da li stvarno želiš da promijeniš status ovog naloga?
             
+            </Modal>
+            <Modal title='Recenzije' open={isModalOpen3} 
+              footer={[
+                <Button key="back" onClick={handleCancel3}>
+                  Izađi
+                </Button>
+              ]}>
+              <div style={{ height: '400px', overflow: 'auto' }}>
+                <List
+                  itemLayout="horizontal"
+                  dataSource={reviews}
+                  renderItem={item => (
+                    <List.Item>
+                      <List.Item.Meta
+                        title={item.korisnikOd}
+                        description={
+                          <div style={{ display: "flex", flexDirection: 'column' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} >
+                              <Rate disabled defaultValue={item.ocjena} />
+                              <text>({item.ocjena})</text>
+                            </div>
+                            <text>{item.komentar}</text>
+                          </div>
+                        }
+                      />
+                    </List.Item>
+                  )}
+                />
+                </div>
             </Modal>
             <FloatButton icon={<SearchOutlined />} type="primary" style={{ right: 40, top: 10 }} onClick={showModal} />
             <Modal title="Pretraživanje po korisničkom imenu" open={isModalOpen} onCancel={handleCancel}
