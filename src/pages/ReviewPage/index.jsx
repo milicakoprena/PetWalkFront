@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Layout, Rate, Descriptions, Space, Table, Avatar } from 'antd';
+import { Modal, Layout, Rate, Descriptions, Space, Table, Avatar, Button } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { UserOutlined } from '@ant-design/icons';
@@ -63,11 +63,10 @@ const ReviewPage = () => {
   const [users, setUsers] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [tempReviews, setTempReviews] = useState([]);
-  var [locations, setLocations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
-   const [selectedPet, setSelectedPet] = useState('');
-   const [selectedWalker, setSelectedWalker] = useState('');   
+  const [selectedPet, setSelectedPet] = useState('');
+  const [selectedWalker, setSelectedWalker] = useState('');   
   const columns = [
     {
       title: 'Recenziju napisao',
@@ -89,7 +88,7 @@ const ReviewPage = () => {
       dataIndex: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={() => showModal(record)}>Prikaži</a>
+          <Button type="link" onClick={() => showModal(record)}>Prikaži</Button>
         </Space>
       ),
     },
@@ -100,8 +99,8 @@ const ReviewPage = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [value, setValue] = useState(3);
 
-useEffect( () => {
-axios.get(`http://localhost:9000/recenzije`, {
+useEffect(() => {
+  axios.get(`http://localhost:9000/recenzije`, {
     headers: {
       Authorization: `Bearer ${user.token}`,
     },
