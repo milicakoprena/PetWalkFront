@@ -107,6 +107,7 @@ const PetListPage = () => {
   var [placesFilter, setPlacesFilter] = useState([]);
   var [typesFilter, setTypesFilter] = useState([]);
   var [typeFilterName, setTypeFilterName] = useState('');
+  const [sadrzaj, setSadrzaj] = useState('');
   
   const columns = [
   {
@@ -288,7 +289,27 @@ useEffect( () => {
    .catch((e) => console.log(e));
 }, [ pets, types, isCalled]);
 
-  
+const postReport =  () => {
+  try {
+    const request = {
+      sadrzaj,
+      korisnikId: user.id,
+    };
+    axios.post('http://localhost:9000/izvjestaji', request, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+    },
+    })
+    .then(() => {
+      console.log("Uspjesno");
+      setIsModalOpen1(false);
+    })
+    .catch((e) => console.log(e)); 
+  }
+  catch (error) {
+    console.log(error);
+  }
+};
   
   const showModal =  () => {
     setIsModalOpen(true);
@@ -306,7 +327,7 @@ useEffect( () => {
     setIsModalOpen2(true);
   };
   const handleOk1 = () => {
-    setIsModalOpen1(false);
+    postReport();
   };
   const handleCancel1 = () => {
     setIsModalOpen1(false);
@@ -374,18 +395,18 @@ useEffect( () => {
                <Descriptions.Item label="Broj telefona">{selectedPet.telefon}</Descriptions.Item>
              </Descriptions>
              <Modal title="Dodaj izvještaj" open={isModalOpen1} onOk={handleOk1} onCancel={handleCancel1} okText="Dodaj"
-                    cancelText="Otkaži">
+                    cancelText="Otkaži" bodyStyle={{ height: '200px'}}>
                 <TextArea
                   showCount
-                  maxLength={100}
+                  maxLength={300}
                   style={{
-                  height: 120,
-                  resize: 'none',
+                  height: 180,
+                    resize: 'none',
                   }}
-                  onChange={onChange}
+                  onChange={(e) => setSadrzaj(e.target.value)}
+                  value={sadrzaj}
                   placeholder="Unesite izvještaj"
                 />
-                <DatePicker onChange={onChangeDate} style={{ marginTop: '3%' }} placeholder="Izaberite datum" />
               </Modal>
             </Modal>
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 11 }} onClick={showModal2} />

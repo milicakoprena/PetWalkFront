@@ -55,8 +55,8 @@ const adminItems = [
     getItem('Izvještaji', "/reportpage", <FormOutlined />),
     getItem('Recenzije', "/reviewpage", <StarOutlined />),
     getItem('Mapa', "/mappage", <EnvironmentOutlined />),
-    getItem('Odjavi se', "/", <LogoutOutlined />),
     getItem('Pregled prijava problema', "/problemview", <ExclamationCircleOutlined />),
+    getItem('Odjavi se', "/", <LogoutOutlined />),
 ]
 
 let items = walkerItems;

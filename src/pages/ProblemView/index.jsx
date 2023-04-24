@@ -189,7 +189,6 @@ const ProblemView = () => {
                             <InfiniteScroll
                                 dataLength={problems.length}
                                 next={loadMoreData}
-                                hasMore={problems.length < 10}
                                 loader={
                                     <Skeleton
                                         avatar
