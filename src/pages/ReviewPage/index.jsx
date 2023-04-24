@@ -44,30 +44,12 @@ export const Cover = styled.div`
 `;
 
 const ReviewPage = () => {
-  const showModal = (review) => {
-    console.log(review);
-    setSelectedReview(review);
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-   
-
+  
   const userState = useLocation();
   const user = userState.state.user;
   const [users, setUsers] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [tempReviews, setTempReviews] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedReview, setSelectedReview] = useState(null);
-  const [selectedPet, setSelectedPet] = useState('');
-  const [selectedWalker, setSelectedWalker] = useState('');   
+  const [tempReviews, setTempReviews] = useState([]);  
   const columns = [
     {
       title: 'Recenziju napisao',
@@ -85,81 +67,90 @@ const ReviewPage = () => {
       width: '20%',
     },
     {
-      title: '',
-      dataIndex: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <Button type="link" onClick={() => showModal(record)}>Prikaži</Button>
-        </Space>
-      ),
+      title: 'Komentar',
+      dataIndex: 'komentar',
     },
+    
   ];
 
   
 
   const [collapsed, setCollapsed] = useState(false);
-  const [value, setValue] = useState(3);
 
-useEffect(() => {
-  axios.get(`http://localhost:9000/recenzije`, {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-   })
-   .then((res) => {
-    setTempReviews(res.data);
-    //console.log("temp",tempReviews);
-   })
-   .catch((e) => console.log(e));
-  
-  axios.get(`http://localhost:9000/korisnici`, {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-   })
-   .then((res) => {
-    setUsers(res.data);
-   })
-   .catch((e) => console.log(e));
-   //console.log("USERS",tempReviews.length);
-   let temp = [];
-   let korisnikOd;
-   let korisnikZa;
-   let ocjena;
-   for(let i = 0; i < tempReviews.length; i++){
-    if(user.role===ROLE_ADMIN){
-      korisnikOd = users.find(element => element.id === tempReviews.at(i).korisnikOdId).firstName + " " +
-        users.find(element => element.id === tempReviews.at(i).korisnikOdId).lastName;
-      //console.log(korisnikOd);
-      korisnikZa = users.find(element => element.id === tempReviews.at(i).korisnikZaId).firstName + " " +
-        users.find(element => element.id === tempReviews.at(i).korisnikZaId).lastName;
-      ocjena = tempReviews.at(i).ocjena;
-      temp.push({
-        korisnikOd,
-        korisnikZa,
-        ocjena,
-      });
-    }
-    else{
-      if(user.id===tempReviews.at(i).korisnikZaId){
-        korisnikOd = users.find(element => element.id === tempReviews.at(i).korisnikOdId).firstName + " " +
-          users.find(element => element.id === tempReviews.at(i).korisnikOdId).lastName;
-        korisnikZa = user.firstName + " " + user.lastName;
-        ocjena = tempReviews.at(i).ocjena;
-        temp.push({
-          korisnikOd,
-          korisnikZa,
-          ocjena,
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resReviews = await axios.get(`http://localhost:9000/recenzije`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
         });
+        const resUsers = await axios.get(`http://localhost:9000/korisnici`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+        const tempReviews = resReviews.data;
+        const users = resUsers.data;
+  
+        let temp = [];
+        let korisnikOd;
+        let korisnikZa;
+        let ocjena;
+        let komentar;
+        for (let i = 0; i < tempReviews.length; i++) {
+          if (user.role === ROLE_ADMIN) {
+            korisnikOd =
+              users.find((element) => element.id === tempReviews.at(i).korisnikOdId)
+                .firstName +
+              " " +
+              users.find((element) => element.id === tempReviews.at(i).korisnikOdId)
+                .lastName;
+  
+            korisnikZa =
+              users.find((element) => element.id === tempReviews.at(i).korisnikZaId)
+                .firstName +
+              " " +
+              users.find((element) => element.id === tempReviews.at(i).korisnikZaId)
+                .lastName;
+            ocjena = tempReviews.at(i).ocjena;
+            komentar = tempReviews.at(i).komentar;
+            temp.push({
+              korisnikOd,
+              korisnikZa,
+              ocjena,
+              komentar,
+            });
+          } else {
+            if (user.id === tempReviews.at(i).korisnikZaId) {
+              korisnikOd =
+                users.find((element) => element.id === tempReviews.at(i).korisnikOdId)
+                  .firstName +
+                " " +
+                users.find((element) => element.id === tempReviews.at(i).korisnikOdId)
+                  .lastName;
+              korisnikZa = user.firstName + " " + user.lastName;
+              ocjena = tempReviews.at(i).ocjena;
+              komentar = tempReviews.at(i).komentar;
+  
+              temp.push({
+                korisnikOd,
+                korisnikZa,
+                ocjena,
+                komentar,
+              });
+            }
+          }
+          setReviews(temp);
+        }
+      }
+      catch (e) {
+        console.log(e);
       }
     }
-  
-    
-   }
-   console.log("T",temp);
-   setReviews(temp);
-   
-  }, [reviews, users, tempReviews, user.token, user.role, user.id, user.firstName, user.lastName]);
+
+    fetchData();
+  },[reviews, users, tempReviews, user.token, user.role, user.id, user.firstName, user.lastName]);
 
   return (
     <Layout hasSider>
@@ -181,25 +172,6 @@ useEffect(() => {
               pagination={false}
               style={{ height: '300px', overflow: 'auto', backgroundColor: 'white', borderRadius: '10px' }}  
             />
-
-            <Modal title="Recenzija" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={530} 
-              okText="OK"
-              cancelText="Otkaži"
-            >
-              <Descriptions title="" size="default" column={2} >
-                <Descriptions.Item>
-                  <Avatar size={130} icon={<UserOutlined />}/>
-                </Descriptions.Item>
-                <Descriptions.Item label="Ime vlasnika">{selectedReview.firstName}  {selectedReview.lastName}</Descriptions.Item>
-                <span style={{ }}>
-                  <Rate tooltips={desc} onChange={setValue} value={value} />
-                    {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
-                </span>
-                <Descriptions.Item label="Tekst">
-                {selectedWalker.recenzija}
-                </Descriptions.Item>
-              </Descriptions>
-            </Modal>
           </Cover>
         </Page>    
       </Content>
