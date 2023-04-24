@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Layout, Button, Rate, Input } from 'antd';
+import { Modal, Layout, Button, Rate, Input, message } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table, FloatButton, Select } from 'antd';
@@ -94,6 +94,7 @@ const WalkerListPage = () => {
   const [locationId, setLocationId] = useState('');
   const [allUsers, setAllUsers] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [messageApi, contextHolder] = message.useMessage();
   
   const columns = [
     {
@@ -177,11 +178,18 @@ const WalkerListPage = () => {
         body: JSON.stringify(recenzijaRequest),
       })
       .catch((e) => console.log(e));
-       
+      messageApi.open({
+        type: 'success',
+        content: 'Recenzija uspješno sačuvana!',
+      });
       console.log(response);
     }
     catch (error) {
       console.log(error);
+      messageApi.open({
+        type: 'error',
+        content: 'Recenzija nije sačuvana!',
+      });
     }
   };
 
@@ -460,6 +468,7 @@ const WalkerListPage = () => {
               <Button type="link" onClick={showReviewModal} >
                 Pregled recenzija
               </Button>
+              {contextHolder}
               <Modal title="Dodaj recenziju" open={isModalOpen1} onOk={postRecenzija} onCancel={handleCancel1} okText="Dodaj"
                   cancelText="Otkaži">
                 <TextArea

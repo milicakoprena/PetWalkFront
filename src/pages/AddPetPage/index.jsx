@@ -189,6 +189,11 @@ const AddPetPage = (props) => {
           type: 'success',
           content: 'Ljubimac uspješno sačuvan!',
         });
+        setName('');
+        setImage('');
+        setDescription('');
+        setImageFile('');
+        setTypeId('');
        }
        else {
         messageApi.open({
