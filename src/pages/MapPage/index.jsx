@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import  { useState, useEffect } from "react";
 import L from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
@@ -43,41 +43,26 @@ const customMarker = new L.icon({
     iconAnchor: [20, 50],
 }); 
 
-const MyPopupMarker = ({ content, position }) => (
-    <Marker position={position} icon={customMarker} >
-      <Popup>{content}</Popup>
-    </Marker>
-)
-
-const MyMarkersList = ({ markers }) => {
-    const items = markers.map(({ key, ...props }) => (
-        <MyPopupMarker key={key} {...props} />
-    ))
-    return <Fragment>{items}</Fragment>
-}
-
-
-
-
 function LeafletgeoSearch() {
     const map = useMap();
+
     useEffect(() => {
-      const provider = new OpenStreetMapProvider();
-  
-      const searchControl = new GeoSearchControl({
-        provider,
-        marker: {
-            icon: customMarker,
-        }
-      });
-  
-      map.addControl(searchControl);
-  
-      return () => map.removeControl(searchControl);
+        const provider = new OpenStreetMapProvider();
+
+        const searchControl = new GeoSearchControl({
+            provider,
+            marker: {
+                icon: customMarker,
+            }
+        });
+
+        map.addControl(searchControl);
+
+        return () => map.removeControl(searchControl);
     }, [map]);
   
     return null;
-  }
+}
 
 const MapPage = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -101,45 +86,38 @@ const MapPage = () => {
         { position: [44.774359621183855, 17.20109822738237], name: "Grooming salon Alexandar", description: <Desc>Šišanje i kupanje kućnih ljubimaca <a href="https://www.facebook.com/people/Grooming-salon-Alexandar/100070751892302/">Link do veb stranice</a> </Desc> },
         { position: [44.76267350638166, 17.19699178263525], name: "Grooming salon Snupići", description: <Desc>Šišanje i kupanje kućnih ljubimaca <a href="https://www.facebook.com/salonsnupi/">Link do veb stranice</a> </Desc> },
         { position: [44.76206726581702, 17.200276253721256], name: "VrebacVET", description: "Veterinarska ordinacija" }
+    ];
 
-
-    
-      ];
-        return (
-            <Layout hasSider>
-            <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
-                    maxHeight: '103vh'
-                    }}>
-                <MainMenu/>
-            </Sider>
-            <Content style={{
+    return (
+        <Layout hasSider>
+            <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
+                style={{
                     maxHeight: '103vh'
                 }}>
+                <MainMenu/>
+            </Sider>
+            <Content style={{ maxHeight: '103vh' }}>
                 <Page>
-                <MapContainer center={[44.772182, 17.191000]} zoom={15} style={{ height: "100%", width: "100%"}} >
-                {locations.map(location => (
-                        <Marker position={location.position} icon={customMarker} >
-                        <Popup>
-                            <h2>{location.name}</h2>
-                            <p>{location.description}</p>
-                        </Popup>
-                        </Marker>
-                    ))}
-                <TileLayer
-                    url={
-                        "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    }
-                />
-              
-               
-                <LeafletgeoSearch/>
-            </MapContainer>
-            </Page>
+                    <MapContainer center={[44.772182, 17.191000]} zoom={15} style={{ height: "100%", width: "100%"}} >
+                        {locations.map(location => (
+                            <Marker position={location.position} icon={customMarker} >
+                                <Popup>
+                                    <h2>{location.name}</h2>
+                                    <p>{location.description}</p>
+                                </Popup>
+                            </Marker>
+                        ))}
+                        <TileLayer
+                            url={
+                                "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            }
+                        />
+                        <LeafletgeoSearch/>
+                    </MapContainer>
+                </Page>
             </Content>
-        </Layout>
-            
-            
-        ); 
+        </Layout>   
+    ); 
 };
 
 export default MapPage;

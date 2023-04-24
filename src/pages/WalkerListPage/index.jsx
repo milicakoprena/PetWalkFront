@@ -14,25 +14,10 @@ const { Content, Sider } = Layout;
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
 const { TextArea } = Input;
 
-const onChange = (e) => {
-  console.log('Change:', e.target.value);
-};
-
-const handleChange1 = (value) => {
-  console.log(`selected ${value}`);
-};
-
-export const WalkerIcon = styled.img `
-  heigth: 40px;
-  width: 40px;
-`;
-
 export const StyledTable = styled(Table) `
   width: 100%;
   height: 95%;
 `;
-
-
 
 export const Page = styled.div`
   height: 100%;
@@ -54,25 +39,6 @@ export const Cover = styled.div`
   justify-content: space-around;
 `;
 
-export const AddReviewButton = styled.div`
-  width: 300px;
-  height: 2em;
-  background-color: rgba(0,21,41,255);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0.25em;
-  cursor: pointer;
-  transition: 0.5s;
-  color: aliceblue;
-  font-size: 1.4em;
-  margin-top:640px;
-  margin-left:780px;
-  &:hover {
-      transform: scale(1.15);
-  }
-`;
-
 const WalkerListPage = () => {
   const userState = useLocation();
   const user = userState.state.user;
@@ -87,11 +53,8 @@ const WalkerListPage = () => {
   const [prices, setPrices] = useState([]);
   const [komentar,setKomentar]=useState('');
   const [ocjena, setOcjena]=useState('');
-  const [korisnikOdId, setKorisnikOdId]=useState(user.id);
-  //const [korisnikZaId,setKorisnikZaId]=useState('');
   const [placeFilterName, setPlaceFilterName]=useState('');
   const [isCalled, setIsCalled]=useState(true);
-  const [locationId, setLocationId] = useState('');
   const [allUsers, setAllUsers] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
@@ -116,10 +79,6 @@ const WalkerListPage = () => {
       dataIndex: 'location',
       width: '20%',
     },
-    //{
-    //  title: 'Cijena',
-    //  dataIndex: 'price',
-    //},
     {
       title: '',
       dataIndex: 'action',
@@ -127,29 +86,28 @@ const WalkerListPage = () => {
         <Space size="middle">
           <Button type="link" onClick={() => 
             {
-              
-                axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
-                 headers: {
-                     Authorization: `Bearer ${user.token}`,
-                     responseType: 'arraybuffer',
-                     "Content-Type": 'image/jpeg',
-                 },
-               })
-               .then((response) => { 
-                 let temp = {
-                   image : `data:image/jpeg;base64,${response.data}`,
-                   imageName : record.imageName,
-                   id : record.id,
-                   firstName : record.firstName,
-                   lastName : record.lastName,
-                   phoneNumber : record.phoneNumber,
-                   location : record.location,
-                   description : record.description,
-                 }
-                 setSelectedWalker(temp);
-                 console.log(selectedWalker);
-               })
-               .catch((e) => console.log(e));
+              axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
+                headers: {
+                  Authorization: `Bearer ${user.token}`,
+                  responseType: 'arraybuffer',
+                  "Content-Type": 'image/jpeg',
+                },
+              })
+              .then((response) => { 
+                let temp = {
+                  image : `data:image/jpeg;base64,${response.data}`,
+                  imageName : record.imageName,
+                  id : record.id,
+                  firstName : record.firstName,
+                  lastName : record.lastName,
+                  phoneNumber : record.phoneNumber,
+                  location : record.location,
+                  description : record.description,
+                }
+                setSelectedWalker(temp);
+                console.log(selectedWalker);
+              })
+              .catch((e) => console.log(e));
                    
               showModal();
             }
@@ -166,7 +124,7 @@ const WalkerListPage = () => {
       const recenzijaRequest = {
         komentar,
         ocjena,
-        korisnikOdId,
+        korisnikOdId: user.id,
         korisnikZaId
       };
       const response = await fetch('http://localhost:9000/recenzije', {
@@ -389,20 +347,8 @@ const WalkerListPage = () => {
     setIsModalOpen(false);
   };
 
-  const handleOk1 = () => {
-    setIsModalOpen1(false);
-  };
-
   const handleCancel1 = () => {
     setIsModalOpen1(false);
-  };
-
-  const handleOk2 = () => {
-    setIsModalOpen2(false);
-  };
-
-  const handleOk3 = () => {
-    setIsModalOpen3(false);
   };
 
   const handleCancel2 = () => {
@@ -422,19 +368,16 @@ const WalkerListPage = () => {
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [isModalOpen3, setIsModalOpen3] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const [value, setValue] = useState(3);
-
   
   return (
     <Layout hasSider>
-      <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
-              maxHeight: '103vh'
-              }}>
-        <MainMenu></MainMenu>
+      <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
+        style={{
+          maxHeight: '103vh'
+        }}>
+        <MainMenu/>
       </Sider>
-      <Content style={{
-              maxHeight: '103vh'
-              }}>
+      <Content style={{ maxHeight: '103vh' }}>
         <Page>
           <Cover>
             <StyledTable
@@ -478,15 +421,13 @@ const WalkerListPage = () => {
                     height: 120,
                     resize: 'none',
                   }}
-                  //onChange={onChange}
                   placeholder="Unesite komentar (opciono)"
                   value={komentar}
                   onChange={(e) => setKomentar(e.target.value)}
                 />
                 <span>
                   <Rate tooltips={desc} onChange={(e) => {setOcjena(e)
-                      console.log("ocjena",ocjena); }} value={ocjena} />
-                  
+                    console.log("ocjena",ocjena); }} value={ocjena} />
                 </span>
               </Modal>
               <Modal title="Pregled usluga" open={isModalOpen3} onOk={handleCancel3} onCancel={handleCancel3} okText="OK"

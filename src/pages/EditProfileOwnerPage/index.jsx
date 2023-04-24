@@ -5,7 +5,6 @@ import { Form, Input, Select, Space, Button } from "antd";
 import TextArea from "rc-textarea";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Modal, Upload, message, Layout, Row, Col, Card } from 'antd';
-import { LocationOptions } from '../EditProfilePage';
 import styled from "styled-components";
 import pozadina from "../resources/pozadina2.jpg"
 import { useLocation } from 'react-router';
@@ -32,8 +31,6 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
-const Option = Select.Option;
-
 export const Page = styled.div`
   height: 100%;
   width: 100%;
@@ -52,33 +49,6 @@ export const Cover = styled.div`
   height: 100%;
   align-items: center;
   justify-content: space-around;
-`;
-
-export const DeactivateButton = styled.div`
-  width: 100%;
-  height: 2em;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: end;
-  align-items: center;
-  padding:0;
-  transition: 0.5s;
-  font-size: 18px;
-  text-decoration: underline;
-  cursor: pointer;
-  color:rgba(19, 19, 20, 0.704);
-  position: relative;
-  border: 0pc;
-  margin-top: 0.2%;
-  background-color: transparent;
-  &:hover {
-    transform: scale(1.15);
-  }
-`;
-
-export const Icon = styled.img`
-  width:25px;
-  height:25px;
 `;
 
 export const StyledForm = styled(Form)`
@@ -130,13 +100,7 @@ export const StyledLabel = styled.div`
   color: rgba(19, 19, 20, 0.704);
 `;
 
-const handleChange1 = (value) => {
-  console.log(`selected ${value}`);
-};
-
-
 const EditProfileOwnerPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const userState = useLocation();
   const [locations, setLocations] = useState([]);
@@ -154,23 +118,14 @@ const EditProfileOwnerPage = () => {
   const [locationName, setLocationName] = useState('');
   const [isPassModalOpen, setIsPassModalOpen] = useState('');
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
   const showPassModal = () => {
     setIsPassModalOpen(true);
   }
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  
   const handleCancel1 = () => {
     setIsPassModalOpen(false);
   };
 
-    
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
 
@@ -186,7 +141,6 @@ const EditProfileOwnerPage = () => {
       return;
     }
     if (info.file.status === 'done') {
-      // Get this url from response in real world.
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
@@ -196,23 +150,21 @@ const EditProfileOwnerPage = () => {
 
   useEffect(() => {
     axios.get(`http://localhost:9000/lokacije`, {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-   })
-   .then((res) => {
-      //console.log("locations",res.data);
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then((res) => {
       setLocations(res.data);
-   })
-   .catch((e) => console.log(e));
+    })
+    .catch((e) => console.log(e));
 
-   axios.get(`http://localhost:9000/mjesta`, {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-   })
-   .then((res) => {
-      //console.log(res.data.length);
+    axios.get(`http://localhost:9000/mjesta`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then((res) => {
       let temp = [];
       for(let i = 0; i < res.data.length; i++){
         temp.push({
@@ -221,15 +173,12 @@ const EditProfileOwnerPage = () => {
         })
       }
       setPlaces(temp);
-      //console.log(places);
-      //console.log("locations", locations)
       const placeId = locations.find(element => element.korisnikId === user.id).mjestoId;
       const tempPN = places.find(element => element.value === placeId).label;
       setLocationName(tempPN);
-      //console.log(locationName);
-   })
-   .catch((e) => console.log(e));
-  } )
+    })
+    .catch((e) => console.log(e));
+  })
 
   const handleUpdate = async (event) => {
     event.preventDefault();
@@ -258,7 +207,7 @@ const EditProfileOwnerPage = () => {
         console.log(locationRequest);
         axios.put(`http://localhost:9000/lokacije/${tempId}`, locationRequest, {
           headers: {
-              Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${user.token}`,
           },
         })
         .then(() => {
@@ -272,7 +221,8 @@ const EditProfileOwnerPage = () => {
             type: 'error',
             content: 'Došlo je do greške, promjene nisu sačuvane.',
           });
-          console.log(e)});
+          console.log(e)
+        });
       })
       .catch((e) => console.log(e));
     }
@@ -306,7 +256,7 @@ const EditProfileOwnerPage = () => {
           marginTop: 8,
         }}
       >
-        Upload
+        Postavite sliku
       </div>
     </div>
   );
@@ -330,10 +280,7 @@ const EditProfileOwnerPage = () => {
         <MainMenu/>
       </Sider>
       <Content style={{ maxHeight: '103vh' }} >
-        <Cover style={{
-                  maxHeight: '103vh',
-                  backgroundImage: `url(${pozadina})`,
-                  }} >
+        <Cover style={{  maxHeight: '103vh', backgroundImage: `url(${pozadina})`, }}>
           <Row gutter={16}>
             <Col span={8}>
               <Card title="Profilna slika" bordered={false}
@@ -422,7 +369,7 @@ const EditProfileOwnerPage = () => {
                       </StyledFormItem>
                       
                       <Space style={{ justifyContent: 'center' }} >
-                      {contextHolder}
+                        {contextHolder}
                         <Button style={{
                           marginTop:40, minHeight:40, backgroundColor: 'rgba(0,21,41,255)', color:'white', fontSize: '16px'
                         }}  onClick={handleUpdate} >Sačuvaj promjene</Button>
@@ -485,16 +432,14 @@ const EditProfileOwnerPage = () => {
                           onOk={changePassword} 
                           onCancel={handleCancel1} 
                           okText="Potvrdi"
-                          cancelText="Otkaži">
-                            <p>Unesite novu lozinku</p>
-                            <StyledInput type="password"
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)} />                       
-                          </Modal>
+                          cancelText="Otkaži"
+                        >
+                          <p>Unesite novu lozinku</p>
+                          <StyledInput type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)} />                       
+                        </Modal>
                       </StyledFormItem>
-                      <>
-                        
-                      </>
                     </StyledForm>
                   </Col>
                 </Row>

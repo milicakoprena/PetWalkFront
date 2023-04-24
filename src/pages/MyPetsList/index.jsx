@@ -4,18 +4,12 @@ import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table } from 'antd';
 import { Button } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import pozadina from "../resources/pozadina2.jpg"
 
 const { Content, Sider } = Layout;
-
-export const PetIcon = styled.img `
-    heigth: 40px;
-    width: 40px;
-`;
 
 export const StyledTable = styled(Table) `
     width: 70%;
@@ -46,40 +40,17 @@ export const Cover = styled.div`
     justify-content: space-around;
 `;
 
-export const AddPetButton = styled.div`
-    width: 360px;
-    height: 2em;
-    background-color: rgba(0,21,41,255);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 0.25em;
-    cursor: pointer;
-    transition: 0.5s;
-    color: aliceblue;
-    font-size: 1.7em;
-    margin-top:-30px;
-    &:hover {
-        transform: scale(1.15);
-    }
-`;
-
-export const Icon = styled.img`
-    width:25px;
-    height:25px;
-`;
-
 const MyPetsList = () => {
     const userState = useLocation();
     const user = userState.state.user;
     const [pets, setPets] = useState([]);
     const [selectedPet, setSelectedPet] = useState('');
     const [types, setTypes] = useState([]);
-    const [imageUrl, setImageUrl] = useState();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpen2, setIsModalOpen2] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
     const [selectedPetPhoto, setSelectedPetPhoto] = useState('');
+
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -105,64 +76,64 @@ const MyPetsList = () => {
     };
 
     const columns = [
-    {
-        title: 'Vrsta',
-        dataIndex: 'vrsta',
-        width: '8%',
-    },
-    {
-        title: 'Ime',
-        dataIndex: 'ime',
-        width: '13%',
-    },
-    {
-        title: 'Opis',
-        dataIndex: 'opis',
-        width: '49%',
-    },
-    {
-        title: '',
-        dataIndex: 'show',
-        width: '15%',
-        render: (_, record) => (
-            <Space size="middle" >
-                <Button type="link" onClick={() => 
-                {
-                    console.log(record);
-                    axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                    responseType: 'arraybuffer',
-                    "Content-Type": 'image/jpeg',
-                },
-                })
-                .then((response) =>
-                {
-                    setSelectedPetPhoto({
-                        image: `data:image/jpeg;base64,${response.data}`,
+        {
+            title: 'Vrsta',
+            dataIndex: 'vrsta',
+            width: '8%',
+        },
+        {
+            title: 'Ime',
+            dataIndex: 'ime',
+            width: '13%',
+        },
+        {
+            title: 'Opis',
+            dataIndex: 'opis',
+            width: '49%',
+        },
+        {
+            title: '',
+            dataIndex: 'show',
+            width: '15%',
+            render: (_, record) => (
+                <Space size="middle" >
+                    <Button type="link" onClick={() => 
+                    {
+                        console.log(record);
+                        axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                        responseType: 'arraybuffer',
+                        "Content-Type": 'image/jpeg',
+                    },
                     })
-                    console.log(selectedPetPhoto);
-                })
-                .catch((e) => console.log(e));
-                showModal2();
-                }}>Prikaži sliku</Button>
-            </Space>
-        ),
-    },
-    {
-        title: '',
-        dataIndex: 'action',
-        width: '15%',
-        render: (_, record) => (
-            <Space size="middle" >
-                <Button type="link" onClick={() => 
-                {
-                    setSelectedPet(record);
-                    showModal();
-                }}>Obriši</Button>
-            </Space>
-        ),
-    },
+                    .then((response) =>
+                    {
+                        setSelectedPetPhoto({
+                            image: `data:image/jpeg;base64,${response.data}`,
+                        })
+                        console.log(selectedPetPhoto);
+                    })
+                    .catch((e) => console.log(e));
+                    showModal2();
+                    }}>Prikaži sliku</Button>
+                </Space>
+            ),
+        },
+        {
+            title: '',
+            dataIndex: 'action',
+            width: '15%',
+            render: (_, record) => (
+                <Space size="middle" >
+                    <Button type="link" onClick={() => 
+                    {
+                        setSelectedPet(record);
+                        showModal();
+                    }}>Obriši</Button>
+                </Space>
+            ),
+        },
     ];
 
     useEffect(() => {
@@ -193,7 +164,6 @@ const MyPetsList = () => {
             let tempPet = '';
             for(let i = 0; i < res.data.length; i++)
             {
-                let imageData = '';
                 let userId = res.data.at(i).korisnikId;
                 let typeId = res.data.at(i).vrstaId;
                 
@@ -212,7 +182,7 @@ const MyPetsList = () => {
             setPets(tempArray);
         })
         .catch((e) => console.log(e));
-    }, [pets, types, user.token, imageUrl, user.id]);
+    }, [pets, types, user.token, user.id]);
 
     const deletePet = (() => {
         axios.delete(`http://localhost:9000/ljubimci/${selectedPet.id}`, {

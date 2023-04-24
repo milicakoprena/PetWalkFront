@@ -10,18 +10,10 @@ import axios from "axios";
 
 const { TextArea } = Input;
 
-export const StyledText = styled.p`
-    font-size: 18px;
-    text-align: start;
-    width: 650px;
-    margin-top: -10px;
-`;
-
 export const Cover = styled.div`
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    background-color:rgba(0, 33, 64, 0.59);
     width: 100%;
     height: 100%;
     position: absolute;
@@ -31,19 +23,13 @@ export const Cover = styled.div`
     justify-content: center;
 `;
 
-export const StyledButton = styled.div`
-    background-color: rgba(0,21,41,255);
-`;
-
 const { Content, Sider } = Layout;
 
 const ReportProblem = () => {
     const [collapsed, setCollapsed] = useState(false);
-    //novo
     const userState = useLocation();
     const user = userState.state.user;
     const [sadrzaj, setSadrzaj] = useState('');
-    const [korisnikId, setKorisnikId] = useState(user.id);
     const [messageApi, contextHolder] = message.useMessage();
 
 
@@ -52,25 +38,26 @@ const ReportProblem = () => {
         try {
             const problemRequest = {
                 sadrzaj,
-                korisnikId,
+                korisnikId: user.id,
             };
             await axios.post('http://localhost:9000/problemi', problemRequest, {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                 },
             })
-                .then(() => {
-                    console.log("Uspjesno");
-                    messageApi.open({
-                        type: 'success',
-                        content: 'Problem uspješno prijavljen!',
-                      });
-                })
-                .catch((e) => {console.log(e);
-                    messageApi.open({
-                        type: 'error',
-                        content: 'Problem nije uspješno prijavljen!',
-                      });});
+            .then(() => {
+                console.log("Uspjesno");
+                messageApi.open({
+                    type: 'success',
+                    content: 'Problem uspješno prijavljen!',
+                });
+            })
+            .catch((e) => {console.log(e);
+                messageApi.open({
+                    type: 'error',
+                    content: 'Problem nije uspješno prijavljen!',
+                });
+            });
         }
         catch (error) {
             console.log(error);
@@ -82,7 +69,7 @@ const ReportProblem = () => {
             <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
                 maxHeight: '103vh'
             }}>
-                <MainMenu></MainMenu>
+                <MainMenu/>
             </Sider>
             <Content style={{
                 maxHeight: '103vh'
@@ -110,17 +97,19 @@ const ReportProblem = () => {
                                     marginLeft: '3.5%',
                                 }}
                                 placeholder="Unesite opis problema"
-                                //novo
                                 value={sadrzaj}
                                 onChange={(e) => setSadrzaj(e.target.value)}
                             />
                             {contextHolder}
-                            <Button type="primary" style={{
-                                backgroundColor: 'rgba(0,21,41,255)',
-                                marginTop: '30px',
-                                fontSize: '17px',
-                                marginLeft: '43%'
-                            }} onClick={handleSubmit}>Pošalji</Button>
+                            <Button type="primary" 
+                                style={{
+                                    backgroundColor: 'rgba(0,21,41,255)',
+                                    marginTop: '30px',
+                                    fontSize: '17px',
+                                    marginLeft: '43%'
+                                }} 
+                                onClick={handleSubmit}
+                            >Pošalji</Button>
                         </Card>
                     </Cover>
                 </Page>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, Layout, Button } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
-import { Space, Table, Divider, List, Skeleton } from 'antd';
+import { Divider, List, Skeleton } from 'antd';
 import { Descriptions } from 'antd';
 import { Avatar } from 'antd';
 import axios from "axios";
@@ -12,18 +12,6 @@ import { useLocation } from "react-router-dom";
 import { UserOutlined } from '@ant-design/icons';
 
 const { Content, Sider } = Layout;
-
-export const UserIcon = styled.img`
-  heigth: 40px;
-  width: 40px;
-`;
-
-export const StyledTable = styled(Table)`
-    width: 70%;
-    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%);
-`;
-
-
 
 export const Page = styled.div`
     height: 100%;
@@ -61,44 +49,44 @@ const ProblemView = () => {
                 Authorization: `Bearer ${user.token}`,
             },
         })
-            .then((res) => {
-                console.log("users", res.data);
-                setUsers(res.data);
-            })
-            .catch((e) => console.log(e));
+        .then((res) => {
+            console.log("users", res.data);
+            setUsers(res.data);
+        })
+        .catch((e) => console.log(e));
 
         axios.get(`http://localhost:9000/problemi`, {
             headers: {
                 Authorization: `Bearer ${user.token}`,
             },
         })
-            .then((res) => {
-                console.log("problems", res.data);
-                let temp = [];
-                let tempProblem = '';
-                for (let i = 0; i < res.data.length; i++) {
-                    let userId = res.data.at(i).korisnikId;
-                    console.log(users);
-                    console.log(userId);
+        .then((res) => {
+            console.log("problems", res.data);
+            let temp = [];
+            let tempProblem = '';
+            for (let i = 0; i < res.data.length; i++) {
+                let userId = res.data.at(i).korisnikId;
+                console.log(users);
+                console.log(userId);
 
-                    tempProblem = {
-                        imageName: users.find(element => element.id === userId).photo,
-                        image: '',
-                        firstName: users.find(element => element.id === userId).firstName,
-                        lastName: users.find(element => element.id === userId).lastName,
-                        key: i,
-                        username: users.find(element => element.id === userId).username,
-                        sadrzaj: res.data.at(i).sadrzaj,
-                    }
-
-                    temp.push(tempProblem);
-                    console.log("TEMP", tempProblem);
+                tempProblem = {
+                    imageName: users.find(element => element.id === userId).photo,
+                    image: '',
+                    firstName: users.find(element => element.id === userId).firstName,
+                    lastName: users.find(element => element.id === userId).lastName,
+                    key: i,
+                    username: users.find(element => element.id === userId).username,
+                    sadrzaj: res.data.at(i).sadrzaj,
                 }
 
-                setProblems(temp);
-                console.log("PROBLEMS",problems);
-            })
-            .catch((e) => console.log(e));
+                temp.push(tempProblem);
+                console.log("TEMP", tempProblem);
+            }
+
+            setProblems(temp);
+            console.log("PROBLEMS",problems);
+        })
+        .catch((e) => console.log(e));
     }
 
     const loadMoreData = () => {
@@ -122,16 +110,14 @@ const ProblemView = () => {
         loadMoreData();
     }, [users]);
 
-
-
     const showModal = (problem) => {
         
-            axios.get(`http://localhost:9000/korisnici/image/${problem.imageName}`, {
-        headers: {
-            Authorization: `Bearer ${user.token}`,
-            responseType: 'arraybuffer',
-            "Content-Type": 'image/jpeg',
-        },
+        axios.get(`http://localhost:9000/korisnici/image/${problem.imageName}`, {
+            headers: {
+                Authorization: `Bearer ${user.token}`,
+                responseType: 'arraybuffer',
+                "Content-Type": 'image/jpeg',
+            },
         })
         .then((response) =>
         {
@@ -149,13 +135,16 @@ const ProblemView = () => {
         
         setIsModalOpen(true);
     };
+
     const handleOk = () => {
         console.log("OK", selectedProblem);
         setIsModalOpen(false);
     };
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
 
@@ -165,7 +154,7 @@ const ProblemView = () => {
                 style={{
                     maxHeight: '103vh'
                 }}>
-                <MainMenu />
+                <MainMenu/>
             </Sider>
             <Content style={{ maxHeight: '103vh' }}>
                 <Page>
@@ -206,7 +195,7 @@ const ProblemView = () => {
                                     renderItem={(item) => (
                                         <List.Item key={item.key}>
                                             <List.Item.Meta
-                                                title={<a >{item.username}</a>}
+                                                title={item.username}
                                             />
                                             <div>
                                                 <Button type="ghost" style={{ color: 'blue' }} onClick={() => showModal(item)}>Prikaži</Button>

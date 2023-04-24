@@ -9,9 +9,6 @@ import axios from "axios";
 import pozadina from "../resources/pozadina2.jpg"
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { STATUS_ACTIVE, STATUS_BLOCKED } from '../../util.js/constants';
-import { useNavigate } from "react-router-dom";
-import { element } from "prop-types";
 
 const { Content, Sider } = Layout;
 
@@ -51,33 +48,6 @@ export const Cover = styled.div`
   height: 100%;
   align-items: center;
   justify-content: space-around;
-`;
-
-export const DeactivateButton = styled.div`
-  width: 100%;
-  height: 2em;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: end;
-  align-items: center;
-  padding:0;
-  transition: 0.5s;
-  font-size: 18px;
-  text-decoration: underline;
-  cursor: pointer;
-  color:rgba(19, 19, 20, 0.704);
-  position: relative;
-  border: 0pc;
-  margin-top: 0.2%;
-  background-color: transparent;
-  &:hover {
-    transform: scale(1.15);
-  }
-`;
-
-export const Icon = styled.img`
-  width:25px;
-  height:25px;
 `;
 
 export const StyledForm = styled(Form)`
@@ -129,31 +99,7 @@ export const StyledLabel = styled.div`
   color: rgba(19, 19, 20, 0.704);
 `;
 
-function getOption(label, value) {
-  return {
-    label,
-    value,
-  };
-}
-
-export const LocationOptions = [
-  getOption('Mejdan', 'mejdan'),
-  getOption('Borik', 'borik'),
-  getOption('Starčevica', 'starcevica'),
-  getOption('Budžak', 'budzak'),
-]
-
-export const UslugaOptions = [
-  getOption('Šetanje', 'setanje'),
-  getOption('Čuvanje', 'cuvanje'),
-  getOption('Uređivanje', 'uredjivanje'),
-]
-
-
-
-
 const EditProfilePage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [isPassModalOpen, setIsPassModalOpen] = useState(false);
@@ -176,13 +122,6 @@ const EditProfilePage = () => {
   const [prices, setPrices] = useState([]);
   const [uslugaId, setUslugaId] = useState('');
   const [cijena, setCijena] = useState('');
-  const [selectedPrice, setSelectedPrice] = useState('');
-  const [remainServices, setRemainServices] = useState([]);
-  const navigate = useNavigate();
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
 
   const showModal2 = () => {
     setIsModalOpen2(true);
@@ -191,10 +130,6 @@ const EditProfilePage = () => {
   const showPassModal = () => {
     setIsPassModalOpen(true);
   }
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
 
   const handleOk1 = () => {
     setIsModalOpen1(false);
@@ -211,20 +146,9 @@ const EditProfilePage = () => {
   const handleCancel3 = () => {
     setIsPassModalOpen(false);
   };
-    
-  const success = () => {
-    messageApi.open({
-      type: 'success',
-      content: 'Promjene uspješno sačuvane.',
-    });
-  };
 
   const handleServiceChange = (event) => {
     setUslugaId(event);
-    let position=event-1;
-    remainServices.splice(position, 1);
-    console.log("service id: ", uslugaId);
-    console.log("preostale:", remainServices);
   };
 
   const columns = [
@@ -249,7 +173,7 @@ const EditProfilePage = () => {
         <Space size="middle">
           <Button type="link" onClick={() => {deletePrice(record);}}>Obriši</Button>
         </Space>
-        ),
+      ),
     },
   ];
     
@@ -267,23 +191,21 @@ const EditProfilePage = () => {
 
   useEffect( () => {
     axios.get(`http://localhost:9000/lokacije`, {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-   })
-   .then((res) => {
-      //console.log("locations",res.data);
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then((res) => {
       setLocations(res.data);
-   })
-   .catch((e) => console.log(e));
+    })
+    .catch((e) => console.log(e));
 
-   axios.get(`http://localhost:9000/mjesta`, {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-   })
-   .then((res) => {
-      //console.log(res.data.length);
+    axios.get(`http://localhost:9000/mjesta`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then((res) => {
       let temp = [];
       for(let i = 0; i < res.data.length; i++){
         temp.push({
@@ -292,22 +214,18 @@ const EditProfilePage = () => {
         })
       }
       setPlaces(temp);
-      //console.log(places);
-      //console.log("locations", locations)
       const placeId = locations.find(element => element.korisnikId === user.id).mjestoId;
       const tempPN = places.find(element => element.value === placeId).label;
       setLocationName(tempPN);
-      //console.log(locationName);
-   })
-   .catch((e) => console.log(e));
+    })
+    .catch((e) => console.log(e));
 
-   axios.get(`http://localhost:9000/usluge`, {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-   })
-   .then((res) => {
-      //console.log(res.data.length);
+    axios.get(`http://localhost:9000/usluge`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then((res) => {
       let temp = [];
       for(let i = 0; i < res.data.length; i++){
         temp.push({
@@ -316,53 +234,50 @@ const EditProfilePage = () => {
         })
       }
       setServices(temp);
-      //console.log(services);
- })
- .catch((e) => console.log(e));
-}, [locationName, locations, places, prices, services, user.id, user.korisnikId, user.token]);
+    })
+    .catch((e) => console.log(e));
+  }, [locationName, locations, places, prices, services, user.id, user.korisnikId, user.token]);
 
-
-
-const changePassword = () => {
-  const request = {
-    password,
-  };
-  axios.put(`http://localhost:9000/korisnici/${user.id}/${user.username}`, request, {
-    headers: {
+  const changePassword = () => {
+    const request = {
+      password,
+    };
+    axios.put(`http://localhost:9000/korisnici/${user.id}/${user.username}`, request, {
+      headers: {
         Authorization: `Bearer ${user.token}`,
-    },
-  })
-  .then(() => {
-    console.log("sifra apdejtovana");
-    setIsPassModalOpen(false);
-  })
-  .catch((e) => console.log(e)); 
-};
+      },
+    })
+    .then(() => {
+      console.log("sifra apdejtovana");
+      setIsPassModalOpen(false);
+    })
+    .catch((e) => console.log(e)); 
+  };
 
 
-const showModal1 = () => {
-  axios.get(`http://localhost:9000/cijene`, {
-  headers: {
-    Authorization: `Bearer ${user.token}`,
-  },
-  })
-  .then((res) => {
-  let temp = [];
-  for(let i = 0; i < res.data.length; i++){
-    if(res.data.at(i).korisnikId===user.id){
-      temp.push({
-        id: res.data.at(i).id,
-        price: res.data.at(i).cijena,
-        service: services.find(element => element.value === res.data.at(i).uslugaId).label,
-      })
-    }
-    setPrices(temp);
-    console.log(prices);
-  }
-  })
-  .catch((e) => console.log(e));
-  setIsModalOpen1(true);
-};
+  const showModal1 = () => {
+    axios.get(`http://localhost:9000/cijene`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then((res) => {
+    let temp = [];
+      for(let i = 0; i < res.data.length; i++){
+        if(res.data.at(i).korisnikId===user.id){
+          temp.push({
+            id: res.data.at(i).id,
+            price: res.data.at(i).cijena,
+            service: services.find(element => element.value === res.data.at(i).uslugaId).label,
+          })
+        }
+        setPrices(temp);
+        console.log(prices);
+      }
+    })
+    .catch((e) => console.log(e));
+    setIsModalOpen1(true);
+  };
 
   const handleUpdate = async (event) => {
     event.preventDefault();
@@ -378,7 +293,7 @@ const showModal1 = () => {
       };
       await axios.put(`http://localhost:9000/korisnici/${user.id}`, request, {
         headers: {
-            Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.token}`,
         },
       })
       .then(() => {
@@ -391,7 +306,7 @@ const showModal1 = () => {
         console.log(locationRequest);
         axios.put(`http://localhost:9000/lokacije/${tempId}`, locationRequest, {
           headers: {
-              Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${user.token}`,
           },
         })
         .then(() => {
@@ -441,7 +356,6 @@ const showModal1 = () => {
   };
 
   const deletePrice = async (selPrice) => {
-    //event.preventDefault();
     try
     {
       await axios.delete(`http://localhost:9000/cijene/${selPrice.id}`, {
@@ -467,10 +381,9 @@ const showModal1 = () => {
       return;
     }
     if (info.file.status === 'done') {
-      // Get this url from response in real world.
       getBase64(info.file.originFileObj, (url) => {
-      setLoading(false);
-      setImageUrl(url);
+        setLoading(false);
+        setImageUrl(url);
       });
     }
   };
@@ -482,7 +395,7 @@ const showModal1 = () => {
         style={{
           marginTop: 8,
         }}>
-        Upload
+        Postavite sliku
       </div>
     </div>
   );
@@ -506,10 +419,7 @@ const showModal1 = () => {
         <MainMenu/>
       </Sider>
       <Content style={{ maxHeight: '103vh' }}>
-        <Cover style={{
-                  maxHeight: '103vh',
-                  backgroundImage: `url(${pozadina})`,
-                  }}>
+        <Cover style={{ maxHeight: '103vh', backgroundImage: `url(${pozadina})` }}>
           <Row gutter={16}>
             <Col span={8}>
               <Card title="Profilna slika" bordered={false}
@@ -636,8 +546,7 @@ const showModal1 = () => {
                         label={ <StyledLabel>Lokacija</StyledLabel> }
                         rules={[{ required: true, message: "Polje je obavezno!"}]}
                       >
-                        <StyledSelect size="default" 
-                          //mode="multiple"
+                        <StyledSelect size="default"
                           allowClear
                           style={{
                             width: '100%',
@@ -645,9 +554,7 @@ const showModal1 = () => {
                           onChange={selectLocation}
                           options={places}
                           defaultValue={locationName}
-                        >
-                          
-                        </StyledSelect>
+                        />
                       </StyledFormItem>
                       <StyledFormItem name="password">
                         <Button type="dashed"
@@ -671,19 +578,20 @@ const showModal1 = () => {
                             <StyledInput type="password"
                               value={password}
                               onChange={(e) => setPassword(e.target.value)} />                       
-                          </Modal>
+                        </Modal>
                       </StyledFormItem>
                       <StyledFormItem
                         name="service"
                       >
                         <Button type="dashed" 
                           style={{ 
-                                  width: '100%', 
-                                  marginTop:'3%', 
-                                  fontFamily:"'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif",
-                                  fontSize: '17px',
-                                  color: 'rgba(19, 19, 20, 0.704)' }}
-                          onClick={showModal1} >
+                            width: '100%', 
+                            marginTop:'3%', 
+                            fontFamily:"'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif",
+                            fontSize: '17px',
+                            color: 'rgba(19, 19, 20, 0.704)' 
+                          }}
+                          onClick={showModal1}>
                           Pregledaj usluge
                         </Button>
                         <Modal 
@@ -735,9 +643,6 @@ const showModal1 = () => {
                             </Form>
                         </Modal>
                       </StyledFormItem>
-                      <>
-                        
-                      </>
                     </StyledForm>
                   </Col>
                 </Row>
