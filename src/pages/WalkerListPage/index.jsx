@@ -164,7 +164,7 @@ const WalkerListPage = () => {
     try {
       const recenzijaRequest = {
         komentar,
-        ocjena : 4,
+        ocjena,
         korisnikOdId,
         korisnikZaId
       };
@@ -475,8 +475,9 @@ const WalkerListPage = () => {
                   onChange={(e) => setKomentar(e.target.value)}
                 />
                 <span>
-                  <Rate tooltips={desc} onChange={(e) => setOcjena(e.target.value)} value={ocjena} />
-                  {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
+                  <Rate tooltips={desc} onChange={(e) => {setOcjena(e)
+                      console.log("ocjena",ocjena); }} value={ocjena} />
+                  
                 </span>
               </Modal>
               <Modal title="Pregled usluga" open={isModalOpen3} onOk={handleCancel3} onCancel={handleCancel3} okText="OK"

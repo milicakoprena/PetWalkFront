@@ -45,6 +45,7 @@ export const Cover = styled.div`
 
 const ReviewPage = () => {
   const showModal = (review) => {
+    console.log(review);
     setSelectedReview(review);
     setIsModalOpen(true);
   };
@@ -158,9 +159,6 @@ useEffect(() => {
    console.log("T",temp);
    setReviews(temp);
    
-
-
-
   }, [reviews, users, tempReviews, user.token, user.role, user.id, user.firstName, user.lastName]);
 
   return (
@@ -192,7 +190,7 @@ useEffect(() => {
                 <Descriptions.Item>
                   <Avatar size={130} icon={<UserOutlined />}/>
                 </Descriptions.Item>
-                <Descriptions.Item label="Ime vlasnika">{selectedWalker.ime}</Descriptions.Item>
+                <Descriptions.Item label="Ime vlasnika">{selectedReview.firstName}  {selectedReview.lastName}</Descriptions.Item>
                 <span style={{ }}>
                   <Rate tooltips={desc} onChange={setValue} value={value} />
                     {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}

@@ -490,18 +490,7 @@ const EditProfileOwnerPage = () => {
                           </Modal>
                       </StyledFormItem>
                       <>
-                        <DeactivateButton type="primary" onClick={showModal}>
-                          Deaktiviraj nalog
-                        </DeactivateButton>
-                        <Modal 
-                          title="Deaktiviraj nalog" 
-                          open={isModalOpen} 
-                          onOk={handleOk} 
-                          onCancel={handleCancel} 
-                          okText="Potvrdi"
-                          cancelText="Otkaži">
-                          <p>Da li ste sigurni da želite da deaktivirate Vaš nalog</p>
-                        </Modal>
+                        
                       </>
                     </StyledForm>
                   </Col>
