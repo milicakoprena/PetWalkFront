@@ -170,12 +170,6 @@ const EditProfileOwnerPage = () => {
     setIsPassModalOpen(false);
   };
 
-  const success = () => {
-    messageApi.open({
-      type: 'success',
-      content: 'Promjene uspješno sačuvane.',
-    });
-  };
     
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
@@ -268,9 +262,17 @@ const EditProfileOwnerPage = () => {
           },
         })
         .then(() => {
-          success();
+          messageApi.open({
+            type: 'success',
+            content: 'Promjene uspješno sačuvane.',
+          });
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          messageApi.open({
+            type: 'error',
+            content: 'Došlo je do greške, promjene nisu sačuvane.',
+          });
+          console.log(e)});
       })
       .catch((e) => console.log(e));
     }
@@ -418,8 +420,9 @@ const EditProfileOwnerPage = () => {
                           value={description}
                           onChange={(e) => setDescription(e.target.value)} />
                       </StyledFormItem>
-                      {contextHolder}
+                      
                       <Space style={{ justifyContent: 'center' }} >
+                      {contextHolder}
                         <Button style={{
                           marginTop:40, minHeight:40, backgroundColor: 'rgba(0,21,41,255)', color:'white', fontSize: '16px'
                         }}  onClick={handleUpdate} >Sačuvaj promjene</Button>

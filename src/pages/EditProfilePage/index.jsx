@@ -395,9 +395,17 @@ const showModal1 = () => {
           },
         })
         .then(() => {
-          success();
+          messageApi.open({
+            type: 'success',
+            content: 'Promjene uspješno sačuvane.',
+          });
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          messageApi.open({
+            type: 'error',
+            content: 'Došlo je do greške, promjene nisu sačuvane.',
+          });
+          console.log(e)});
       })
       .catch((e) => console.log(e));
     }

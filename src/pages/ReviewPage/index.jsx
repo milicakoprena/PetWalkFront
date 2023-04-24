@@ -53,17 +53,17 @@ const ReviewPage = () => {
     {
       title: 'Recenziju napisao',
       dataIndex: 'korisnikOd',
-      width: '30%',
+      width: '20%',
     },
     {
       title: 'Čuvar',
       dataIndex: 'korisnikZa',
-      width: '30%',
+      width: '20%',
     },
     {
       title: 'Ocjena',
       dataIndex: 'ocjena',
-      width: '20%',
+      width: '10%',
     },
     {
       title: 'Komentar',
