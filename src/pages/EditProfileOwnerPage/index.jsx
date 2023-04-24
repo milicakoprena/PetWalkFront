@@ -117,6 +117,8 @@ const EditProfileOwnerPage = () => {
   const [locationId, setLocationId] = useState('');
   const [locationName, setLocationName] = useState('');
   const [isPassModalOpen, setIsPassModalOpen] = useState('');
+  const [imageFile, setImageFile] = useState('');
+  const [currentImage, setCurrentImage] = useState('');
 
   const showPassModal = () => {
     setIsPassModalOpen(true);
@@ -136,6 +138,7 @@ const EditProfileOwnerPage = () => {
   };
     
   const handleChange = (info) => {
+    setCurrentImage('');
     if (info.file.status === 'uploading') {
       setLoading(true);
       return;
@@ -144,11 +147,28 @@ const EditProfileOwnerPage = () => {
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
+        setCurrentImage(url);
       });
     }
   };
 
   useEffect(() => {
+
+    axios.get(`http://localhost:9000/korisnici/image/${user.photo}`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        responseType: 'arraybuffer',
+        "Content-Type": 'image/jpeg',
+      },
+    })
+    .then((response) => {
+      if(imageUrl===undefined){
+        console.log("bla");
+        setCurrentImage(`data:image/jpeg;base64,${response.data}`);
+      } 
+    })
+    .catch((e) => console.log(e));
+
     axios.get(`http://localhost:9000/lokacije`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -176,12 +196,30 @@ const EditProfileOwnerPage = () => {
       const placeId = locations.find(element => element.korisnikId === user.id).mjestoId;
       const tempPN = places.find(element => element.value === placeId).label;
       setLocationName(tempPN);
+      //console.log(locationName);
     })
     .catch((e) => console.log(e));
-  })
+  } ,[imageUrl, locations, places, user.id, user.photo, user.token])
+
+  const uploadPhoto = async () => {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+    await axios.post(`http://localhost:9000/korisnici/image`, formData,  {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+      "Content-Type": "multipart/form-data",
+    },
+    })
+    .then((res) => {
+      console.log("Uspjesno");
+    })
+    .catch((e) => console.log(e));
+  }
 
   const handleUpdate = async (event) => {
     event.preventDefault();
+
+    uploadPhoto();
     try {
       const request = {
         firstName,
@@ -194,7 +232,7 @@ const EditProfileOwnerPage = () => {
       };
       await axios.put(`http://localhost:9000/korisnici/${user.id}`, request, {
         headers: {
-            Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.token}`,
         },
       })
       .then(() => {
@@ -237,7 +275,7 @@ const EditProfileOwnerPage = () => {
     };
     axios.put(`http://localhost:9000/korisnici/${user.id}/${user.username}`, request, {
       headers: {
-          Authorization: `Bearer ${user.token}`,
+        Authorization: `Bearer ${user.token}`,
       },
     })
     .then(() => {
@@ -249,8 +287,7 @@ const EditProfileOwnerPage = () => {
 
   const uploadButton = (
     <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined/>
-      }
+      {loading ? <LoadingOutlined /> : <PlusOutlined/>}
       <div
         style={{
           marginTop: 8,
@@ -265,6 +302,7 @@ const EditProfileOwnerPage = () => {
     setTimeout(() => {
       onSuccess("ok");
       setPhoto(file.name);
+      setImageFile(file);
     }, 0);
   };
 
@@ -304,11 +342,7 @@ const EditProfileOwnerPage = () => {
                       beforeUpload={beforeUpload}
                       onChange={handleChange}
                     >
-                      {imageUrl ? (
-                        <UserPhoto src={imageUrl} alt="avatar"/>
-                      ) : (
-                        uploadButton
-                      )} 
+                      {currentImage ? <UserPhoto src={currentImage} alt="avatar"/> : uploadButton} 
                     </Upload>
                   </Space>
                 </StyledUpload>

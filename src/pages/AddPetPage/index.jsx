@@ -217,16 +217,13 @@ const AddPetPage = (props) => {
   const handleChange = (info) => {
     console.log(info);
     if (info.file.status === 'uploading') {
-      console.log("uploading");
       setLoading(true);
       return;
     }
     if (info.file.status === 'done') {
-      console.log("done");
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
-        console.log("IMAGE URL:",imageUrl);
       });
     }
   };
@@ -244,14 +241,15 @@ const AddPetPage = (props) => {
     </div>
   );
 
-  const saveFile = ({ file, onSuccess }) => {
-    console.log(file);
-    setImage(file.name);
-    setImageFile(file);
-  };
-
-  const [form] = Form.useForm();
-  const [collapsed, setCollapsed] = useState(false);
+      const saveFile = ({ file, onSuccess }) => {
+        setTimeout(() => {
+          onSuccess("ok");
+          setImage(file.name);
+          setImageFile(file);
+        }, 0);
+      };
+    const [form] = Form.useForm();
+    const [collapsed, setCollapsed] = useState(false);
 
   return (
     <Layout hasSider>
@@ -259,86 +257,90 @@ const AddPetPage = (props) => {
         style={{
           maxHeight: '103vh',
           minWidth: ''
-        }}>
-        <MainMenu/>
-      </Sider>
-      <Content>
-        <Page>
-          <Cover style={{ maxHeight: '103vh', backgroundImage: `url(${pozadina})` }} >
-            <Card title="Dodaj ljubimca" bordered={false} 
-              style={{ 
-                boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)',
-                justifyContent: 'center',
-                width: '500px',
-                height: '636px',
-                marginTop: '-20px'
-              }}
-            >
-              <StyledForm
-                form={form}
-                size="large"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-              >
-                <StyledFormItem>
-                  <StyledUpload>
-                    <Upload
-                      name="avatar"
-                      customRequest={saveFile}
-                      listType="picture-circle"
-                      className="avatar-uploader"
-                      showUploadList={false}
-                      beforeUpload={beforeUpload}
-                      onSelect={handleChange}
+          }}>
+          <MainMenu/>
+        </Sider>
+          <Content>
+            <Page>
+              <Cover style={{ maxHeight: '103vh', backgroundImage: `url(${pozadina})` }} >
+                <Card title="Dodaj ljubimca" bordered={false} 
+                  style={{ 
+                    boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)',
+                    justifyContent: 'center',
+                    width: '500px',
+                    height: '636px',
+                    marginTop: '-20px'
+                  }} >
+                  <StyledForm
+                    form={form}
+                    size="large"
+                    labelCol={
+                      { span: 24 }
+                    }
+                    wrapperCol={{ span: 24 }
+                    }
                     >
-                      {imageUrl ? (
-                        <PetPhoto
-                          src={imageUrl}
-                          alt="avatar"
-                        />
-                      ) : (
-                        uploadButton
-                      )}
-                    </Upload>
-                  </StyledUpload>
-                </StyledFormItem>
-                <StyledFormItem
-                  label={ <StyledLabel>Ime</StyledLabel> }
-                  name="name"
-                  rules={[{ required: true, message: "Polje je obavezno!"}]}
-                >
-                  <StyledInput value={name} onChange={(e) => setName(e.target.value)}/>
-                </StyledFormItem>
-                <StyledFormItem
-                  name="type"
-                  label={ <StyledLabel>Vrsta ljubimca</StyledLabel> }
-                  rules={[{ required: true, message: "Polje je obavezno!"}]}
-                >
-                  <StyledSelect size="large"
-                    options={types}
-                    defaultValue={types[0]} 
-                    onChange={selectType}
-                  />
-                </StyledFormItem>
-                <StyledFormItem
-                  name="description"
-                  label={ <StyledLabel>Opis</StyledLabel> }
-                >
-                  <StyledTextArea value={description} onChange={(e) => setDescription(e.target.value)}/>
-                </StyledFormItem>
-                {contextHolder}
-                <Button onClick={addPet} style={{
-                  marginTop:5, marginLeft:110, minHeight:40, backgroundColor: 'rgba(0,21,41,255)', color:'white', fontSize: '16px'
-                }}>
-                  Dodaj ljubimca
-                </Button>
-              </StyledForm>
-            </Card>
-          </Cover>
-        </Page>
-      </Content>
-    </Layout>
-  );
+                    <StyledFormItem>
+                      <StyledUpload>
+                        <Upload
+                          name="avatar"
+                          customRequest={saveFile}
+                          listType="picture-circle"
+                          className="avatar-uploader"
+                          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                          showUploadList={false}
+                          beforeUpload={beforeUpload}
+                          onChange={handleChange}
+                        >
+                          {imageUrl ? (
+                            <PetPhoto
+                              src={imageUrl}
+                              alt="avatar"
+                              
+                            />
+                          ) : (
+                            uploadButton
+                          )}
+                        </Upload>
+                      </StyledUpload>
+                    </StyledFormItem>
+                    <StyledFormItem
+                      label={ <StyledLabel>Ime</StyledLabel> }
+                      name="name"
+                      rules={[{ required: true, message: "Polje je obavezno!"}]}
+                    >
+                      <StyledInput value={name} onChange={(e) => setName(e.target.value)}/>
+                    </StyledFormItem>
+                    <StyledFormItem
+                      name="type"
+                      label={ <StyledLabel>Vrsta ljubimca</StyledLabel> }
+                      rules={[{ required: true, message: "Polje je obavezno!"}]}
+                    >
+                      <StyledSelect size="large"
+                        options={types}
+                        defaultValue={types[0]} 
+                        onChange={selectType}
+                      />
+                    </StyledFormItem>
+                    <StyledFormItem
+                      name="description"
+                      label={ <StyledLabel>Opis</StyledLabel> }
+                    >
+                      <StyledTextArea value={description} onChange={(e) => setDescription(e.target.value)}/>
+                    </StyledFormItem>
+                    {contextHolder}
+                    <Button onClick={addPet} style={{
+                      marginTop:5, marginLeft:110, minHeight:40, backgroundColor: 'rgba(0,21,41,255)', color:'white', fontSize: '16px'
+                    }}>
+                      Dodaj ljubimca
+                    </Button>
+                  </StyledForm>
+                </Card>
+              </Cover>
+          </Page>
+        </Content>
+      </Layout>
+    );
 };
 
 export default AddPetPage;

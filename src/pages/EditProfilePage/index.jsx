@@ -106,6 +106,7 @@ const EditProfilePage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [locations, setLocations] = useState([]);
   const [places, setPlaces] = useState([]);
+  const [selectServices, setSelectServices] = useState([]);
   const [services, setServices] = useState([]);
   const userState = useLocation();
   const user = userState.state.user;
@@ -122,8 +123,18 @@ const EditProfilePage = () => {
   const [prices, setPrices] = useState([]);
   const [uslugaId, setUslugaId] = useState('');
   const [cijena, setCijena] = useState('');
+  const [imageFile, setImageFile] = useState('');
+  const [currentImage, setCurrentImage] = useState(''); 
+
 
   const showModal2 = () => {
+    for(let i = 0; i < services.length; i++){
+      if(!prices.find(element => element.service === services.at(i).label)){
+        console.log("ima");
+        selectServices.push(services.at(i));
+      }
+    }
+    console.log(selectServices);
     setIsModalOpen2(true);
   }
 
@@ -140,12 +151,15 @@ const EditProfilePage = () => {
   };
 
   const handleCancel2 = () => {
+    setSelectServices([]);
     setIsModalOpen2(false);
   };
 
   const handleCancel3 = () => {
     setIsPassModalOpen(false);
   };
+    
+  
 
   const handleServiceChange = (event) => {
     setUslugaId(event);
@@ -190,6 +204,21 @@ const EditProfilePage = () => {
   };
 
   useEffect( () => {
+    axios.get(`http://localhost:9000/korisnici/image/${user.photo}`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        responseType: 'arraybuffer',
+        "Content-Type": 'image/jpeg',
+      },
+    })
+    .then((response) => {
+      if(imageUrl===undefined){
+        console.log("bla");
+        setCurrentImage(`data:image/jpeg;base64,${response.data}`);
+      }
+    })
+    .catch((e) => console.log(e));
+
     axios.get(`http://localhost:9000/lokacije`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -236,7 +265,7 @@ const EditProfilePage = () => {
       setServices(temp);
     })
     .catch((e) => console.log(e));
-  }, [locationName, locations, places, prices, services, user.id, user.korisnikId, user.token]);
+  }, [imageUrl, locationName, locations, places, prices, services, user.id, user.korisnikId, user.photo, user.token]);
 
   const changePassword = () => {
     const request = {
@@ -279,8 +308,25 @@ const EditProfilePage = () => {
     setIsModalOpen1(true);
   };
 
+  const uploadPhoto = async () => {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+    await axios.post(`http://localhost:9000/korisnici/image`, formData,  {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((res) => {
+      console.log("Uspjesno");
+    })
+    .catch((e) => console.log(e));
+  }
+
+
   const handleUpdate = async (event) => {
     event.preventDefault();
+    uploadPhoto();
     try {
       const request = {
         firstName,
@@ -384,6 +430,7 @@ const EditProfilePage = () => {
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
+        setCurrentImage(url);
       });
     }
   };
@@ -404,6 +451,7 @@ const EditProfilePage = () => {
     setTimeout(() => {
       onSuccess("ok");
       setPhoto(file.name);
+      setImageFile(file);
     }, 0);
   };
 
@@ -443,8 +491,8 @@ const EditProfilePage = () => {
                     beforeUpload={beforeUpload}
                     onChange={handleChange}
                   >
-                    {imageUrl ? (
-                      <UserPhoto src={imageUrl} alt="avatar"/>
+                    {currentImage ? (
+                      <UserPhoto src={currentImage} alt="avatar"/>
                     ) : (
                       uploadButton
                     )} 
@@ -631,7 +679,7 @@ const EditProfilePage = () => {
                                     fontSize: '15px',
                                   }}
                                   onChange={handleServiceChange}
-                                  options={services} />
+                                  options={selectServices} />
                               </Form.Item>
                               <Form.Item
                                 label={ <StyledLabel>Cijena</StyledLabel> }
