@@ -100,7 +100,7 @@ const MyPetsList = () => {
                     <Button type="link" onClick={() => 
                     {
                         console.log(record);
-                        axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
+                        axios.get(`http://localhost:9000/ljubimci/image/${record.imageName}`, {
                     headers: {
                         Authorization: `Bearer ${user.token}`,
                         responseType: 'arraybuffer',
