@@ -10,11 +10,6 @@ import { ROLE_ADMIN } from "../../util.js/constants";
 
 const { Content, Sider } = Layout;
 
-export const UserIcon = styled.img `
-  heigth: 40px;
-  width: 40px;
-`;
-
 export const StyledTable = styled(Table) `
   width: 70%;
   box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%);

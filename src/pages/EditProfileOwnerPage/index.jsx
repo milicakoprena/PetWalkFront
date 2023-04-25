@@ -109,7 +109,7 @@ const EditProfileOwnerPage = () => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [username, setUsername] = useState(user.username);
-  const [password, setPassword] = useState(user.password);
+  const [password, setPassword] = useState('');
   const [email, setEmail] = useState(user.email);
   const [description, setDescription] = useState(user.description);
   const [photo, setPhoto] = useState(user.photo);
@@ -280,9 +280,19 @@ const EditProfileOwnerPage = () => {
     })
     .then(() => {
       console.log("sifra apdejtovana");
+      messageApi.open({
+        type: 'success',
+        content: 'Lozinka uspješno promijenjena.',
+      });
       setIsPassModalOpen(false);
     })
-    .catch((e) => console.log(e)); 
+    .catch((e) => {
+      messageApi.open({
+        type: 'error',
+        content: 'Došlo je do greške, lozinka nije promijenjena.',
+      });
+      console.log(e)
+    }); 
   };
 
   const uploadButton = (

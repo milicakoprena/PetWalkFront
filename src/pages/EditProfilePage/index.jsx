@@ -120,6 +120,7 @@ const EditProfilePage = () => {
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
   const [locationId, setLocationId] = useState('');
   const [locationName, setLocationName] = useState('');
+  const [currLocation, setCurrLocation] = useState('');
   const [prices, setPrices] = useState([]);
   const [uslugaId, setUslugaId] = useState('');
   const [cijena, setCijena] = useState('');
@@ -245,6 +246,8 @@ const EditProfilePage = () => {
       setPlaces(temp);
       const placeId = locations.find(element => element.korisnikId === user.id).mjestoId;
       const tempPN = places.find(element => element.value === placeId).label;
+      setCurrLocation(places.find(element => element.value === placeId));
+      console.log("trenutna", currLocation);
       setLocationName(tempPN);
     })
     .catch((e) => console.log(e));
@@ -265,7 +268,7 @@ const EditProfilePage = () => {
       setServices(temp);
     })
     .catch((e) => console.log(e));
-  }, [imageUrl, locationName, locations, places, prices, services, user.id, user.korisnikId, user.photo, user.token]);
+  }, [currLocation, imageUrl, locationName, locations, places, prices, services, user.id, user.korisnikId, user.photo, user.token]);
 
   const changePassword = () => {
     const request = {
@@ -278,9 +281,19 @@ const EditProfilePage = () => {
     })
     .then(() => {
       console.log("sifra apdejtovana");
+      messageApi.open({
+        type: 'success',
+        content: 'Lozinka uspješno promijenjena.',
+      });
       setIsPassModalOpen(false);
     })
-    .catch((e) => console.log(e)); 
+    .catch((e) => {
+      messageApi.open({
+        type: 'error',
+        content: 'Došlo je do greške, lozinka nije promijenjena.',
+      });
+      console.log(e)
+    });  
   };
 
 
