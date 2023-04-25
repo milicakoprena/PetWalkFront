@@ -100,6 +100,7 @@ export const StyledLabel = styled.div`
 `;
 
 const EditProfilePage = () => {
+  const [isCalled, setIsCalled] = useState(true);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [isPassModalOpen, setIsPassModalOpen] = useState(false);
@@ -120,12 +121,10 @@ const EditProfilePage = () => {
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
   const [locationId, setLocationId] = useState('');
   const [locationName, setLocationName] = useState('');
-  const [currLocation, setCurrLocation] = useState('');
   const [prices, setPrices] = useState([]);
   const [uslugaId, setUslugaId] = useState('');
   const [cijena, setCijena] = useState('');
   const [imageFile, setImageFile] = useState('');
-  const [currentImage, setCurrentImage] = useState(''); 
 
 
   const showModal2 = () => {
@@ -213,9 +212,8 @@ const EditProfilePage = () => {
       },
     })
     .then((response) => {
-      if(imageUrl===undefined){
-        console.log("bla");
-        setCurrentImage(`data:image/jpeg;base64,${response.data}`);
+      if(isCalled){
+        setImageUrl(`data:image/jpeg;base64,${response.data}`);
       }
     })
     .catch((e) => console.log(e));
@@ -246,9 +244,8 @@ const EditProfilePage = () => {
       setPlaces(temp);
       const placeId = locations.find(element => element.korisnikId === user.id).mjestoId;
       const tempPN = places.find(element => element.value === placeId).label;
-      setCurrLocation(places.find(element => element.value === placeId));
-      console.log("trenutna", currLocation);
       setLocationName(tempPN);
+      
     })
     .catch((e) => console.log(e));
 
@@ -268,7 +265,7 @@ const EditProfilePage = () => {
       setServices(temp);
     })
     .catch((e) => console.log(e));
-  }, [currLocation, imageUrl, locationName, locations, places, prices, services, user.id, user.korisnikId, user.photo, user.token]);
+  }, [imageUrl, locationName, locations, places, prices, services, user.id, user.korisnikId, user.photo, user.token, isCalled]);
 
   const changePassword = () => {
     const request = {
@@ -435,6 +432,7 @@ const EditProfilePage = () => {
   }
     
   const handleChange = (info) => {
+    setIsCalled(false);
     if (info.file.status === 'uploading') {
       setLoading(true);
       return;
@@ -443,7 +441,6 @@ const EditProfilePage = () => {
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
-        setCurrentImage(url);
       });
     }
   };
@@ -504,8 +501,8 @@ const EditProfilePage = () => {
                     beforeUpload={beforeUpload}
                     onChange={handleChange}
                   >
-                    {currentImage ? (
-                      <UserPhoto src={currentImage} alt="avatar"/>
+                    {imageUrl ? (
+                      <UserPhoto src={imageUrl} alt="avatar"/>
                     ) : (
                       uploadButton
                     )} 
@@ -604,7 +601,7 @@ const EditProfilePage = () => {
                       
                       <StyledFormItem
                         name="location"
-                        label={ <StyledLabel>Lokacija</StyledLabel> }
+                        label={ <StyledLabel>Lokacija: {locationName}</StyledLabel> }
                         rules={[{ required: true, message: "Polje je obavezno!"}]}
                       >
                         <StyledSelect size="default"

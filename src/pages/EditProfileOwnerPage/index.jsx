@@ -101,6 +101,7 @@ export const StyledLabel = styled.div`
 `;
 
 const EditProfileOwnerPage = () => {
+  const [isCalled, setIsCalled] = useState(true);
   const [messageApi, contextHolder] = message.useMessage();
   const userState = useLocation();
   const [locations, setLocations] = useState([]);
@@ -118,7 +119,6 @@ const EditProfileOwnerPage = () => {
   const [locationName, setLocationName] = useState('');
   const [isPassModalOpen, setIsPassModalOpen] = useState('');
   const [imageFile, setImageFile] = useState('');
-  const [currentImage, setCurrentImage] = useState('');
 
   const showPassModal = () => {
     setIsPassModalOpen(true);
@@ -138,7 +138,7 @@ const EditProfileOwnerPage = () => {
   };
     
   const handleChange = (info) => {
-    setCurrentImage('');
+    setIsCalled(false);
     if (info.file.status === 'uploading') {
       setLoading(true);
       return;
@@ -147,7 +147,6 @@ const EditProfileOwnerPage = () => {
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
-        setCurrentImage(url);
       });
     }
   };
@@ -162,12 +161,15 @@ const EditProfileOwnerPage = () => {
       },
     })
     .then((response) => {
-      if(imageUrl===undefined){
-        console.log("bla");
-        setCurrentImage(`data:image/jpeg;base64,${response.data}`);
-      } 
+      if(isCalled){
+        setImageUrl(`data:image/jpeg;base64,${response.data}`);
+      }
+        
+      
     })
-    .catch((e) => console.log(e));
+    .catch((e) => {
+      console.log(e);
+    });
 
     axios.get(`http://localhost:9000/lokacije`, {
       headers: {
@@ -199,7 +201,7 @@ const EditProfileOwnerPage = () => {
       //console.log(locationName);
     })
     .catch((e) => console.log(e));
-  } ,[imageUrl, locations, places, user.id, user.photo, user.token])
+  } ,[imageUrl, locations, places, user.id, user.photo, user.token, isCalled])
 
   const uploadPhoto = async () => {
     const formData = new FormData();
@@ -211,9 +213,11 @@ const EditProfileOwnerPage = () => {
     },
     })
     .then((res) => {
-      console.log("Uspjesno");
+      console.log("Uspjesno", res);
     })
-    .catch((e) => console.log(e));
+    .catch((e) => {
+      console.log("NE MOZE", e);
+      console.log(e)});
   }
 
   const handleUpdate = async (event) => {
@@ -262,7 +266,9 @@ const EditProfileOwnerPage = () => {
           console.log(e)
         });
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        //console.log(e);
+      });
     }
     catch (error) {
       console.log(error);
@@ -352,7 +358,7 @@ const EditProfileOwnerPage = () => {
                       beforeUpload={beforeUpload}
                       onChange={handleChange}
                     >
-                      {currentImage ? <UserPhoto src={currentImage} alt="avatar"/> : uploadButton} 
+                      {imageUrl ? <UserPhoto src={imageUrl} alt="avatar"/> : uploadButton} 
                     </Upload>
                   </Space>
                 </StyledUpload>
@@ -447,7 +453,7 @@ const EditProfileOwnerPage = () => {
                       </StyledFormItem>
                       <StyledFormItem
                         name="location"
-                        label={ <StyledLabel>Lokacija</StyledLabel> }
+                        label={ <StyledLabel>Lokacija: {locationName}</StyledLabel> }
                         rules={[{ required: true, message: "Polje je obavezno!"}]}
                       >
                         <StyledSelect size="default" 
@@ -457,7 +463,7 @@ const EditProfileOwnerPage = () => {
                           }}
                           onChange={selectLocation}
                           options={places}
-                          defaultValue={locationName}/>
+                          value={locationName}/>
                       </StyledFormItem>
                       <StyledFormItem name="password">
                         <Button type="dashed"

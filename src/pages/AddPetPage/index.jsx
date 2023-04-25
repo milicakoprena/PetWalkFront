@@ -143,7 +143,7 @@ const AddPetPage = (props) => {
     console.log("IMAGEFILE",imageFile);
     const formData = new FormData();
     formData.append('file', imageFile);
-    axios.post(`http://localhost:9000/korisnici/image`, formData,  {
+    axios.post(`http://localhost:9000/ljubimci/image`, formData,  {
       headers: {
         Authorization: `Bearer ${user.token}`,
         "Content-Type": "multipart/form-data",
@@ -200,7 +200,6 @@ const AddPetPage = (props) => {
       },
     })
     .then((res) => {
-      console.log(res.data.length);
       let temp = [];
       for(let i = 0; i < res.data.length; i++){
         temp.push({
@@ -209,7 +208,6 @@ const AddPetPage = (props) => {
         })
       }
       setTypes(temp);
-      console.log(types);
     })
     .catch((e) => console.log(e));
   }, [types, user.token]);
