@@ -234,6 +234,7 @@ const PetListPage = () => {
       const request = {
         sadrzaj,
         korisnikId: user.id,
+        ljubimacId: selectedPet.id,
       };
       axios.post('http://localhost:9000/izvjestaji', request, {
         headers: {

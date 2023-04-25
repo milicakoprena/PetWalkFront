@@ -151,7 +151,7 @@ const SignUpPage = () => {
   useEffect( () => {
     axios.get(`http://localhost:9000/mjesta`)
     .then((res) => {
-    console.log(res.data.length);
+      console.log(res.data.length);
       let temp = [];
       for(let i = 0; i < res.data.length; i++){
         temp.push({
