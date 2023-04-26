@@ -130,12 +130,6 @@ const EditProfileOwnerPage = () => {
 
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
-
-  const selectLocation = (event) => {
-    setLocationId(event);
-    setLocationName(places.find(element => element.value === locationId).label);
-    console.log(locationName);
-  };
     
   const handleChange = (info) => {
     setIsCalled(false);
@@ -164,8 +158,6 @@ const EditProfileOwnerPage = () => {
       if(isCalled){
         setImageUrl(`data:image/jpeg;base64,${response.data}`);
       }
-        
-      
     })
     .catch((e) => {
       console.log(e);
@@ -198,19 +190,27 @@ const EditProfileOwnerPage = () => {
       const placeId = locations.find(element => element.korisnikId === user.id).mjestoId;
       const tempPN = places.find(element => element.value === placeId).label;
       setLocationName(tempPN);
-      //console.log(locationName);
+      setLocationId(placeId);
     })
     .catch((e) => console.log(e));
-  } ,[imageUrl, locations, places, user.id, user.photo, user.token, isCalled])
+  } ,[imageUrl, locations, locationName, places, user.id, user.photo, user.token, isCalled])
+
+  const [defaultValue, setDefaultValue] = useState(locationId);
+
+  useEffect(() => {
+    setDefaultValue(locationId);
+  }, [locationId])
+
+  console.log("DefVal", defaultValue);
 
   const uploadPhoto = async () => {
     const formData = new FormData();
     formData.append('file', imageFile);
     await axios.post(`http://localhost:9000/korisnici/image`, formData,  {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-      "Content-Type": "multipart/form-data",
-    },
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        "Content-Type": "multipart/form-data",
+      },
     })
     .then((res) => {
       console.log("Uspjesno", res);
@@ -461,9 +461,10 @@ const EditProfileOwnerPage = () => {
                           style={{
                             width: '100%',
                           }}
-                          onChange={selectLocation}
+                          onChange={(selectedOption) => setDefaultValue(selectedOption)}
                           options={places}
-                          value={locationName}/>
+                          value={defaultValue}
+                        />
                       </StyledFormItem>
                       <StyledFormItem name="password">
                         <Button type="dashed"

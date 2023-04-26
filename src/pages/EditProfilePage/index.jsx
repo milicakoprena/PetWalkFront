@@ -125,7 +125,7 @@ const EditProfilePage = () => {
   const [uslugaId, setUslugaId] = useState('');
   const [cijena, setCijena] = useState('');
   const [imageFile, setImageFile] = useState('');
-
+  
 
   const showModal2 = () => {
     for(let i = 0; i < services.length; i++){
@@ -194,15 +194,6 @@ const EditProfilePage = () => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
 
-  const selectLocation = (event) => {
-    setLocationId(event);
-    console.log(event);
-    let temp = places.find(element => element.value === event).label;
-    setLocationName(temp);
-    console.log(temp);
-    console.log(locationName);
-  };
-
   useEffect( () => {
     axios.get(`http://localhost:9000/korisnici/image/${user.photo}`, {
       headers: {
@@ -245,7 +236,7 @@ const EditProfilePage = () => {
       const placeId = locations.find(element => element.korisnikId === user.id).mjestoId;
       const tempPN = places.find(element => element.value === placeId).label;
       setLocationName(tempPN);
-      
+      setLocationId(placeId);
     })
     .catch((e) => console.log(e));
 
@@ -266,6 +257,12 @@ const EditProfilePage = () => {
     })
     .catch((e) => console.log(e));
   }, [imageUrl, locationName, locations, places, prices, services, user.id, user.korisnikId, user.photo, user.token, isCalled]);
+
+  const [defaultValue, setDefaultValue] = useState(locationId);
+
+  useEffect(() => {
+    setDefaultValue(locationId);
+  }, [locationId])
 
   const changePassword = () => {
     const request = {
@@ -354,7 +351,7 @@ const EditProfilePage = () => {
       })
       .then(() => {
         const locationRequest = {
-          mjestoId: locationId,
+          mjestoId: defaultValue,
           korisnikId: user.id,
         };
         const tempId = locations.find(element => element.korisnikId === user.id).id;
@@ -609,9 +606,9 @@ const EditProfilePage = () => {
                           style={{
                             width: '100%',
                           }}
-                          onChange={selectLocation}
+                          onChange={(selectedOption) => setDefaultValue(selectedOption)}
                           options={places}
-                          defaultValue={locationName}
+                          value={defaultValue}
                         />
                       </StyledFormItem>
                       <StyledFormItem name="password">
