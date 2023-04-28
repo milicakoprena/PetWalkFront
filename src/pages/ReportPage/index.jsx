@@ -93,9 +93,7 @@ const ReportPage = () => {
       },
     })
     .then((res) => {
-      console.log("users", res.data);
       setUsers(res.data);
-      console.log("korisnici", users);
     })
     .catch((e) => console.log(e));
 
@@ -114,7 +112,6 @@ const ReportPage = () => {
         })
       }
       setPets(temp);
-      console.log("pets", pets);
     })
     .catch((e) => console.log(e));
 
@@ -124,14 +121,11 @@ const ReportPage = () => {
       },
     })
     .then((res) => {
-      console.log("res", res.data);
-
       let temp = [];
       let tempReport = '';
       for (let i = 0; i < res.data.length; i++) {
         let userId = res.data.at(i).korisnikId;
         let ownerId = pets.find(element => element.id === res.data.at(i).ljubimacId).vlasnikId;
-        console.log(ownerId);
         
         if (user.role===ROLE_ADMIN) {
           tempReport = {
@@ -142,7 +136,6 @@ const ReportPage = () => {
             content: res.data.at(i).sadrzaj,
           }
           temp.push(tempReport);
-          console.log("TEMP", tempReport);
         }
         else {
           if(user.id===ownerId){
@@ -154,13 +147,11 @@ const ReportPage = () => {
               content: res.data.at(i).sadrzaj,
             }
             temp.push(tempReport);
-            console.log("TEMP", tempReport);
           }
         }
       }
 
       setReports(temp);
-      console.log("REPORTS",reports);
     })
     .catch((e) => console.log(e));
   }, [pets, reports, user.firstName, user.id, user.lastName, user.role, user.token, users]);

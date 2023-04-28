@@ -99,7 +99,6 @@ const PetListPage = () => {
                 telefon : record.telefon,
                 lokacija : record.lokacija,
               }
-              console.log(temp);
               setSelectedPet(temp);
             })
             .catch((response) => {
@@ -306,10 +305,7 @@ const PetListPage = () => {
   const [isModalOpen1, setIsModalOpen1] = useState(false);
 
   const selectType = (event) => {
-    console.log("1",event);
     setTypeFilterName(event);
-    console.log("2",event);
-    console.log("3",typeFilterName);
   };
 
   return (

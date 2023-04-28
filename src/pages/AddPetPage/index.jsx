@@ -135,12 +135,9 @@ const AddPetPage = (props) => {
 
   const selectType = (event) => {
     setTypeId(event);
-    console.log(event);
-    console.log(typeId);
   };
 
   const addPet = async () => {
-    console.log("IMAGEFILE",imageFile);
     const formData = new FormData();
     formData.append('file', imageFile);
     axios.post(`http://localhost:9000/ljubimci/image`, formData,  {
@@ -179,11 +176,6 @@ const AddPetPage = (props) => {
         type: 'success',
         content: 'Ljubimac uspješno sačuvan!',
       });
-      setName('');
-      setImage('');
-      setDescription('');
-      setImageFile('');
-      setTypeId('');
       window.location.reload();
     }
     else {
@@ -214,7 +206,6 @@ const AddPetPage = (props) => {
   }, [types, user.token]);
     
   const handleChange = (info) => {
-    console.log(info);
     if (info.file.status === 'uploading') {
       setLoading(true);
       return;

@@ -83,7 +83,6 @@ const LoginPage = () => {
   const [imageFile, setImageFile] = useState('');
 
   const handleSubmit = async (event) => {
-    console.log(locationId);
     event.preventDefault();
     try {
       const response = await axios.post('http://localhost:9000/login', {
@@ -91,7 +90,6 @@ const LoginPage = () => {
         password,
       });
       const user = response.data;
-      console.log(user);
       sessionStorage.setItem('auth', user.token);
       messageApi.open({
         type: 'success',
@@ -117,7 +115,6 @@ const LoginPage = () => {
       }
 
       if(imageFile){
-        console.log("IMAGEFILE",imageFile);
         const formData = new FormData();
         formData.append('file', imageFile);
         axios.post(`http://localhost:9000/korisnici/image`, formData,  {
@@ -163,7 +160,6 @@ const LoginPage = () => {
   };
 
   useEffect(()=>{
-    console.log(locationIdState);
     if(locationIdState.state){
       setLocationId(locationIdState.state.locationId);
       setImageFile(locationIdState.state.imageFile);

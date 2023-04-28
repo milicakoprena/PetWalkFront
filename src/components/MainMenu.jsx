@@ -122,8 +122,6 @@ const MainMenu = () => {
             role: user.role === ROLE_OWNER ? ROLE_WALKER : ROLE_OWNER,
         };
      
-        console.log(request);
-        console.log(user.token);
         return await axios
             .patch(`http://localhost:9000/korisnici/${user.id}/role`, request, {
                 headers: {
@@ -131,7 +129,6 @@ const MainMenu = () => {
                 },
             })
             .then(() => {
-                console.log(request);
                 navigate("/loginpage",
                 {
                     state: {user}
@@ -157,10 +154,8 @@ const MainMenu = () => {
             </div>
             <Menu theme="dark"  mode="inline" items={items} onClick={({key}) => 
             {
-                console.log(key);
                 if(key==='/') 
                 {
-                    console.log("yes")
                     showModal2();
                 }
                 else {

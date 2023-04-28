@@ -99,9 +99,8 @@ const MyPetsList = () => {
                 <Space size="middle" >
                     <Button type="link" onClick={() => 
                     {
-                        console.log(record);
                         axios.get(`http://localhost:9000/ljubimci/image/${record.imageName}`, {
-                    headers: {
+                         headers: {
                         Authorization: `Bearer ${user.token}`,
                         responseType: 'arraybuffer',
                         "Content-Type": 'image/jpeg',
@@ -112,7 +111,6 @@ const MyPetsList = () => {
                         setSelectedPetPhoto({
                             image: `data:image/jpeg;base64,${response.data}`,
                         })
-                        console.log(selectedPetPhoto);
                     })
                     .catch((e) => console.log(e));
                     showModal2();

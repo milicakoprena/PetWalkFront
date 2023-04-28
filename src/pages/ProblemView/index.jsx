@@ -50,7 +50,6 @@ const ProblemView = () => {
             },
         })
         .then((res) => {
-            console.log("users", res.data);
             setUsers(res.data);
         })
         .catch((e) => console.log(e));
@@ -61,13 +60,10 @@ const ProblemView = () => {
             },
         })
         .then((res) => {
-            console.log("problems", res.data);
             let temp = [];
             let tempProblem = '';
             for (let i = 0; i < res.data.length; i++) {
                 let userId = res.data.at(i).korisnikId;
-                console.log(users);
-                console.log(userId);
 
                 tempProblem = {
                     imageName: users.find(element => element.id === userId).photo,
@@ -80,11 +76,9 @@ const ProblemView = () => {
                 }
 
                 temp.push(tempProblem);
-                console.log("TEMP", tempProblem);
             }
 
             setProblems(temp);
-            console.log("PROBLEMS",problems);
         })
         .catch((e) => console.log(e));
     }
@@ -148,7 +142,6 @@ const ProblemView = () => {
     };
 
     const handleOk = () => {
-        console.log("OK", selectedProblem);
         setIsModalOpen(false);
     };
 

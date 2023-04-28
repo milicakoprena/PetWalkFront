@@ -304,7 +304,6 @@ const EditProfilePage = () => {
           })
         }
         setPrices(temp);
-        console.log(prices);
       }
     })
     .catch((e) => console.log(e));
@@ -351,8 +350,7 @@ const EditProfilePage = () => {
           korisnikId: user.id,
         };
         const tempId = locations.find(element => element.korisnikId === user.id).id;
-        console.log(tempId);
-        console.log(locationRequest);
+        
         axios.put(`http://localhost:9000/lokacije/${tempId}`, locationRequest, {
           headers: {
             Authorization: `Bearer ${user.token}`,

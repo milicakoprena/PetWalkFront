@@ -105,7 +105,6 @@ const WalkerListPage = () => {
                   description : record.description,
                 }
                 setSelectedWalker(temp);
-                console.log(selectedWalker);
               })
               .catch((response) => { 
                 let temp = {
@@ -119,8 +118,6 @@ const WalkerListPage = () => {
                   description : record.description,
                 }
                 setSelectedWalker(temp);
-                console.log(selectedWalker);
-                console.log(response);
               })
                    
               showModal();
@@ -154,9 +151,6 @@ const WalkerListPage = () => {
         type: 'success',
         content: 'Recenzija uspješno sačuvana!',
       });
-      console.log(response);
-      setKomentar('');
-      setOcjena('');
       setIsModalOpen1(false);
       window.location.reload();
     }
@@ -170,7 +164,6 @@ const WalkerListPage = () => {
   };
 
   const selectPlace = (event) => {
-    console.log(event);
     setPlaceFilterName(event);
   };
 
@@ -206,7 +199,7 @@ const WalkerListPage = () => {
       width: '33%',
     },
     {
-      title: 'Cijena (KM)',
+      title: 'Cijena po satu (KM)',
       dataIndex: 'price',
       key: 'price',
       width: '33%',
@@ -357,7 +350,6 @@ const WalkerListPage = () => {
   }
 
   const handleOk = () => {
-    console.log("OK",selectedWalker);
     setIsModalOpen(false);
   };
 
@@ -444,8 +436,7 @@ const WalkerListPage = () => {
                   onChange={(e) => setKomentar(e.target.value)}
                 />
                 <span>
-                  <Rate tooltips={desc} onChange={(e) => {setOcjena(e)
-                    console.log("ocjena",ocjena); }} value={ocjena} />
+                  <Rate tooltips={desc} onChange={(e) => {setOcjena(e); }} value={ocjena} />
                 </span>
               </Modal>
               <Modal title="Pregled usluga" open={isModalOpen3} onOk={handleCancel3} onCancel={handleCancel3} 

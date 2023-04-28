@@ -90,9 +90,7 @@ const AccountListPage = () => {
           }}>Promijeni status</Button>
           {record.role===ROLE_WALKER ? (
             <Button type="link" onClick={() => {
-              console.log("record", record);
               setSelectedUser(record);
-              console.log("SU", selectedUser);
               showModal3(record);
             }}>Recenzije</Button>
           ) : (
@@ -105,17 +103,12 @@ const AccountListPage = () => {
 
   const searchByUsername = () => {
     setIsCalled(false);
-    console.log("isCalled",isCalled);
-    console.log(searchedUsername);
-    console.log("usersTemp:",usersTemp);
     for(let i = 0; i < usersTemp.length; i++){
       if(usersTemp.at(i).username.toLowerCase().includes(searchedUsername.toLowerCase())){
         usersResult.push(usersTemp.at(i));
       }
-      console.log("rezultat:",usersResult);
       setUsers(usersResult);
       setUsersResult([]);
-      console.log("users:",users);
     }
     setIsModalOpen(false);    
   }
@@ -155,7 +148,7 @@ const AccountListPage = () => {
     })
     .then(() => { 
       setSelectedUser(null);
-      window.location.reload(true);
+      //window.location.reload(true);
     })
     .catch((e) => console.log(e));  
   }
@@ -167,7 +160,6 @@ const AccountListPage = () => {
       },
     })
     .then((res) => {
-      console.log("leng", res.data.length);
       if (res.data.length>0) {
         for (let i = 0; i < res.data.length; i++) {
           if (res.data.at(i).korisnikZaId === selUser.id) {
@@ -178,7 +170,6 @@ const AccountListPage = () => {
               ocjena: res.data.at(i).ocjena,
               komentar: res.data.at(i).komentar,
             })
-            console.log("R", reviews);
           }
         }
       }

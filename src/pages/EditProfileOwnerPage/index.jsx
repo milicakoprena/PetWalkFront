@@ -211,10 +211,9 @@ const EditProfileOwnerPage = () => {
       },
     })
     .then((res) => {
-      console.log("Uspjesno", res);
+      console.log("Uspjesno");
     })
     .catch((e) => {
-      console.log("NE MOZE", e);
       console.log(e)});
   }
 
@@ -242,8 +241,7 @@ const EditProfileOwnerPage = () => {
           korisnikId: user.id,
         };
         const tempId = locations.find(element => element.korisnikId === user.id).id;
-        console.log(tempId);
-        console.log(locationRequest);
+        
         axios.put(`http://localhost:9000/lokacije/${tempId}`, locationRequest, {
           headers: {
             Authorization: `Bearer ${user.token}`,

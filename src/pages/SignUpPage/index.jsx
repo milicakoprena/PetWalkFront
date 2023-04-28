@@ -129,10 +129,7 @@ const SignUpPage = () => {
   const [imageFile, setImageFile] = useState('');
 
   const selectLocation = (event) => {
-    console.log(event);
     setLocationId(event);
-    console.log(event);
-    console.log(locationId);
   };
 
   const handleChange = (info) => {
@@ -151,7 +148,6 @@ const SignUpPage = () => {
   useEffect( () => {
     axios.get(`http://localhost:9000/mjesta`)
     .then((res) => {
-      console.log(res.data.length);
       let temp = [];
       for(let i = 0; i < res.data.length; i++){
         temp.push({
@@ -160,7 +156,6 @@ const SignUpPage = () => {
         })
       }
       setLocations(temp);
-      console.log(locations);
     })
     .catch((e) => console.log(e));
   }, [locations]);
