@@ -158,6 +158,7 @@ const WalkerListPage = () => {
       setKomentar('');
       setOcjena('');
       setIsModalOpen1(false);
+      window.location.reload();
     }
     catch (error) {
       console.log(error);
