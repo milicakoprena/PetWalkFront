@@ -51,6 +51,7 @@ const ReportProblem = () => {
                     type: 'success',
                     content: 'Problem uspješno prijavljen!',
                 });
+                setSadrzaj('');
             })
             .catch((e) => {console.log(e);
                 messageApi.open({

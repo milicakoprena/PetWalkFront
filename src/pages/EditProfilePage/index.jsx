@@ -107,7 +107,6 @@ const EditProfilePage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [locations, setLocations] = useState([]);
   const [places, setPlaces] = useState([]);
-  const [selectServices, setSelectServices] = useState([]);
   const [services, setServices] = useState([]);
   const userState = useLocation();
   const user = userState.state.user;
@@ -128,13 +127,8 @@ const EditProfilePage = () => {
   
 
   const showModal2 = () => {
-    for(let i = 0; i < services.length; i++){
-      if(!prices.find(element => element.service === services.at(i).label)){
-        console.log("ima");
-        selectServices.push(services.at(i));
-      }
-    }
-    console.log(selectServices);
+    setCijena("");
+    setUslugaId("");
     setIsModalOpen2(true);
   }
 
@@ -151,7 +145,8 @@ const EditProfilePage = () => {
   };
 
   const handleCancel2 = () => {
-    setSelectServices([]);
+    setCijena("");
+    setUslugaId("");
     setIsModalOpen2(false);
   };
 
@@ -292,13 +287,14 @@ const EditProfilePage = () => {
 
 
   const showModal1 = () => {
+    setPrices([]);
     axios.get(`http://localhost:9000/cijene`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     })
     .then((res) => {
-    let temp = [];
+      let temp = [];
       for(let i = 0; i < res.data.length; i++){
         if(res.data.at(i).korisnikId===user.id){
           temp.push({
@@ -398,6 +394,8 @@ const EditProfilePage = () => {
       })
       .then(() => {
         console.log('dodano');
+        setCijena("");
+        setUslugaId("");
         setIsModalOpen2(false);
         showModal1();
       })
@@ -686,14 +684,15 @@ const EditProfilePage = () => {
                                     fontSize: '15px',
                                   }}
                                   onChange={handleServiceChange}
-                                  options={selectServices} />
+                                  value={uslugaId}
+                                  options={services} />
                               </Form.Item>
                               <Form.Item
                                 label={ <StyledLabel>Cijena</StyledLabel> }
                                 name='cijena'
                                 rules={[{ required: true, message: 'Nedostaje cijena' }]}
                               >
-                                <Input style={{ fontSize: '15px', width: 330 }} suffix="KM" onChange={(e) => {setCijena(e.target.value)}} />
+                                <Input style={{ fontSize: '15px', width: 330 }} suffix="KM" value={cijena} onChange={(e) => {setCijena(e.target.value)}} />
                               </Form.Item>
                             </Form>
                         </Modal>

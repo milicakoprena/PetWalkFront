@@ -131,7 +131,18 @@ const ProblemView = () => {
                 sadrzaj: problem.sadrzaj,
             })
         })
-        .catch((e) => console.log(e));
+        .catch((response) =>
+        {
+            setSelectedProblem({
+                image: '',
+                imageName: '',
+                firstName: problem.firstName,
+                lastName: problem.lastName,
+                key: problem.key,
+                username: problem.username,
+                sadrzaj: problem.sadrzaj,
+            })
+        })
         
         setIsModalOpen(true);
     };
@@ -206,8 +217,11 @@ const ProblemView = () => {
                                 />
                             </InfiniteScroll>
                             <Modal title="Detalji o problemu" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={300}
-                                okText="OK"
-                                cancelText="Otkaži"
+                                footer={[
+                                    <Button key="back" onClick={handleCancel}>
+                                      Izađi
+                                    </Button>,
+                                    ]}
                             >
                                 <Descriptions title="" size="default" column={1} >
                                     <Descriptions.Item>

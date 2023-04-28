@@ -102,7 +102,21 @@ const PetListPage = () => {
               console.log(temp);
               setSelectedPet(temp);
             })
-            .catch((e) => console.log(e));
+            .catch((response) => {
+              let temp = {
+                image : '',
+                imageName : '',
+                id : record.id,
+                ime : record.ime,
+                opis : record.opis,
+                imevlasnika : record.imevlasnika,
+                vrsta : record.vrsta,
+                telefon : record.telefon,
+                lokacija : record.lokacija,
+              }
+              console.log(temp);
+              setSelectedPet(temp);
+            })
                 
             showModal();
           }}>Prikaži</Button>
@@ -243,6 +257,7 @@ const PetListPage = () => {
       })
       .then(() => {
         console.log("Uspjesno");
+        setSadrzaj('');
         setIsModalOpen1(false);
       })
       .catch((e) => console.log(e)); 
@@ -277,6 +292,7 @@ const PetListPage = () => {
   };
 
   const handleCancel1 = () => {
+    setSadrzaj('');
     setIsModalOpen1(false);
   }
 

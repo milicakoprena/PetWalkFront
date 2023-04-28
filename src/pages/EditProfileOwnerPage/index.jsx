@@ -201,8 +201,6 @@ const EditProfileOwnerPage = () => {
     setDefaultValue(locationId);
   }, [locationId])
 
-  console.log("DefVal", defaultValue);
-
   const uploadPhoto = async () => {
     const formData = new FormData();
     formData.append('file', imageFile);
@@ -222,7 +220,6 @@ const EditProfileOwnerPage = () => {
 
   const handleUpdate = async (event) => {
     event.preventDefault();
-
     uploadPhoto();
     try {
       const request = {
@@ -241,7 +238,7 @@ const EditProfileOwnerPage = () => {
       })
       .then(() => {
         const locationRequest = {
-          mjestoId: locationId,
+          mjestoId: defaultValue,
           korisnikId: user.id,
         };
         const tempId = locations.find(element => element.korisnikId === user.id).id;

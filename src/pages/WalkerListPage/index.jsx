@@ -107,7 +107,21 @@ const WalkerListPage = () => {
                 setSelectedWalker(temp);
                 console.log(selectedWalker);
               })
-              .catch((e) => console.log(e));
+              .catch((response) => { 
+                let temp = {
+                  image : '',
+                  imageName : '',
+                  id : record.id,
+                  firstName : record.firstName,
+                  lastName : record.lastName,
+                  phoneNumber : record.phoneNumber,
+                  location : record.location,
+                  description : record.description,
+                }
+                setSelectedWalker(temp);
+                console.log(selectedWalker);
+                console.log(response);
+              })
                    
               showModal();
             }
@@ -141,6 +155,9 @@ const WalkerListPage = () => {
         content: 'Recenzija uspješno sačuvana!',
       });
       console.log(response);
+      setKomentar('');
+      setOcjena('');
+      setIsModalOpen1(false);
     }
     catch (error) {
       console.log(error);
@@ -430,12 +447,20 @@ const WalkerListPage = () => {
                     console.log("ocjena",ocjena); }} value={ocjena} />
                 </span>
               </Modal>
-              <Modal title="Pregled usluga" open={isModalOpen3} onOk={handleCancel3} onCancel={handleCancel3} okText="OK"
-                cancelText="Zatvori">
+              <Modal title="Pregled usluga" open={isModalOpen3} onOk={handleCancel3} onCancel={handleCancel3} 
+                footer={[
+                  <Button key="back" onClick={handleCancel3}>
+                    Izađi
+                  </Button>,
+              ]}>
                 <Table columns={columnsServices} dataSource={prices} pagination={false} style={{ height: '80%', overflow: 'auto' }} />
               </Modal>
-              <Modal title="Pregled recenzija" open={isReviewModalOpen} onOk={handleCancel4} onCancel={handleCancel4} okText="OK"
-                cancelText="Zatvori">
+              <Modal title="Pregled recenzija" open={isReviewModalOpen} onOk={handleCancel4} onCancel={handleCancel4} 
+              footer={[
+                <Button key="back" onClick={handleCancel4}>
+                  Izađi
+                </Button>,
+              ]}>
                 <div style={{ height: '400px', overflow: 'auto' }}>
                   <List
                     itemLayout="horizontal"
