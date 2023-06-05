@@ -87,6 +87,7 @@ const WalkerListPage = () => {
         <Space size="middle">
           <Button type="link" onClick={() => 
             {
+              let avg = 0;
               axios.get(`http://localhost:9000/recenzije/recenzije/prosjecnaOcjena/${record.id}`, {
                 headers: {
                   Authorization: `Bearer ${user.token}`,
@@ -95,6 +96,7 @@ const WalkerListPage = () => {
               .then((response) => {
                 console.log(response.data);
                 setAverageRate(response.data);
+                avg = response.data;
                 console.log("prosjek ", averageRate)
               })
               .catch((e) => {
@@ -118,7 +120,7 @@ const WalkerListPage = () => {
                   phoneNumber : record.phoneNumber,
                   location : record.location,
                   description : record.description,
-                  avgRate : averageRate,
+                  avgRate : avg,
                 }
                 setSelectedWalker(temp);
               })
