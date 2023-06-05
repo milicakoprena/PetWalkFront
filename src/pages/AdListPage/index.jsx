@@ -48,18 +48,14 @@ export const StyledSelect = styled(Select)`
 const AdListPage = () => {
   const userState = useLocation();
   const user = userState.state.user;
-  const [walkers, setWalkers] = useState([]);
-  const [walkersTemp, setWalkersTemp] = useState([]);
-  const [selectedWalker, setSelectedWalker] = useState('');
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState('');
+  
+ 
   const [isAdModalOpen, setIsAdModalOpen] = useState(false);
-  const [locations, setLocations] = useState([]);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [places, setPlaces] = useState([]);
   const [placesFilter, setPlacesFilter] = useState([]);
-  const [services, setServices] = useState([]);
   const [prices, setPrices] = useState([]);
-  const [komentar,setKomentar]=useState('');
-  const [ocjena, setOcjena]=useState('');
+  
   const [placeFilterName, setPlaceFilterName]=useState('');
   const [isCalled, setIsCalled]=useState(true);
   const [allUsers, setAllUsers] = useState([]);
@@ -69,26 +65,40 @@ const AdListPage = () => {
   const [sadrzaj,setSadrzaj]=useState('');
   const [kategorije, setKategorije] = useState([]);
   const [kategorija, setKategorija] = useState('');
+
+  const [allAds, setAllAds] = useState([]);
+  const [categoryFilterName, setCategoryFilterName]=useState('');
+  const [selectedAd, setSelectedAd] = useState('');
+  const [selectedUser, setSelectedUser] = useState('');
   
   const columns = [
     {
-      title: 'Ime',
-      dataIndex: 'firstName',
+      title: 'Ime i prezime',
+      dataIndex: 'name',
+      width: '30%',
+    },
+    {
+      title: 'Kategorija',
+      dataIndex: 'category',
       width: '20%',
     },
     {
-      title: 'Prezime',
-      dataIndex: 'lastName',
-      width: '20%',
+      title: 'Datum',
+      dataIndex: 'date',
     },
     {
-      title: 'Broj telefona',
-      dataIndex: 'phoneNumber',
-    },
-    {
-      title: 'Lokacija',
-      dataIndex: 'location',
-      width: '20%',
+      title: '',
+      dataIndex: 'oglas',
+      render: (_, record) => (
+        <Space size="middle">
+          <Button type="link" onClick={() => 
+            {
+              setSelectedAd(record);
+              showInfoModal();
+            }
+          }>Prikaži oglas</Button>
+        </Space>
+      ),
     },
     {
       title: '',
@@ -96,8 +106,40 @@ const AdListPage = () => {
       render: (_, record) => (
         <Space size="middle">
           <Button type="link" onClick={() => 
-            {
-              axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
+            { let temp =  allUsers.find(element => element.id ===  record.userId);
+              console.log(temp);
+              let locationId = 0;
+              axios.get(`http://localhost:9000/lokacije`, {
+                headers: {
+                  Authorization: `Bearer ${user.token}`,
+                },
+              })
+              .then((response) => {
+                locationId = response.data.find(element => element.korisnikId ===temp.id).mjestoId;
+                console.log(locationId);
+              })
+              .catch((error) =>
+                {
+                  console.log(error);
+                }
+              )
+              let location = '';
+              axios.get(`http://localhost:9000/mjesta`, {
+                headers: {
+                  Authorization: `Bearer ${user.token}`,
+                },
+              })
+              .then((response) => {
+                location = response.data.find(element => element.id === locationId).naziv;
+                
+              })
+              .catch((error) =>
+                {
+                  console.log(error);
+                }
+              )
+
+              axios.get(`http://localhost:9000/korisnici/image/${temp.photo}`, {
                 headers: {
                   Authorization: `Bearer ${user.token}`,
                   responseType: 'arraybuffer',
@@ -105,78 +147,41 @@ const AdListPage = () => {
                 },
               })
               .then((response) => { 
-                let temp = {
+                let temp2 = {
                   image : `data:image/jpeg;base64,${response.data}`,
-                  imageName : record.imageName,
-                  id : record.id,
-                  firstName : record.firstName,
-                  lastName : record.lastName,
-                  phoneNumber : record.phoneNumber,
-                  location : record.location,
-                  description : record.description,
+                  imageName : temp.imageName,
+                  id : temp.id,
+                  firstName : temp.firstName,
+                  lastName : temp.lastName,
+                  phoneNumber : temp.phoneNumber,
+                  location : location,
+                  description : temp.description,
                 }
-                setSelectedWalker(temp);
+                setSelectedUser(temp2);
               })
               .catch((response) => { 
-                let temp = {
+                let temp2 = {
                   image : '',
                   imageName : '',
-                  id : record.id,
-                  firstName : record.firstName,
-                  lastName : record.lastName,
-                  phoneNumber : record.phoneNumber,
-                  location : record.location,
-                  description : record.description,
+                  id : temp.id,
+                  firstName : temp.firstName,
+                  lastName : temp.lastName,
+                  phoneNumber : temp.phoneNumber,
+                  location : location,
+                  description : temp.description,
                 }
-                setSelectedWalker(temp);
+                setSelectedUser(temp2);
               })
-                   
+                
               showModal();
-            }
-          }>Prikaži</Button>
+          }
+          }>Prikaži nalog</Button>
         </Space>
       ),
     },
   ];
 
-  const postRecenzija = async (event) => {
-    event.preventDefault();
-    let korisnikZaId=selectedWalker.id;
-    try {
-      const recenzijaRequest = {
-        komentar,
-        ocjena,
-        korisnikOdId: user.id,
-        korisnikZaId
-      };
-      const response = await fetch('http://localhost:9000/recenzije', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`,
-        },
-        body: JSON.stringify(recenzijaRequest),
-      })
-      .catch((e) => console.log(e));
-      messageApi.open({
-        type: 'success',
-        content: 'Recenzija uspješno sačuvana!',
-      });
-      setIsModalOpen1(false);
-      window.location.reload();
-    }
-    catch (error) {
-      console.log(error);
-      messageApi.open({
-        type: 'error',
-        content: 'Recenzija nije sačuvana!',
-      });
-    }
-  };
-
-  const selectPlace = (event) => {
-    setPlaceFilterName(event);
-  };
+  
 
   const filterByPlace = () => {
     setIsCalled(false);
@@ -186,183 +191,69 @@ const AdListPage = () => {
       },
     })
     .then((res) => {
-      let temp = [];
-      for(let i = 0; i < walkersTemp.length; i++){
-        for(let j = 0; j < res.data.length; j++){
-          if(walkersTemp.at(i).id === res.data.at(j).id)
-          {
-            temp.push(walkersTemp.at(i));
-          }
-        }
-      }
-      setWalkers(temp);
-    })
+
+     })
     .catch((e) => console.log(e));
-    setIsModalOpen2(false);
   };
   
 
-  const columnsServices = [
-    {
-      title: 'Usluga',
-      dataIndex: 'service',
-      key: 'service',
-      width: '33%',
-    },
-    {
-      title: 'Cijena po satu (KM)',
-      dataIndex: 'price',
-      key: 'price',
-      width: '33%',
-    },
-  ];
+  
   
 
   useEffect( () => {
-    axios.get(`http://localhost:9000/usluge`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    })
-    .then((res) => {
-      setServices(res.data);
-    })
-    .catch((e) => console.log(e));
-
-    axios.get(`http://localhost:9000/lokacije`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    })
-    .then((res) => {
-      let temp = [];
-      for(let i = 0; i < res.data.length; i++){
-        temp.push({
-          korisnikId: res.data.at(i).korisnikId,
-          mjesto: res.data.at(i).mjestoId,
-        })
-      }
-      
-      setLocations(temp);
-    })
-    .catch((e) => console.log(e));
-  
-    axios.get(`http://localhost:9000/mjesta`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    })
-    .then((res) => {
-      let temp = [];
-      for(let i = 0; i < res.data.length; i++){
-        temp.push({
-          value: res.data.at(i).naziv,
-          label: res.data.at(i).naziv,
-        })
-      }
-      setPlacesFilter(temp);
-      setPlaces(res.data);
-    })
-    .catch((e) => console.log(e));
-
+    
     axios.get(`http://localhost:9000/korisnici`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     })
     .then((res) => {
-      let temp = [];
       setAllUsers(res.data);
-      if(isCalled || placeFilterName===undefined) {
+      }
+    )
+    .catch((e) => console.log(e));
+
+    axios.get(`http://localhost:9000/oglasi`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then((res) => {
+      let temp = [];
+      
         for(let i = 0; i < res.data.length; i++)
         {
-          let userId = res.data.at(i).id;
-          let placeId = 0;
-          for(let j = 0; j < locations.length; j++)
-          {
-            if (locations.at(j).korisnikId === userId)
-              placeId = locations.at(j).mjesto;
-          }
-          if(res.data.at(i).role === ROLE_WALKER && res.data.at(i).status === STATUS_ACTIVE)
+          let adId = res.data.at(i).id;
+          let userName = allUsers.find(element => element.id ===  res.data.at(i).korisnikId).firstName +
+           ' ' + allUsers.find(element => element.id ===  res.data.at(i).korisnikId).lastName;
+          if(res.data.at(i).status === true)
             temp.push({
-              imageName : res.data.at(i).photo,
-              image: '',
-              id: res.data.at(i).id,
-              firstName: res.data.at(i).firstName,
-              lastName: res.data.at(i).lastName,
-              phoneNumber: res.data.at(i).phoneNumber,
-              location: places.find(element => element.id === placeId).naziv,
-              description: res.data.at(i).description,
+              id : adId,
+              name: userName,
+              info: res.data.at(i).sadrzaj,
+              date: res.data.at(i).datum.slice(0,10),
+              category: 'bla',
+              userId: res.data.at(i).korisnikId,
             });
-        }
-        setWalkers(temp);
-        setWalkersTemp(walkers);
+        
+       
       }
+      setAllAds(temp);
     })
     .catch((e) => console.log(e));
-  }, [walkers, places, services, placeFilterName, user.token, isCalled, locations]);
+  }, [allAds, places, placeFilterName, user.token, isCalled, kategorije, allUsers]);
   
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const showModal1 = () => {
-    setIsModalOpen1(true);
-  };
-
-  const showModal2 = () => {
-    setIsModalOpen2(true);
-  };
+ 
 
   const showAdModal = () => {
+    kategorije.push({ value: 1, label: 'Vlasnici' });
+    kategorije.push({ value: 2, label: 'Čuvari' });
     setIsAdModalOpen(true);
   };
-
-  const showModal3 =  () => {
-    axios.get(`http://localhost:9000/cijene`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    })
-    .then((res) => {
-      let temp = [];
-      for(let i = 0; i < res.data.length; i++){
-        if(res.data.at(i).korisnikId===selectedWalker.id){
-          temp.push({
-            id: res.data.at(i).id,
-            price: res.data.at(i).cijena,
-            service: services.find(element => element.id === res.data.at(i).uslugaId).naziv,
-          })
-        }
-        setPrices(temp);
-      }
-    })
-    .catch((e) => console.log(e));
-    setIsModalOpen3(true);
-  };
-
-  const showReviewModal = () => {
-    axios.get(`http://localhost:9000/recenzije`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    })
-    .then((res) => {
-      let temp = [];
-      for(let i = 0; i < res.data.length; i++){
-        if(res.data.at(i).korisnikZaId===selectedWalker.id){
-          temp.push({
-            rating: res.data.at(i).ocjena,
-            comment: res.data.at(i).komentar,
-            name: allUsers.find(element => element.id === res.data.at(i).korisnikOdId).firstName + " " + allUsers.find(element => element.id === res.data.at(i).korisnikOdId).lastName,
-          })
-        }
-      }
-      setReviews(temp);
-    })
-
-    setIsReviewModalOpen(true);
-  }
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -372,30 +263,58 @@ const AdListPage = () => {
     setIsModalOpen(false);
   };
 
-  const handleCancel1 = () => {
-    setIsModalOpen1(false);
+  const showInfoModal = () => {
+    setIsInfoModalOpen(true);
   };
 
-  const handleCancel2 = () => {
-    setIsModalOpen2(false);
-  };
-
-  const handleCancel3 = () => {
-    setIsModalOpen3(false);
-  };
-
-  const handleCancel4 = () => {
-    setIsReviewModalOpen(false);
+  const handleCancelInfoModal = () => {
+    setIsInfoModalOpen(false);
   }
+
+  
 
   const handleCancelAdModal = () => {
     setIsAdModalOpen(false);
   }
 
+  const dodajOglas = async (event) => {
+    event.preventDefault();
+    try {
+      const datum = new Date();
+      const oglasRequest = {
+        id: 1,
+        sadrzaj: sadrzaj,
+        status: true,
+        kategorija: kategorija,
+        datum: datum,
+        korisnikId: user.id,
+      };
+      const response = await fetch('http://localhost:9000/oglasi', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`,
+        },
+        body: JSON.stringify(oglasRequest),
+      })
+      .catch((e) => console.log(e));
+      messageApi.open({
+        type: 'success',
+        content: 'Oglas uspješno sačuvan!',
+      });
+      setIsAdModalOpen(false);
+    }
+    catch (error) {
+      console.log(error);
+      messageApi.open({
+        type: 'error',
+        content: 'Oglas nije sačuvan!',
+      });
+    }
+  }
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpen1, setIsModalOpen1] = useState(false);
-  const [isModalOpen2, setIsModalOpen2] = useState(false);
-  const [isModalOpen3, setIsModalOpen3] = useState(false);
+  
   const [collapsed, setCollapsed] = useState(false);
   
   return (
@@ -411,7 +330,7 @@ const AdListPage = () => {
           <Cover>
             <StyledTable
               columns={columns}
-              dataSource={walkers}
+              dataSource={allAds}
               pagination={false}
               style={{height: '100%', overflow: 'auto'}}
             />
@@ -424,55 +343,16 @@ const AdListPage = () => {
             >
               <Descriptions title="" size="default" column={1}>
                 <Descriptions.Item>
-                  <Avatar size={130} icon={<UserOutlined />} src={selectedWalker.image}/>
+                  <Avatar size={130} icon={<UserOutlined />} src={selectedUser.image}/>
                 </Descriptions.Item>
-                <Descriptions.Item label="Ime i prezime">{selectedWalker.firstName} {selectedWalker.lastName}</Descriptions.Item>
-                <Descriptions.Item label="Broj telefona">{selectedWalker.phoneNumber}</Descriptions.Item>
-                <Descriptions.Item label="Lokacija">{selectedWalker.location}</Descriptions.Item>
-                <Descriptions.Item label="Opis">{selectedWalker.description}</Descriptions.Item>
+                <Descriptions.Item label="Ime i prezime">{selectedUser.firstName} {selectedUser.lastName}</Descriptions.Item>
+                <Descriptions.Item label="Broj telefona">{selectedUser.phoneNumber}</Descriptions.Item>
+                <Descriptions.Item label="Lokacija">{selectedUser.location}</Descriptions.Item>
+                <Descriptions.Item label="Opis">{selectedUser.description}</Descriptions.Item>
               </Descriptions>
-              <Button type="link" onClick={showModal1} >
-                Dodaj recenziju 
-              </Button>
-              <Button type="link" onClick={showModal3} >
-                Pregled usluga
-              </Button>
-              <Button type="link" onClick={showReviewModal} >
-                Pregled recenzija
-              </Button>
-              {contextHolder}
-              <Modal title="Dodaj recenziju" open={isModalOpen1} onOk={postRecenzija} onCancel={handleCancel1} okText="Dodaj"
-                  cancelText="Otkaži">
-                <TextArea
-                  showCount
-                  maxLength={300}
-                  style={{
-                    height: 120,
-                    resize: 'none',
-                  }}
-                  placeholder="Unesite komentar (opciono)"
-                  value={komentar}
-                  onChange={(e) => setKomentar(e.target.value)}
-                />
-                <span>
-                  <Rate tooltips={desc} onChange={(e) => {setOcjena(e); }} value={ocjena} />
-                </span>
+              
               </Modal>
-              <Modal title="Pregled usluga" open={isModalOpen3} onOk={handleCancel3} onCancel={handleCancel3} 
-                footer={[
-                  <Button key="back" onClick={handleCancel3}>
-                    Izađi
-                  </Button>,
-              ]}>
-                <Table columns={columnsServices} dataSource={prices} pagination={false} style={{ height: '80%', overflow: 'auto' }} />
-              </Modal>
-              <Modal title="Pregled recenzija" open={isReviewModalOpen} onOk={handleCancel4} onCancel={handleCancel4} 
-              footer={[
-                <Button key="back" onClick={handleCancel4}>
-                  Izađi
-                </Button>,
-              ]}>
-                <Modal title="Dodaj oglas" open={isAdModalOpen} onOk={handleCancelAdModal} onCancel={handleCancelAdModal} 
+                 <Modal title="Dodaj oglas" open={isAdModalOpen} onOk={dodajOglas} onCancel={handleCancelAdModal} 
               >
                 <TextArea
                   showCount
@@ -485,6 +365,7 @@ const AdListPage = () => {
                   value={sadrzaj}
                   onChange={(e) => setSadrzaj(e.target.value)}
                 />
+                <p>Unesite kategoriju</p>
                 <StyledSelect size="default"
                           allowClear
                           style={{
@@ -495,33 +376,11 @@ const AdListPage = () => {
                           value={kategorija}
                         />
               </Modal>
-                <div style={{ height: '400px', overflow: 'auto' }}>
-                  <List
-                    itemLayout="horizontal"
-                    dataSource={reviews}
-                    renderItem={item => (
-                      <List.Item>
-                        <List.Item.Meta
-                          title={item.name}
-                          description={
-                            <div style={{ display: "flex", flexDirection: 'column' }}>
-                              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} >
-                                <Rate disabled value={item.rating} />
-                                <text>({item.rating})</text>
-                              </div>
-                              <text>{item.comment}</text>
-                            </div>
-                          }
-                        />
-                      </List.Item>
-                    )}
-                  />
-                </div>
-              </Modal>
-            </Modal>
-            <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 30, top: 8 }} onClick={showModal2} />
+                
+             
+            <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 30, top: 8 }}  />
             <FloatButton icon={<PlusCircleOutlined />} type="primary" style={{ right: 90, top: 8 }} onClick={showAdModal} />
-            <Modal title="Filtriranje" open={isModalOpen2} onOk={filterByPlace} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
+            <Modal title="Filtriranje"  onOk={filterByPlace}  okText="Filtriraj" cancelText="Otkaži" >
               <Select size="middle" 
                 placeholder="Izaberite lokacije"
                 allowClear
@@ -530,8 +389,11 @@ const AdListPage = () => {
                   marginBottom: '3%',
                   marginTop: '3%'
                 }}
-                options={placesFilter}
-                onChange={selectPlace}/>
+                options={placesFilter}/>
+            </Modal>
+            <Modal title="Sadržaj oglasa"  okText="OK" cancelText="Otkaži" 
+              open={isInfoModalOpen} onOk={handleCancelInfoModal} onCancel={handleCancelInfoModal} >
+              <p>{selectedAd.info}</p>
             </Modal>
           </Cover>
         </Page>
