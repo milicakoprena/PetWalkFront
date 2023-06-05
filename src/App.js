@@ -13,6 +13,7 @@ import EditProfileOwnerPage from "./pages/EditProfileOwnerPage";
 import AccountListPage from "./pages/AccountListPage";
 import MyPetsList from "./pages/MyPetsList";
 import ProblemView from "./pages/ProblemView";
+import AdListPage from "./pages/AdListPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -37,6 +38,7 @@ function App() {
           <Route path="/accountlistpage" element={<AccountListPage />} />
           <Route exact path="/problemview" element={<ProblemView />} />
           <Route exact path="/mypetslist" element={<MyPetsList />} />
+          <Route exact path="/adlist" element={<AdListPage />} />
         </Routes>
       </Router>
       
