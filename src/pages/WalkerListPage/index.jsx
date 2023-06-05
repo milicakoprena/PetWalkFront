@@ -58,6 +58,7 @@ const WalkerListPage = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
+  const [averageRate, setAverageRate] = useState();
   
   const columns = [
     {
@@ -86,6 +87,20 @@ const WalkerListPage = () => {
         <Space size="middle">
           <Button type="link" onClick={() => 
             {
+              axios.get(`http://localhost:9000/recenzije/recenzije/prosjecnaOcjena/${record.id}`, {
+                headers: {
+                  Authorization: `Bearer ${user.token}`,
+                },
+              })
+              .then((response) => {
+                console.log(response.data);
+                setAverageRate(response.data);
+                console.log("prosjek ", averageRate)
+              })
+              .catch((e) => {
+                console.log(e);
+              })
+
               axios.get(`http://localhost:9000/korisnici/image/${record.imageName}`, {
                 headers: {
                   Authorization: `Bearer ${user.token}`,
@@ -103,6 +118,7 @@ const WalkerListPage = () => {
                   phoneNumber : record.phoneNumber,
                   location : record.location,
                   description : record.description,
+                  avgRate : averageRate,
                 }
                 setSelectedWalker(temp);
               })
@@ -116,6 +132,7 @@ const WalkerListPage = () => {
                   phoneNumber : record.phoneNumber,
                   location : record.location,
                   description : record.description,
+                  avgRate : averageRate,
                 }
                 setSelectedWalker(temp);
               })
@@ -132,11 +149,13 @@ const WalkerListPage = () => {
     event.preventDefault();
     let korisnikZaId=selectedWalker.id;
     try {
+      const date = new Date();
       const recenzijaRequest = {
         komentar,
         ocjena,
         korisnikOdId: user.id,
-        korisnikZaId
+        korisnikZaId,
+        datum: date,
       };
       const response = await fetch('http://localhost:9000/recenzije', {
         method: 'POST',
@@ -411,6 +430,10 @@ const WalkerListPage = () => {
                 <Descriptions.Item label="Broj telefona">{selectedWalker.phoneNumber}</Descriptions.Item>
                 <Descriptions.Item label="Lokacija">{selectedWalker.location}</Descriptions.Item>
                 <Descriptions.Item label="Opis">{selectedWalker.description}</Descriptions.Item>
+                <Descriptions.Item label="Prosječna ocjena" style={{alignItems: 'center'}} >
+                  <Rate disabled allowHalf value={selectedWalker.avgRate}/>
+                  {selectedWalker.avgRate}
+                </Descriptions.Item>
               </Descriptions>
               <Button type="link" onClick={showModal1} >
                 Dodaj recenziju 
