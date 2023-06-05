@@ -10,6 +10,8 @@ import styled from "styled-components";
 import {  Layout, Modal, Input } from 'antd';
 import MainMenu from "../../components/MainMenu";
 import { useMapEvents } from 'react-leaflet';
+import { useLocation } from 'react-router-dom';
+import { ROLE_ADMIN } from "../../util.js/constants";
 
 const { Content, Sider } = Layout;
 
@@ -76,6 +78,7 @@ const MapPage = () => {
     const [x, setX] = useState('');
     const [y, setY] = useState('');
     const [collapsed, setCollapsed] = useState(false);
+    const userState = useLocation();
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -111,11 +114,14 @@ const MapPage = () => {
     function MyComponent() {
         const map = useMapEvents({
           click: (e) => {
-            const { lat, lng } = e.latlng;
-            setX(lat);
-            setY(lng);
-            console.log(x,y);
-            showModal();
+            if(userState.state.user.role == ROLE_ADMIN) {
+                const { lat, lng } = e.latlng;
+                setX(lat);
+                setY(lng);
+                console.log(x,y);
+                showModal();
+            }
+            
           }
         });
         return null;
