@@ -7,8 +7,9 @@ import { useMap } from 'react-leaflet/hooks'
 import "leaflet-geosearch/dist/geosearch.css";
 import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
 import styled from "styled-components";
-import {  Layout } from 'antd';
+import {  Layout, Modal, Input } from 'antd';
 import MainMenu from "../../components/MainMenu";
+import { useMapEvents } from 'react-leaflet';
 
 const { Content, Sider } = Layout;
 
@@ -19,6 +20,10 @@ export const Page = styled.div`
     justify-content: center;
     align-items: center;
     position: relative;
+`;
+
+export const StyledInput = styled(Input)`
+  font-size:15px;
 `;
 
 export const Cover = styled.div`
@@ -65,7 +70,22 @@ function LeafletgeoSearch() {
 }
 
 const MapPage = () => {
+    const [isModalOpen, setIsModalOpen] = useState('');
+    const [naziv, setNaziv] = useState('');
+    const [opis, setOpis] = useState('');
+    const [x, setX] = useState('');
+    const [y, setY] = useState('');
     const [collapsed, setCollapsed] = useState(false);
+
+    const showModal = () => {
+        setIsModalOpen(true);
+      }
+      
+      const handleCancel = () => {
+        setIsModalOpen(false);
+      };
+    
+
     const locations = [
         { position: [44.76656719765876, 17.20447089815072], name: "BL Vet", description: <Desc>Veterinarska ambulanta<a href="https://bl-vet.com/">Link do veb stranice</a></Desc> },
         { position: [44.77359478646836, 17.17559528263551], name: "Vet Centar", description: <Desc>Veterinarska stanica<a href="https://vetcentar.com/">Link do veb stranice</a></Desc> },
@@ -88,6 +108,37 @@ const MapPage = () => {
         { position: [44.76206726581702, 17.200276253721256], name: "VrebacVET", description: "Veterinarska ordinacija" }
     ];
 
+    function MyComponent() {
+        const map = useMapEvents({
+          click: (e) => {
+            const { lat, lng } = e.latlng;
+            setX(lat);
+            setY(lng);
+            console.log(x,y);
+            showModal();
+          }
+        });
+        return null;
+      }
+
+      const addLocation = () => {
+        let temp = {
+            position: [x, y],
+            name: naziv,
+            description: <Desc>{opis}</Desc>
+
+        };
+        console.log(temp);
+        locations.push({
+            position: [x, y],
+            name: naziv,
+            description: <Desc>{opis}</Desc>
+
+        });
+        console.log(locations);
+        handleCancel();
+      };
+
     return (
         <Layout hasSider>
             <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
@@ -98,7 +149,8 @@ const MapPage = () => {
             </Sider>
             <Content style={{ maxHeight: '103vh' }}>
                 <Page>
-                    <MapContainer center={[44.772182, 17.191000]} zoom={15} style={{ height: "100%", width: "100%"}} >
+                    <MapContainer center={[44.772182, 17.191000]} zoom={15} style={{ height: "100%", width: "100%"}} 
+                        >
                         {locations.map(location => (
                             <Marker position={location.position} icon={customMarker} >
                                 <Popup>
@@ -113,7 +165,25 @@ const MapPage = () => {
                             }
                         />
                         <LeafletgeoSearch/>
+                        <MyComponent />
                     </MapContainer>
+                    <Modal 
+                          title="Dodaj lokaciju" 
+                          open={isModalOpen} 
+                          onOk={addLocation} 
+                          onCancel={handleCancel} 
+                          okText="Potvrdi"
+                          cancelText="Otkaži"
+                        >
+                          <p>Unesite naziv lokacije</p>
+                          <StyledInput 
+                            value={naziv}
+                            onChange={(e) => setNaziv(e.target.value)} />  
+                          <p>Unesite opis lokacije</p>
+                          <StyledInput 
+                            value={opis}
+                            onChange={(e) => setOpis(e.target.value)} />                       
+                        </Modal>
                 </Page>
             </Content>
         </Layout>   

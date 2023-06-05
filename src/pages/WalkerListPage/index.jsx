@@ -464,7 +464,7 @@ const WalkerListPage = () => {
                           description={
                             <div style={{ display: "flex", flexDirection: 'column' }}>
                               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} >
-                                <Rate disabled defaultValue={item.rating} />
+                                <Rate disabled value={item.rating} />
                                 <text>({item.rating})</text>
                               </div>
                               <text>{item.comment}</text>
