@@ -453,7 +453,7 @@ const WalkerListPage = () => {
                 <Descriptions.Item label="Broj telefona">{selectedWalker.phoneNumber}</Descriptions.Item>
                 <Descriptions.Item label="Lokacija">{selectedWalker.location}</Descriptions.Item>
                 <Descriptions.Item label="Opis">{selectedWalker.description}</Descriptions.Item>
-                <Descriptions.Item label="Prosječna ocjena" style={{alignItems: 'center'}} >
+                <Descriptions.Item label="Prosječna ocjena" style={{alignContent: 'center'}} >
                   <Rate disabled allowHalf value={selectedWalker.avgRate}/>
                   {selectedWalker.avgRate}
                 </Descriptions.Item>
@@ -506,7 +506,7 @@ const WalkerListPage = () => {
                     renderItem={item => (
                       <List.Item>
                         <List.Item.Meta
-                          avatar={<Avatar src={item.image} />}
+                          avatar={<Avatar src={item.image} style={{ marginTop: '22px', scale: '1.4', marginLeft: '10px'}} />}
                           title={item.name}
                           description={
                             <div style={{ display: "flex", flexDirection: 'column' }}>
@@ -514,7 +514,7 @@ const WalkerListPage = () => {
                                 <Rate disabled value={item.rating} />
                                 <text>({item.rating})</text>
                               </div>
-                              <text>{item.comment}</text>
+                              <text style={{color: 'black'}}>{item.comment}</text>
                               <text>{item.date}</text>
                             </div>
                           }
