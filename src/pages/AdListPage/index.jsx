@@ -8,7 +8,7 @@ import { UserOutlined, FilterOutlined, PlusCircleOutlined } from '@ant-design/ic
 import { Avatar } from 'antd';
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-import { ROLE_WALKER, STATUS_ACTIVE } from '../../util.js/constants';
+import { CATEGORY_NUDIM } from '../../util.js/constants';
 import pozadina from "../resources/pozadina2.jpg"
 
 const { Content, Sider } = Layout;
@@ -68,27 +68,38 @@ const AdListPage = () => {
   const [kategorije, setKategorije] = useState([]);
   const [kategorijeSelect, setKategorijeSelect] = useState([]);
   const [kategorija, setKategorija] = useState('');
+  const [kategorijaFilter, setKategorijaFilter] = useState(''); 
 
   const [allAds, setAllAds] = useState([]);
+  const [allAdsTemp, setAllAdsTemp] = useState([]);
   const [categoryFilterName, setCategoryFilterName]=useState('');
   const [selectedAd, setSelectedAd] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  
-  
 
   
 
-  const filterByPlace = () => {
+  const filterByCategory = () => {
     setIsCalled(false);
-    axios.get(`http://localhost:9000/lokacije/trazenoMjesto/${placeFilterName}`, {
+    axios.get(`http://localhost:9000/oglasi/kategorija/${kategorijaFilter}`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     })
     .then((res) => {
-
+      console.log(res);
+      let temp = [];
+      for(let i = 0; i < allAdsTemp.length; i++){
+        for(let j = 0; j < res.data.length; j++){
+          if(allAdsTemp.at(i).id === res.data.at(j).id)
+          {
+            temp.push(allAdsTemp.at(i));
+          }
+        }
+      }
+      setAllAds(temp);
+      setIsFilterModalOpen(false);
      })
     .catch((e) => console.log(e));
   };
@@ -116,8 +127,10 @@ const AdListPage = () => {
       }
     )
     .catch((e) => console.log(e));
-    
-    axios.get(`http://localhost:9000/korisnici`, {
+
+    if(isCalled || kategorijaFilter===undefined)
+    {
+      axios.get(`http://localhost:9000/korisnici`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -127,6 +140,8 @@ const AdListPage = () => {
       }
     )
     .catch((e) => console.log(e));
+
+
 
     axios.get(`http://localhost:9000/oglasi`, {
       headers: {
@@ -156,8 +171,10 @@ const AdListPage = () => {
        
       }
       setAllAds(temp);
+      setAllAdsTemp(temp);
     })
     .catch((e) => console.log(e));
+  }
   }, [allAds, places, placeFilterName, user.token, isCalled, allUsers, kategorije]);
   
   const showModal = (item) => {
@@ -362,7 +379,7 @@ const AdListPage = () => {
                 
                 
               </Descriptions>
-              {(selectedUser.category == 'Nudim čuvanje') ? (<Button>Izaberi čuvara</Button>) : (<div></div>)}
+              {(selectedUser.category == CATEGORY_NUDIM) ? (<Button>Izaberi čuvara</Button>) : (<div></div>)}
              
               </Modal>
                  <Modal title="Dodaj oglas" open={isAdModalOpen} onOk={dodajOglas} onCancel={handleCancelAdModal} 
@@ -394,7 +411,7 @@ const AdListPage = () => {
              
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 30, top: 8 }}  onClick={showFilterModal}/>
             <FloatButton icon={<PlusCircleOutlined />} type="primary" style={{ right: 90, top: 8 }} onClick={showAdModal} />
-            <Modal title="Filtriranje po kategorijama" open={isFilterModalOpen} onCancel={handleCancelFilterModal} onOk={filterByPlace}  okText="Filtriraj" cancelText="Otkaži" >
+            <Modal title="Filtriranje po kategorijama" open={isFilterModalOpen} onCancel={handleCancelFilterModal} onOk={filterByCategory}  okText="Filtriraj" cancelText="Otkaži" >
               <Select size="middle" 
                 placeholder="Izaberite kategoriju"
                 allowClear
@@ -403,7 +420,12 @@ const AdListPage = () => {
                   marginBottom: '3%',
                   marginTop: '3%'
                 }}
-                options={kategorije}/>
+                onChange={(selectedOption) => {
+                  setKategorijaFilter(selectedOption);
+                  console.log(kategorijaFilter);
+                }}
+                options={kategorije}
+                value={kategorijaFilter}/>
             </Modal>
             
           </Cover>
