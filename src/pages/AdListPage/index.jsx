@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Layout, Button, Rate, Input, message, Divider } from 'antd';
+import { Modal, Layout, Button, Rate, Input, message, InputNumber, DatePicker } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table, FloatButton, Select } from 'antd';
@@ -10,6 +10,7 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { CATEGORY_NUDIM } from '../../util.js/constants';
 import pozadina from "../resources/pozadina2.jpg"
+import dayjs from 'dayjs';
 
 const { Content, Sider } = Layout;
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
@@ -77,6 +78,13 @@ const AdListPage = () => {
   const [selectedUser, setSelectedUser] = useState('');
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [isWalkerModalOpen, setIsWalkerModalOpen] = useState(false);
+  const [services, setServices] = useState([]);
+  const [service, setService] = useState(1);
+  const [hours, setHours] = useState('');
+  const [days, setDays] = useState('');
+  const [dateWalker, setDateWalker] = useState('');
+  const [money, setMoney] = useState('');
 
   
 
@@ -211,6 +219,8 @@ const AdListPage = () => {
                 }
               )
 
+              
+
               axios.get(`http://localhost:9000/korisnici/image/${temp.photo}`, {
                 headers: {
                   Authorization: `Bearer ${user.token}`,
@@ -245,7 +255,24 @@ const AdListPage = () => {
                   description : temp.description,
                 }
                 setSelectedUser(temp2);
-              })
+              });
+              axios.get(`http://localhost:9000/cijene`, {
+              headers: {
+                Authorization: `Bearer ${user.token}`,
+              },
+            })
+            .then((res) => {
+              console.log(res);
+              let temp = [];
+              for(let i = 0; i < res.data.length; i++){
+                if(res.data.at(i).korisnikId===selectedUser.id){
+                  temp.push(res.data.at(i));
+                }
+                
+                setPrices(temp);
+              }
+            })
+            .catch((e) => console.log(e));
                 
     setIsModalOpen(true);
   };
@@ -276,6 +303,36 @@ const AdListPage = () => {
 
   const handleCancelAdModal = () => {
     setIsAdModalOpen(false);
+  }
+
+  const showWalkerModal = () => {
+    axios.get(`http://localhost:9000/usluge`, {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+            })
+            .then((res) => {
+                let temp = [];
+                for(let i = 0; i < res.data.length; i++){
+                    temp.push({
+                    value: res.data.at(i).id,
+                    label: res.data.at(i).naziv,
+                    })
+                }
+                setServices(temp);
+            })
+            .catch((e) => console.log(e));
+      
+    setIsWalkerModalOpen(true);
+  };
+
+  const handleCancelWalkerModal = () => {
+    setIsWalkerModalOpen(false);
+  }
+
+  const onChange = (date, dateString) => {
+    const dateObject = dayjs(dateString, 'DD/MM/YY');
+    setDateWalker(dateObject);
   }
 
   const dodajOglas = async (event) => {
@@ -315,9 +372,44 @@ const AdListPage = () => {
     }
   }
 
+  const dodajCuvanje = async (event) => {
+   
+    event.preventDefault();
+    try {
+      let u = (service === 1)? hours : days;
+      let m = prices.find(element => element.uslugaId === service).cijena;
+      console.log("U",u,m);
+      setMoney(u * m);
+      const rasporedRequest = {
+        vrijemeCuvanja: u,
+        ukupnaCijena: money,
+        datum: dateWalker,
+        korisnikId: selectedUser.id,
+        ljubimacId: '1',
+      };
+      const response = await fetch('http://localhost:9000/rasporedi', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`,
+        },
+        body: JSON.stringify(rasporedRequest),
+      })
+      .catch((e) => console.log(e));
+      
+      setIsWalkerModalOpen(false);
+    }
+    catch (error) {
+      console.log(error);
+      
+    }
+  }
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   const [collapsed, setCollapsed] = useState(false);
+
+
   
   return (
     <Layout hasSider>
@@ -351,11 +443,11 @@ const AdListPage = () => {
                               <text >Kategorija: {item.category}</text>
                             <text>Datum objave: {item.date}</text>
                           </div>
-                          <div >
+                          <div style={{ marginTop: '-25px'}}>
                               <Button icon={<UserOutlined />} onClick={() => {
                                 showModal(item);
                               }}
-                              style={{ scale: '1.5', borderRadius: '50%' }}></Button>
+                              style={{ scale: '1.5', borderRadius: '50%'}}></Button>
                           </div>
                           
                           </div>
@@ -379,7 +471,8 @@ const AdListPage = () => {
                 
                 
               </Descriptions>
-              {(selectedUser.category == CATEGORY_NUDIM) ? (<Button>Izaberi čuvara</Button>) : (<div></div>)}
+              {(selectedUser.category == CATEGORY_NUDIM) ? (<Button onClick={showWalkerModal}>
+                Izaberi čuvara</Button>) : (<div></div>)}
              
               </Modal>
                  <Modal title="Dodaj oglas" open={isAdModalOpen} onOk={dodajOglas} onCancel={handleCancelAdModal} 
@@ -427,6 +520,62 @@ const AdListPage = () => {
                 options={kategorije}
                 value={kategorijaFilter}/>
             </Modal>
+            <Modal title="Izaberi čuvara" open={isWalkerModalOpen} onOk={dodajCuvanje} onCancel={handleCancelWalkerModal} 
+              width={450} 
+              >
+                <div style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
+                <div style={{ display: "flex", flexDirection: 'column', justifyContent: 'space-between' }}>
+                <p>Izaberite uslugu:</p>
+                <StyledSelect size="default"
+                          allowClear
+                          style={{
+                            width: '100%',
+                          }}
+                          onChange={(selectedOption) => {
+                            setService(selectedOption);
+                          console.log(service);}}
+                          options={services}
+                          value={service}
+                        />
+                        </div>
+                {(service===1) ? 
+                (<div style={{ display: "flex", flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <p>Unesite broj sati čuvanja:</p>
+                  <InputNumber min={1} max={10} defaultValue={1} onChange={(e) => {
+                    setHours(e);
+                    console.log(service);
+                    
+                    console.log("A",money);
+                  }} 
+                  addonAfter="h"
+                  style={{
+                    width: '30%',
+                  }}/>
+                </div>)
+                 : (<div style={{ display: "flex", flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <p>Unesite broj dana čuvanja:</p>
+                  <InputNumber min={1} max={30} defaultValue={1} onChange={(e) => {
+                    setDays(e);
+                    console.log(days);
+                    console.log(prices.find(element => element.uslugaId === service).cijena);
+                    
+                    console.log("A",money);}} 
+                  addonAfter="d"
+                  style={{
+                    width: '30%',
+                  }}/>
+                 </div>)}
+                 
+                 </div>
+                 <DatePicker format={'DD/MM/YY'} onChange={onChange}
+                 style={{
+                  marginTop: '20px',
+                  width: '80%'
+                }} 
+                placeholder="Unesite datum"
+                value={dateWalker}/>
+                <p>Izaberite svog ljubimca:</p>
+              </Modal>
             
           </Cover>
         </Page>
