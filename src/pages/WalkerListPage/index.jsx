@@ -357,10 +357,31 @@ const WalkerListPage = () => {
       let temp = [];
       for(let i = 0; i < res.data.length; i++){
         if(res.data.at(i).korisnikZaId===selectedWalker.id){
-          temp.push({
-            rating: res.data.at(i).ocjena,
-            comment: res.data.at(i).komentar,
-            name: allUsers.find(element => element.id === res.data.at(i).korisnikOdId).firstName + " " + allUsers.find(element => element.id === res.data.at(i).korisnikOdId).lastName,
+          let tempImg = allUsers.find((element) => element.id === res.data.at(i).korisnikOdId).photo;
+          axios.get(`http://localhost:9000/korisnici/image/${tempImg}`, {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+              responseType: 'arraybuffer',
+              "Content-Type": 'image/jpeg',
+            },
+          })
+          .then((response) => { 
+            temp.push({
+              rating: res.data.at(i).ocjena,
+              comment: res.data.at(i).komentar,
+              date: res.data.at(i).datum,
+              image: `data:image/jpeg;base64,${response.data}`,
+              name: allUsers.find(element => element.id === res.data.at(i).korisnikOdId).firstName + " " + allUsers.find(element => element.id === res.data.at(i).korisnikOdId).lastName,
+            })
+          })
+          .catch((response) => {
+            temp.push({
+              rating: res.data.at(i).ocjena,
+              comment: res.data.at(i).komentar,
+              date: res.data.at(i).datum,
+              image: '',
+              name: allUsers.find(element => element.id === res.data.at(i).korisnikOdId).firstName + " " + allUsers.find(element => element.id === res.data.at(i).korisnikOdId).lastName,
+            })
           })
         }
       }
@@ -485,6 +506,7 @@ const WalkerListPage = () => {
                     renderItem={item => (
                       <List.Item>
                         <List.Item.Meta
+                          avatar={<Avatar src={item.image} />}
                           title={item.name}
                           description={
                             <div style={{ display: "flex", flexDirection: 'column' }}>
@@ -493,6 +515,7 @@ const WalkerListPage = () => {
                                 <text>({item.rating})</text>
                               </div>
                               <text>{item.comment}</text>
+                              <text>{item.date}</text>
                             </div>
                           }
                         />
