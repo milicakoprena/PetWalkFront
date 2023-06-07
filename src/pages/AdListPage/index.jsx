@@ -183,13 +183,13 @@ const AdListPage = () => {
     })
     .catch((e) => console.log(e));
   }
-  }, [allAds, places, placeFilterName, user.token, isCalled, allUsers, kategorije]);
+  }, [allAds, prices, placeFilterName, user.token, isCalled, allUsers, kategorije]);
   
-  const showModal = (item) => {
+  const showModal =  (item) => {
     let temp =  allUsers.find(element => element.id ===  item.userId);
               console.log(item);
               let locationId = 0;
-              axios.get(`http://localhost:9000/lokacije`, {
+               axios.get(`http://localhost:9000/lokacije`, {
                 headers: {
                   Authorization: `Bearer ${user.token}`,
                 },
@@ -256,7 +256,7 @@ const AdListPage = () => {
                 }
                 setSelectedUser(temp2);
               });
-              axios.get(`http://localhost:9000/cijene`, {
+               axios.get(`http://localhost:9000/cijene`, {
               headers: {
                 Authorization: `Bearer ${user.token}`,
               },
@@ -305,8 +305,10 @@ const AdListPage = () => {
     setIsAdModalOpen(false);
   }
 
-  const showWalkerModal = () => {
-    axios.get(`http://localhost:9000/usluge`, {
+  const showWalkerModal = (prices) => {
+    console.log(prices);
+    
+   axios.get(`http://localhost:9000/usluge`, {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                 },
@@ -377,8 +379,9 @@ const AdListPage = () => {
     event.preventDefault();
     try {
       let u = (service === 1)? hours : days;
+      console.log("a",prices);
       let m = prices.find(element => element.uslugaId === service).cijena;
-      console.log("U",u,m);
+      
       setMoney(u * m);
       const rasporedRequest = {
         vrijemeCuvanja: u,
@@ -471,7 +474,7 @@ const AdListPage = () => {
                 
                 
               </Descriptions>
-              {(selectedUser.category == CATEGORY_NUDIM) ? (<Button onClick={showWalkerModal}>
+              {(selectedUser.category == CATEGORY_NUDIM) ? (<Button onClick={() => showWalkerModal(prices)}>
                 Izaberi čuvara</Button>) : (<div></div>)}
              
               </Modal>

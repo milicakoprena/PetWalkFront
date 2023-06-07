@@ -12,6 +12,7 @@ import MainMenu from "../../components/MainMenu";
 import { useMapEvents } from 'react-leaflet';
 import { useLocation } from 'react-router-dom';
 import { ROLE_ADMIN } from "../../util.js/constants";
+import axios from 'axios';
 
 const { Content, Sider } = Layout;
 
@@ -75,6 +76,7 @@ const MapPage = () => {
     const [isModalOpen, setIsModalOpen] = useState('');
     const [naziv, setNaziv] = useState('');
     const [opis, setOpis] = useState('');
+    const [putanja, setPutanja] = useState('');
     const [x, setX] = useState('');
     const [y, setY] = useState('');
     const [collapsed, setCollapsed] = useState(false);
@@ -87,29 +89,9 @@ const MapPage = () => {
       const handleCancel = () => {
         setIsModalOpen(false);
       };
-    
+      const [markers, setMarkers] = useState([]);
 
-    const locations = [
-        { position: [44.76656719765876, 17.20447089815072], name: "BL Vet", description: <Desc>Veterinarska ambulanta<a href="https://bl-vet.com/">Link do veb stranice</a></Desc> },
-        { position: [44.77359478646836, 17.17559528263551], name: "Vet Centar", description: <Desc>Veterinarska stanica<a href="https://vetcentar.com/">Link do veb stranice</a></Desc> },
-        { position: [44.79688441138837, 17.139584155649985], name: "VET Company", description: <Desc>Veterinarska ordinacija <a href="https://www.facebook.com/people/Veterinarska-ambulanta-VET-Company-Banja-Luka/100066737814835/?paipv=0&eav=AfYUo2uAvctNkYCli71fSnaJSOR3ryUWKxguRFOgfVhNMcXHi-ng3KEpVvrdvasW9lc&_rdr">Link do veb stranice</a></Desc> },
-        { position: [44.76902856745142, 17.185328467292994], name: "Frizerski salon za pse Nola", description: <a href="https://sisanje-pasa-banja-luka-frizerski-salon-za-pse-nola.business.site/?utm_source=gmb&utm_medium=referral">Link do veb stranice</a> },
-        { position: [44.75984639714031, 17.196088413320002], name: "Frizko", description: <Desc>Salon za šišanje pasa <a href="https://www.facebook.com/sisanjepasabanjaluka">Link do veb stranice</a></Desc> },
-        { position: [44.776937561235734, 17.201737467293214], name: "Tea's grooming corner", description: <Desc>Šišanje i kupanje kućnih ljubimaca <a href="https://www.facebook.com/teasgrooming/">Link do veb stranice</a> </Desc>},
-        { position: [44.77141564544468, 17.196543509621797], name: "Kadar", description: <Desc>Pet friendly kafe bar <a href="https://kadarbl.business.site/">Link do veb stranice</a></Desc> },
-        { position: [44.76883961689355, 17.188300111471023], name: "Pet shop Draganić", description: <Desc>Prodavnica kućnih ljubimaca <a href="https://pet-shop-draganic.business.site/">Link do veb stranice</a></Desc> }, 
-        { position: [44.77387087292766, 17.18688992496436], name: "Veterinarski institut Republike Srpske Dr Vaso Butozan", description: <a href="https://virs-vb.com/" >Link do veb stranice</a> },
-        { position: [44.77700396548966, 17.189865524964468], name: "MIM Coop", description: <Desc>Veterinarska ambulanta <a href="https://veterinarskaambulanta.ba/">Link do veb stranice</a></Desc> },
-        { position: [44.76766712195801, 17.185520382635364], name: "Vetmedik", description: <Desc>Veterinarska ambulanta <a href="http://www.vetmedikbl.com/">Link do veb stranice</a></Desc>},
-        { position: [44.76801720927072, 17.19082561332026], name: "Veterinarska apoteka", description: "Apoteka za životinje " },
-        { position: [44.79718115735773, 17.210076713321243], name: "Ljubimac", description: <Desc>Veterinarska ambulanta <a href="https://www.facebook.com/vetambljubimac/">Link do veb stranice</a></Desc> },
-        { position: [44.7785031850491, 17.206783494849404], name: "Park za pse", description: "Prilagođen za pse" },
-        { position: [44.780187481961605, 17.206962055649416], name: "Delta Planet", description: "Pet friendly tržni centar" },
-        { position: [44.77547901423748, 17.1977062133206], name: "Grooming salon Tango", description: <Desc>Šišanje i kupanje kućnih ljubimaca <a href="https://www.groomingsalontango.com/">Link do veb stranice</a> </Desc> },
-        { position: [44.774359621183855, 17.20109822738237], name: "Grooming salon Alexandar", description: <Desc>Šišanje i kupanje kućnih ljubimaca <a href="https://www.facebook.com/people/Grooming-salon-Alexandar/100070751892302/">Link do veb stranice</a> </Desc> },
-        { position: [44.76267350638166, 17.19699178263525], name: "Grooming salon Snupići", description: <Desc>Šišanje i kupanje kućnih ljubimaca <a href="https://www.facebook.com/salonsnupi/">Link do veb stranice</a> </Desc> },
-        { position: [44.76206726581702, 17.200276253721256], name: "VrebacVET", description: "Veterinarska ordinacija" }
-    ];
+     
 
     function MyComponent() {
         const map = useMapEvents({
@@ -127,22 +109,56 @@ const MapPage = () => {
         return null;
       }
 
-      const addLocation = () => {
-        let temp = {
-            position: [x, y],
-            name: naziv,
-            description: <Desc>{opis}</Desc>
+      useEffect( () => {
+        axios.get(`http://localhost:9000/mape`, {
+          headers: {
+            Authorization: `Bearer ${userState.state.user.token}`,
+          },
+        })
+        .then((res) => {
+            let temp = [];
+            for(let i = 0; i < res.data.length; i++)
+            {
+              temp.push({
+                position: [res.data.at(i).koordinataX, res.data.at(i).koordinataY],
+                name: res.data.at(i).nazivObjekta,
+                description: <Desc>{res.data.at(i).opisObjekta}<a href={res.data.at(i).putanja}>Link do veb stranice</a></Desc>,
+              })
+            }
+               
+            console.log("temp",temp);
+            setMarkers(temp);
+          
+        })
+        .catch((e) => console.log(e));
+      }, [markers]);
+    
 
-        };
-        console.log(temp);
-        locations.push({
-            position: [x, y],
-            name: naziv,
-            description: <Desc>{opis}</Desc>
-
-        });
-        console.log(locations);
-        handleCancel();
+      const addLocation = async () => {
+        try {
+            let mapaRequest={
+                koordinataX: x,
+                koordinataY: y,
+                nazivObjekta: naziv,
+                opisObjekta: opis,
+                putanja: putanja,
+            };
+            const response = await fetch('http://localhost:9000/mape', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${userState.state.user.token}`,
+              },
+              body: JSON.stringify(mapaRequest),
+            })
+            .catch((e) => console.log(e));
+            
+            setIsModalOpen(false);
+          }
+          catch (error) {
+            console.log(error);
+            
+          }
       };
 
     return (
@@ -157,11 +173,11 @@ const MapPage = () => {
                 <Page>
                     <MapContainer center={[44.772182, 17.191000]} zoom={15} style={{ height: "100%", width: "100%"}} 
                         >
-                        {locations.map(location => (
-                            <Marker position={location.position} icon={customMarker} >
+                        {markers.map(marker => (
+                            <Marker position={marker.position} icon={customMarker} >
                                 <Popup>
-                                    <h2>{location.name}</h2>
-                                    <p>{location.description}</p>
+                                    <h2>{marker.name}</h2>
+                                    <p>{marker.description}</p>
                                 </Popup>
                             </Marker>
                         ))}
@@ -188,7 +204,11 @@ const MapPage = () => {
                           <p>Unesite opis lokacije</p>
                           <StyledInput 
                             value={opis}
-                            onChange={(e) => setOpis(e.target.value)} />                       
+                            onChange={(e) => setOpis(e.target.value)} />
+                          <p>Unesite putanju do web sajta</p>
+                          <StyledInput 
+                            value={putanja}
+                            onChange={(e) => setPutanja(e.target.value)} />                       
                         </Modal>
                 </Page>
             </Content>
