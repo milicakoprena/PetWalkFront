@@ -55,9 +55,9 @@ const AdListPage = () => {
   
  
   const [isAdModalOpen, setIsAdModalOpen] = useState(false);
-  const [places, setPlaces] = useState([]);
-  const [placesFilter, setPlacesFilter] = useState([]);
   const [prices, setPrices] = useState([]);
+  const [placesFilter, setPlacesFilter] = useState([]);
+  
   
   const [placeFilterName, setPlaceFilterName]=useState('');
   const [isCalled, setIsCalled]=useState(true);
@@ -163,8 +163,8 @@ const AdListPage = () => {
         for(let i = 0; i < res.data.length; i++)
         {
           let adId = res.data.at(i).id;
-          let userName = allUsers.find(element => element.id ===  res.data.at(i).korisnikId).firstName +
-           ' ' + allUsers.find(element => element.id ===  res.data.at(i).korisnikId).lastName;
+          let userName = allUsers?.find(element => element.id ===  res.data.at(i).korisnikId)?.['firstName'] +
+           ' ' + allUsers?.find(element => element.id ===  res.data.at(i).korisnikId)?.['lastName'];
           if(res.data.at(i).status === true)
             temp.push({
               id : adId,
@@ -172,7 +172,7 @@ const AdListPage = () => {
               info: res.data.at(i).sadrzaj,
               date: res.data.at(i).datum.slice(0,10),
               categoryId: res.data.at(i).kategorijaId,
-              category: kategorije.find(element => element.value === res.data.at(i).kategorijaId).label,
+              category: kategorije?.find(element => element.value === res.data.at(i).kategorijaId)?.['label'],
               userId: res.data.at(i).korisnikId,
             });
         
@@ -183,101 +183,83 @@ const AdListPage = () => {
     })
     .catch((e) => console.log(e));
   }
-  }, [allAds, prices, placeFilterName, user.token, isCalled, allUsers, kategorije]);
+  }, [allAds, allUsers]);
   
-  const showModal =  (item) => {
-    let temp =  allUsers.find(element => element.id ===  item.userId);
-              console.log(item);
-              let locationId = 0;
-               axios.get(`http://localhost:9000/lokacije`, {
-                headers: {
-                  Authorization: `Bearer ${user.token}`,
-                },
-              })
-              .then((response) => {
-                locationId = response.data.find(element => element.korisnikId ===temp.id).mjestoId;
-                
-              })
-              .catch((error) =>
-                {
-                  console.log(error);
-                }
-              )
-              let location = '';
-              axios.get(`http://localhost:9000/mjesta`, {
-                headers: {
-                  Authorization: `Bearer ${user.token}`,
-                },
-              })
-              .then((response) => {
-                location = response.data.find(element => element.id === locationId).naziv;
-                
-              })
-              .catch((error) =>
-                {
-                  console.log(error);
-                }
-              )
-
-              
-
-              axios.get(`http://localhost:9000/korisnici/image/${temp.photo}`, {
-                headers: {
-                  Authorization: `Bearer ${user.token}`,
-                  responseType: 'arraybuffer',
-                  "Content-Type": 'image/jpeg',
-                },
-              })
-              .then((response) => { 
-                let temp2 = {
-                  image : `data:image/jpeg;base64,${response.data}`,
-                  imageName : temp.imageName,
-                  id : temp.id,
-                  firstName : temp.firstName,
-                  lastName : temp.lastName,
-                  phoneNumber : temp.phoneNumber,
-                  location : location,
-                  description : temp.description,
-                  role: temp.role,
-                  category: item.category,
-                }
-                setSelectedUser(temp2);
-              })
-              .catch((response) => { 
-                let temp2 = {
-                  image : '',
-                  imageName : '',
-                  id : temp.id,
-                  firstName : temp.firstName,
-                  lastName : temp.lastName,
-                  phoneNumber : temp.phoneNumber,
-                  location : location,
-                  description : temp.description,
-                }
-                setSelectedUser(temp2);
-              });
-               axios.get(`http://localhost:9000/cijene`, {
-              headers: {
-                Authorization: `Bearer ${user.token}`,
-              },
-            })
-            .then((res) => {
-              console.log(res);
-              let temp = [];
-              for(let i = 0; i < res.data.length; i++){
-                if(res.data.at(i).korisnikId===selectedUser.id){
-                  temp.push(res.data.at(i));
-                }
-                
-                setPrices(temp);
-              }
-            })
-            .catch((e) => console.log(e));
-                
+  const showModal = async (item) => {
+    try {
+      let temp = allUsers.find((element) => element.id === item.userId);
+      console.log(item);
+      let locationId = 0;
+      await axios.get(`http://localhost:9000/lokacije`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((response) => {
+        locationId = response.data?.find((element) => element.korisnikId === temp.id)?.['mjestoId'];
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  
+      let location = '';
+      await axios.get(`http://localhost:9000/mjesta`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((response) => {
+        location = response.data?.find((element) => element.id === locationId)?.['naziv'];
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  
+      await axios.get(`http://localhost:9000/korisnici/image/${temp.photo}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          responseType: 'arraybuffer',
+          'Content-Type': 'image/jpeg',
+        },
+      })
+      .then((response) => {
+        let temp2 = {
+          image: `data:image/jpeg;base64,${response.data}`,
+          imageName: temp.imageName,
+          id: temp.id,
+          firstName: temp.firstName,
+          lastName: temp.lastName,
+          phoneNumber: temp.phoneNumber,
+          location: location,
+          description: temp.description,
+          role: temp.role,
+          category: item.category,
+        };
+        setSelectedUser(temp2);
+      })
+      .catch((response) => {
+        let temp2 = {
+          image: '',
+          imageName: '',
+          id: temp.id,
+          firstName: temp.firstName,
+          lastName: temp.lastName,
+          phoneNumber: temp.phoneNumber,
+          location: location,
+          description: temp.description,
+        };
+        setSelectedUser(temp2);
+      });
+  
+      
+    } catch (e) {
+      console.log(e);
+    }
+  
     setIsModalOpen(true);
   };
-
- 
+  
+  
 
   const showAdModal = () => {
     console.log(kategorijeSelect);
@@ -305,10 +287,23 @@ const AdListPage = () => {
     setIsAdModalOpen(false);
   }
 
-  const showWalkerModal = (prices) => {
-    console.log(prices);
+  const showWalkerModal = async () => {
+    const response = await axios.get(`http://localhost:9000/cijene`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+  console.log("USER",selectedUser);
+      let temp3 = [];
+      for (let i = 0; i < response.data.length; i++) {
+        if (response.data[i].korisnikId === selectedUser.id) {
+          temp3.push(response.data[i]);
+        }
+      }
+      console.log(temp3);
+      setPrices(temp3);
     
-   axios.get(`http://localhost:9000/usluge`, {
+    axios.get(`http://localhost:9000/usluge`, {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                 },
@@ -318,7 +313,7 @@ const AdListPage = () => {
                 for(let i = 0; i < res.data.length; i++){
                     temp.push({
                     value: res.data.at(i).id,
-                    label: res.data.at(i).naziv,
+                    label: res.data.at(i).naziv 
                     })
                 }
                 setServices(temp);
@@ -375,21 +370,20 @@ const AdListPage = () => {
   }
 
   const dodajCuvanje = async (event) => {
-   
     event.preventDefault();
     try {
-      let u = (service === 1)? hours : days;
-      console.log("a",prices);
-      let m = prices.find(element => element.uslugaId === service).cijena;
+      let m = prices?.find(element => element.uslugaId === service)?.['cijena'];
       
-      setMoney(u * m);
+  
+      
       const rasporedRequest = {
-        vrijemeCuvanja: u,
-        ukupnaCijena: money,
+        vrijemeCuvanja: (service === 1) ? hours : days * 24,
+        ukupnaCijena: (service === 1) ? m * hours : m * days,
         datum: dateWalker,
         korisnikId: selectedUser.id,
         ljubimacId: '1',
       };
+  
       const response = await fetch('http://localhost:9000/rasporedi', {
         method: 'POST',
         headers: {
@@ -397,16 +391,14 @@ const AdListPage = () => {
           'Authorization': `Bearer ${user.token}`,
         },
         body: JSON.stringify(rasporedRequest),
-      })
-      .catch((e) => console.log(e));
-      
+      }).catch((e) => console.log(e));
+  
       setIsWalkerModalOpen(false);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
-      
     }
   }
+  
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -474,7 +466,7 @@ const AdListPage = () => {
                 
                 
               </Descriptions>
-              {(selectedUser.category == CATEGORY_NUDIM) ? (<Button onClick={() => showWalkerModal(prices)}>
+              {(selectedUser.category == CATEGORY_NUDIM) ? (<Button onClick={showWalkerModal}>
                 Izaberi čuvara</Button>) : (<div></div>)}
              
               </Modal>
@@ -528,7 +520,7 @@ const AdListPage = () => {
               >
                 <div style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
                 <div style={{ display: "flex", flexDirection: 'column', justifyContent: 'space-between' }}>
-                <p>Izaberite uslugu:</p>
+                <p>Izaberite uslugu: ({prices?.find((element) => element.uslugaId === service)?.['cijena']} KM)</p>
                 <StyledSelect size="default"
                           allowClear
                           style={{
@@ -559,10 +551,7 @@ const AdListPage = () => {
                   <p>Unesite broj dana čuvanja:</p>
                   <InputNumber min={1} max={30} defaultValue={1} onChange={(e) => {
                     setDays(e);
-                    console.log(days);
-                    console.log(prices.find(element => element.uslugaId === service).cijena);
-                    
-                    console.log("A",money);}} 
+                    console.log(days);}} 
                   addonAfter="d"
                   style={{
                     width: '30%',
