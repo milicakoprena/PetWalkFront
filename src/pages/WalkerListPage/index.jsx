@@ -173,7 +173,7 @@ const WalkerListPage = () => {
     })
     .catch((e) => console.log(e));
 
-    axios.get(`http://localhost:9000/recenzije/recenzije/prosjecnaOcjena`, {
+    axios.get(`http://localhost:9000/recenzije/prosjecnaOcjena`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
