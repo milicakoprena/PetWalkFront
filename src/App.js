@@ -16,6 +16,7 @@ import ProblemView from "./pages/ProblemView";
 import AdListPage from "./pages/AdListPage";
 import RasporedPage from "./pages/RasporedPage";
 import StatisticsPage from "./pages/StatisticsPage";
+import PlacesPage from "./pages/PlacesPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -43,6 +44,7 @@ function App() {
           <Route exact path="/adlist" element={<AdListPage />} />
           <Route exact path="/rasporedpage" element={<RasporedPage />} />
           <Route exact path="/statisticspage" element={<StatisticsPage />} />
+          <Route exact path="/placespage" element={<PlacesPage />} />
         </Routes>
       </Router>
       

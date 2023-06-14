@@ -10,7 +10,8 @@ import {
     LogoutOutlined,
     NotificationOutlined,
     ScheduleOutlined,
-    BarChartOutlined
+    BarChartOutlined,
+    HomeOutlined
 } from '@ant-design/icons';
 import { Menu, Radio, Space, Modal } from 'antd';
 import { useState } from 'react';
@@ -60,6 +61,7 @@ const adminItems = [
     getItem('Izvještaji', "/reportpage", <FormOutlined />),
     getItem('Mapa', "/mappage", <EnvironmentOutlined />),
     getItem('Pregled prijava problema', "/problemview", <ExclamationCircleOutlined />),
+    getItem('Pregled naselja', "/placespage", <HomeOutlined />),
     getItem('Odjavi se', "/", <LogoutOutlined />),
 ]
 
