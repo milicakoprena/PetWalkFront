@@ -3,11 +3,12 @@ import { Modal, Layout, Descriptions } from 'antd';
 import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Space, Table } from 'antd';
-import { Button } from 'antd';
+import { Button, List } from 'antd';
 import { Avatar } from 'antd';
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import pozadina from "../resources/pozadina2.jpg"
+import { DeleteOutlined, PictureOutlined } from '@ant-design/icons';
 
 const { Content, Sider } = Layout;
 
@@ -211,13 +212,46 @@ const MyPetsList = () => {
                             maxHeight: '103vh',
                             backgroundImage: `url(${pozadina})`,
                         }}>
-                            <StyledTable
-                                columns={columns}
-                                dataSource={pets}
-                                size="small"
-                                pagination={false}
-                                style={{height: '300px', overflow: 'auto'}}
-                            />
+                           <div style={{ maxHeight: '400px', width: '800px', overflow: 'auto', backgroundColor: 'white', borderRadius: '10px', 
+                                boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)', paddingLeft: '2%', paddingRight: '2%' }}>
+                                <List
+                                    itemLayout="horizontal"
+                                    dataSource={pets}
+                                    pagination={false}
+                                    renderItem={item => (
+                                    <List.Item>
+                                        <List.Item.Meta
+                                            title={item.ime}
+                                            description={
+                                                <div style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                    <div style={{ display: "flex", flexDirection: 'column', marginRight: '20px' }}>
+                                                        <text style={{color: 'black'}}>{item.vrsta}</text>
+                                                        <text style={{color: 'black'}}>{item.opis}</text>
+                                                    </div>
+                                                    <Button icon={<PictureOutlined /> }  onClick={() => {
+                                                        axios.get(`http://localhost:9000/ljubimci/image/${item.imageName}`, {
+                                                        headers: {
+                                                        Authorization: `Bearer ${user.token}`,
+                                                        responseType: 'arraybuffer',
+                                                        "Content-Type": 'image/jpeg',
+                                                    },
+                                                    })
+                                                    .then((response) =>
+                                                    {
+                                                        setSelectedPetPhoto({
+                                                            image: `data:image/jpeg;base64,${response.data}`,
+                                                        })
+                                                    })
+                                                    .catch((e) => console.log(e));
+                                                    showModal2();}}></Button>
+                                                    <Button icon={<DeleteOutlined />} style={{marginLeft: '10px'}} onClick={() => {setSelectedPet(item); showModal()}} ></Button>
+                                                </div>
+                                            }
+                                        />
+                                    </List.Item>
+                                )}
+                                />
+                            </div>
                             <Modal title="Informacije" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={350}
                                 okText="Da" cancelText="Ne" style={{ minWidth: '490px' }}
                             >
