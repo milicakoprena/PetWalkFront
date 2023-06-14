@@ -9,7 +9,8 @@ import {
     TeamOutlined,
     LogoutOutlined,
     NotificationOutlined,
-    ScheduleOutlined
+    ScheduleOutlined,
+    BarChartOutlined
 } from '@ant-design/icons';
 import { Menu, Radio, Space, Modal } from 'antd';
 import { useState } from 'react';
@@ -18,6 +19,7 @@ import { useNavigate, useLocation } from 'react-router';
 import "../util.js/constants";
 import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER } from '../util.js/constants';
 import axios from "axios";
+import StatisticsPage from '../pages/StatisticsPage';
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -47,6 +49,7 @@ const walkerItems = [
     getItem('Oglasna tabla', "/adlist", <NotificationOutlined  />),
     getItem('Lista čuvanja', "/rasporedpage", <ScheduleOutlined />),
     getItem('Recenzije', "/reviewpage", <StarOutlined />),
+    getItem('Statistika', "/statisticspage", <BarChartOutlined />),
     getItem('Mapa', "/mappage", <EnvironmentOutlined />),
     getItem('Prijava problema', "/reportproblem", <ExclamationCircleOutlined />),
     getItem('Odjavi se', "/", <LogoutOutlined />),
