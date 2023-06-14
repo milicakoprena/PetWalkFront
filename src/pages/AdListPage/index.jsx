@@ -84,9 +84,9 @@ const AdListPage = () => {
   const [hours, setHours] = useState('');
   const [days, setDays] = useState('');
   const [dateWalker, setDateWalker] = useState('');
+  const [pets, setPets] = useState([]);
   const [money, setMoney] = useState('');
-
-  
+  const [pet, setPet] = useState('');
 
   const filterByCategory = () => {
     setIsCalled(false);
@@ -319,6 +319,32 @@ const AdListPage = () => {
                 setServices(temp);
             })
             .catch((e) => console.log(e));
+          axios.get(`http://localhost:9000/ljubimci`, {
+              headers: {
+                  Authorization: `Bearer ${user.token}`,
+              },
+          })
+          .then((res) => {
+            console.log(res);
+              let tempArray = [];
+              let tempPet = '';
+              for(let i = 0; i < res.data.length; i++)
+              {
+                  let userId = res.data.at(i).korisnikId;
+                  
+                  if(userId===user.id){
+                      tempPet = {
+                          value: res.data.at(i).id,
+                          label: res.data.at(i).ime,
+                      }
+                      console.log(tempPet);
+                      tempArray.push(tempPet);
+                  }
+              }
+              setPets(tempArray);
+              console.log(pets);
+          })
+          .catch((e) => console.log(e));
       
     setIsWalkerModalOpen(true);
   };
@@ -381,7 +407,7 @@ const AdListPage = () => {
         ukupnaCijena: (service === 1) ? m * hours : m * days,
         datum: dateWalker,
         korisnikId: selectedUser.id,
-        ljubimacId: '1',
+        ljubimacId: pet,
       };
   
       const response = await fetch('http://localhost:9000/rasporedi', {
@@ -567,6 +593,13 @@ const AdListPage = () => {
                 placeholder="Unesite datum"
                 value={dateWalker}/>
                 <p>Izaberite svog ljubimca:</p>
+                <StyledSelect
+                  onChange={(selectedOption) => {
+                    setPet(selectedOption);
+                  console.log(pet);}}
+                  options={pets}
+                  value={pet}
+                ></StyledSelect>
               </Modal>
             
           </Cover>

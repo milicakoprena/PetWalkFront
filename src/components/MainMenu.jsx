@@ -8,7 +8,8 @@ import {
     ExclamationCircleOutlined,
     TeamOutlined,
     LogoutOutlined,
-    NotificationOutlined
+    NotificationOutlined,
+    ScheduleOutlined
 } from '@ant-design/icons';
 import { Menu, Radio, Space, Modal } from 'antd';
 import { useState } from 'react';
@@ -44,6 +45,7 @@ const walkerItems = [
     getItem('Uredi profil', "/editprofile", <EditOutlined />),
     getItem('Lista ljubimaca', "/petlist", <UnorderedListOutlined />),
     getItem('Oglasna tabla', "/adlist", <NotificationOutlined  />),
+    getItem('Lista čuvanja', "/rasporedpage", <ScheduleOutlined />),
     getItem('Recenzije', "/reviewpage", <StarOutlined />),
     getItem('Mapa', "/mappage", <EnvironmentOutlined />),
     getItem('Prijava problema', "/reportproblem", <ExclamationCircleOutlined />),
