@@ -89,6 +89,7 @@ const WalkerListPage = () => {
         });
         setIsModalOpen1(false);
         window.location.reload();
+        console.log(response);
     }
     catch (error) {
       console.log(error);
@@ -441,6 +442,7 @@ const WalkerListPage = () => {
                   />
                 </div>
               </Modal>
+              {contextHolder}
               <Modal title="Dodaj recenziju" open={isModalOpen1} onOk={postRecenzija} onCancel={handleCancel1} okText="Dodaj"
                   cancelText="Otkaži">
                 <TextArea
