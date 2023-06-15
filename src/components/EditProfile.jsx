@@ -542,13 +542,7 @@ const EditProfile = () => {
                           onChange={(selectedOption) => setDefaultValue(selectedOption)}
                           options={places}
                           value={defaultValue}
-                        >
-                            {places.map((place) => (
-                                <Select.Option key={place.value} value={place.value}>
-                                    {place.label}
-                                </Select.Option>
-                            ))}
-                        </StyledSelect>
+                        />
                       </StyledFormItem>
                       <StyledFormItem name="password">
                         <Button type="dashed"
