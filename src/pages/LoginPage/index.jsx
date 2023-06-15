@@ -5,7 +5,7 @@ import axios from "axios";
 import pozadina from "../resources/pozadina2darker.jpg"
 import { useLocation } from "react-router-dom";
 import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER } from "../../util.js/constants";
-import { Page, Cover, LoginButton, Logo, Icon, StyledFormLogin, StyledFormItemLogin } from "../../components/CssComponents";
+import { Page, Cover, LoginButton, Logo, Icon, StyledFormLogin, StyledFormItemLogin, StyledInput2 } from "../../components/CssComponents";
 
 
 const LoginPage = () => {
@@ -17,7 +17,6 @@ const LoginPage = () => {
   const [imageFile, setImageFile] = useState('');
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
     try {
       const response = await axios.post('http://localhost:9000/login', {
         username,
@@ -93,6 +92,12 @@ const LoginPage = () => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
   useEffect(()=>{
     if(locationIdState.state){
       setLocationId(locationIdState.state.locationId);
@@ -115,18 +120,19 @@ const LoginPage = () => {
             name="username"
             rules={[{ required: true, message: "Polje je obavezno!"}]}
           >
-            <Input  prefix={<Icon  src={require('../resources/mail.png')}/>} placeholder="Korisničko ime" 
+            <StyledInput2  prefix={<Icon  src={require('../resources/mail.png')}/>} placeholder="Korisničko ime" 
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              style={{fontSize: '20px'}}/>
+              onKeyDown={handleKeyPress}/>
           </StyledFormItemLogin>
           <StyledFormItemLogin
             name="password"
             rules={[{ required: true, message: "Polje je obavezno!" }]}
           >
-            <Input type="password" prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" 
+            <Input.Password prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyPress}
               style={{fontSize: '20px'}}/>
           </StyledFormItemLogin>
           <StyledFormItemLogin>

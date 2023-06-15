@@ -1,7 +1,7 @@
 import { Form, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
-import { Upload, message } from 'antd';
+import { Upload, message, Input } from 'antd';
 import { useState, useEffect } from "react";
 import axios from "axios";
 import pozadina from "../resources/pozadina-signup.jpg"
@@ -236,9 +236,10 @@ const SignUpPage = () => {
                 label={ <StyledLabel2>Lozinka</StyledLabel2> }
                 name="password"
               >
-                <StyledInput2 type="password" 
+                <Input.Password
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}/>
+                  onChange={(e) => setPassword(e.target.value)}
+                  style={{fontSize: '20px'}} />
               </StyledFormItemLogin>
             </Form>
           </StyledCol1>

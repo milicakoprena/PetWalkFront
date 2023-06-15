@@ -161,8 +161,8 @@ const EditProfile = () => {
                 })
             }
             setPlaces(temp);
-            const placeId = locations.find(element => element.korisnikId === user.id).mjestoId;
-            const tempPN = places.find(element => element.value === placeId).label;
+            const placeId = locations?.find(element => element.korisnikId === user.id)?.['mjestoId'];
+            const tempPN = places?.find(element => element.value === placeId)?.['label'];
             setLocationName(tempPN);
             setLocationId(placeId);
         })
@@ -193,6 +193,7 @@ const EditProfile = () => {
     
     useEffect(() => {
         setDefaultValue(locationId);
+        
     }, [locationId])
 
     const changePassword = () => {
@@ -396,6 +397,12 @@ const EditProfile = () => {
     
     const [form] = Form.useForm();
 
+    useEffect(() => {
+        form.setFieldsValue({
+          location: locationId 
+        });
+      }, [form, locationId]);
+
     return (
         <CoverEditPage style={{ maxHeight: '103vh', backgroundImage: `url(${pozadina})` }}>
           <Row gutter={16}>
@@ -444,6 +451,9 @@ const EditProfile = () => {
                   <Col span={8}>
                     <StyledEditForm
                       form={form}
+                      initialValues={{
+                        location: locationId
+                      }}
                       size="default"
                       labelCol={{ span: 24 }}
                       wrapperCol={{ span: 24 }} 
@@ -521,7 +531,7 @@ const EditProfile = () => {
                       
                       <StyledFormItem
                         name="location"
-                        label={ <StyledLabel>Lokacija: {locationName}</StyledLabel> }
+                        label={ <StyledLabel>Lokacija:</StyledLabel> }
                         rules={[{ required: true, message: "Polje je obavezno!"}]}
                       >
                         <StyledSelect size="default"
@@ -532,7 +542,13 @@ const EditProfile = () => {
                           onChange={(selectedOption) => setDefaultValue(selectedOption)}
                           options={places}
                           value={defaultValue}
-                        />
+                        >
+                            {places.map((place) => (
+                                <Select.Option key={place.value} value={place.value}>
+                                    {place.label}
+                                </Select.Option>
+                            ))}
+                        </StyledSelect>
                       </StyledFormItem>
                       <StyledFormItem name="password">
                         <Button type="dashed"
@@ -553,8 +569,9 @@ const EditProfile = () => {
                           okText="Potvrdi"
                           cancelText="Otkaži">
                             <p>Unesite novu lozinku</p>
-                            <StyledInput type="password"
+                            <Input.Password
                               value={password}
+                              style={{fontSize: '15px'}}
                               onChange={(e) => setPassword(e.target.value)} />                       
                         </Modal>
                       </StyledFormItem>
