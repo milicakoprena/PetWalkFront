@@ -189,10 +189,10 @@ const EditProfile = () => {
         }
     }, [imageUrl, locationName, locations, places, prices, services, user.id, user.korisnikId, user.photo, user.token, isCalled, role]);
     
-    const [defaultValue, setDefaultValue] = useState(locationId);
+    const [LocationValue, setLocationValue] = useState(locationId);
     
     useEffect(() => {
-        setDefaultValue(locationId);
+        setLocationValue(locationId);
         
     }, [locationId])
 
@@ -282,7 +282,7 @@ const EditProfile = () => {
             })
             .then(() => {
                 const locationRequest = {
-                    mjestoId: defaultValue,
+                    mjestoId: LocationValue,
                     korisnikId: user.id,
                 };
                 const tempId = locations.find(element => element.korisnikId === user.id).id;
@@ -539,9 +539,9 @@ const EditProfile = () => {
                           style={{
                             width: '100%',
                           }}
-                          onChange={(selectedOption) => setDefaultValue(selectedOption)}
+                          onChange={(selectedOption) => setLocationValue(selectedOption)}
                           options={places}
-                          value={defaultValue}
+                          value={LocationValue}
                         />
                       </StyledFormItem>
                       <StyledFormItem name="password">

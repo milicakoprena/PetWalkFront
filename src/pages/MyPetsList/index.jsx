@@ -84,7 +84,7 @@ const MyPetsList = () => {
                         id: res.data.at(i).id,
                         ime: res.data.at(i).ime,
                         opis: res.data.at(i).opis,
-                        vrsta: types.find(element => element.id === typeId).naziv,
+                        vrsta: types?.find(element => element.id === typeId)?.['naziv'],
                     }
                     tempArray.push(tempPet);
                 }

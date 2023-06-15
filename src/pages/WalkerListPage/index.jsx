@@ -182,21 +182,19 @@ const WalkerListPage = () => {
           temp1.push({
             userId: res.data.at(i).korisnikId,
             price: res.data.at(i).cijena,
-            service: services.find(element => element.id === res.data.at(i).uslugaId).naziv,
+            service: services?.find(element => element.id === res.data.at(i).uslugaId)?.['naziv'],
           })
         }
         else if (res.data.at(i).uslugaId === 2) {
           temp2.push({
             userId: res.data.at(i).korisnikId,
             price: res.data.at(i).cijena,
-            service: services.find(element => element.id === res.data.at(i).uslugaId).naziv,
+            service: services?.find(element => element.id === res.data.at(i).uslugaId)?.['naziv'],
           })
         }
         setPricesPerHour(temp1);
         setPricesPerDay(temp2);
       }
-      console.log("po satu", pricesPerHour);
-      console.log("po danu", pricesPerDay);
     })
     .catch((e) => console.log(e));
 
@@ -239,7 +237,6 @@ const WalkerListPage = () => {
         setWalkers(temp);
         setWalkersTemp(walkers);
       }
-      //console.log("walk", walkers);
     })
     .catch((e) => console.log(e));
   }, [averageRates, isCalled, locations, placeFilterName, places, pricesPerDay, pricesPerHour, services, user.token, walkers]);
@@ -365,11 +362,11 @@ const WalkerListPage = () => {
                               <Rate disabled allowHalf value={item.averageRate} style={{marginRight: '8px'}}/>
                               {item.averageRate}
                             </div>
-                            <text style={{color: 'black'}}>📍 {item.location}</text>
-                            <text style={{color: 'black'}}>📞 {item.phoneNumber}</text>
-                            <text style={{color: 'black'}}>💵 čuvanje po satu: {item.pricePerHour} KM</text>
-                            <text style={{color: 'black'}}>💵 čuvanje po danu: {item.pricePerDay} KM</text>
-                            <text style={{color: 'black', textAlign: 'justify'}}>{item.description}</text>
+                            <div style={{color: 'black'}}>📍 {item.location}</div>
+                            <div style={{color: 'black'}}>📞 {item.phoneNumber}</div>
+                            <div style={{color: 'black'}}>💵 čuvanje po satu: {item.pricePerHour} KM</div>
+                            <div style={{color: 'black'}}>💵 čuvanje po danu: {item.pricePerDay} KM</div>
+                            <div style={{color: 'black', textAlign: 'justify'}}>{item.description}</div>
                           </div>
                           <div style={{ display: "flex", flexDirection: 'column' }}>
                             <Button type="primary" style={{ borderRadius: '5%', marginTop: '25px' }} onClick={() => showReviewModal(item)}>Pregledaj recenzije</Button>
