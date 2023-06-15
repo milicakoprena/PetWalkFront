@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Layout } from 'antd';
+import { Layout, List } from 'antd';
 import MainMenu from "../../components/MainMenu";
 import pozadina from "../resources/pozadina2.jpg"
 import axios from "axios";
@@ -117,6 +117,7 @@ const ReportPage = () => {
               petName: pets.find(element => element.id === res.data.at(i).ljubimacId).ime,
               key: i,
               content: res.data.at(i).sadrzaj,
+              date: res.data.at(i).datum,
             }
             temp.push(tempReport);
           }
@@ -152,12 +153,30 @@ const ReportPage = () => {
               style={{ maxHeight: '400px', overflow: 'auto', borderRadius: '10px' }}
             />
             ) : (
-              <StyledTable
-              columns={columnsOwner}
-              dataSource={reports}
-              pagination={false}
-              style={{ maxHeight: '400px', overflow: 'auto', borderRadius: '10px' }}
-            />
+              
+                <div style={{ maxHeight: '400px', width: '600px', overflow: 'auto', backgroundColor: 'white', borderRadius: '10px', 
+                  boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)', paddingLeft: '2%', paddingRight: '2%' }}>
+                    <List
+                      itemLayout="horizontal"
+                      dataSource={reports}
+                      pagination={false}
+                      renderItem={item => (
+                        <List.Item>
+                          <List.Item.Meta
+                            title={item.userName}
+                            description={
+                              <div style={{ display: "flex", flexDirection: 'column' }}>
+                               
+                                <text>Ime ljubimca: {item.petName}</text>
+                                <text>Sadržaj: {item.content}</text>
+                                <text>Datum čuvanja: {item.date}</text>
+                              </div>
+                            }
+                          />
+                        </List.Item>
+                      )}
+                    />
+                </div>
             )}
           </Cover>
         </Page>
