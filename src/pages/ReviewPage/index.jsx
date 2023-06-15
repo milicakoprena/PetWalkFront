@@ -1,33 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Rate, List } from 'antd';
-import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import pozadina from "../resources/pozadina2.jpg"
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import { Page, Cover } from "../../components/CssComponents";
 const { Content, Sider } = Layout;
-
-export const Page = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-export const Cover = styled.div`
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-`;
 
 const ReviewPage = () => {
   

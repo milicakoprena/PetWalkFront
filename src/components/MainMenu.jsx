@@ -15,12 +15,11 @@ import {
 } from '@ant-design/icons';
 import { Menu, Radio, Space, Modal } from 'antd';
 import { useState } from 'react';
-import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router';
 import "../util.js/constants";
 import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER } from '../util.js/constants';
 import axios from "axios";
-import StatisticsPage from '../pages/StatisticsPage';
+import { HeaderImage } from './CssComponents';
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -67,11 +66,6 @@ const adminItems = [
 
 let items = walkerItems;
 let selectedValue = 1;
-
-export const HeaderImage = styled.img`
-    width: 40px;
-    height: 40px;
-`;
 
 const MainMenu = () => {
     const navigate=useNavigate();

@@ -1,36 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Layout, Image } from 'antd';
-import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Button, List } from 'antd';
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import pozadina from "../resources/pozadina2.jpg"
 import { DeleteOutlined, PictureOutlined } from '@ant-design/icons';
+import { Page, Cover } from "../../components/CssComponents";
 
 const { Content, Sider } = Layout;
-
-export const Page = styled.div`
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-`;
-
-export const Cover = styled.div`
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-`;
 
 const MyPetsList = () => {
     const userState = useLocation();

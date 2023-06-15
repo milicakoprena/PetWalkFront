@@ -1,41 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Layout } from 'antd';
-import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
-import { Table } from 'antd';
 import pozadina from "../resources/pozadina2.jpg"
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { ROLE_ADMIN } from "../../util.js/constants";
+import { Page, Cover, StyledTable } from "../../components/CssComponents";
 
 const { Content, Sider } = Layout;
-
-export const StyledTable = styled(Table) `
-  width: 70%;
-  box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%);
-`;
-
-export const Page = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-export const Cover = styled.div`
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-`;
 
 const ReportPage = () => {
   const [collapsed, setCollapsed] = useState(false);

@@ -1,11 +1,11 @@
-import styled from "styled-components";
-import { Form, Input, Select, Row, Col } from "antd";
+import { Form, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Upload, message } from 'antd';
 import { useState, useEffect } from "react";
 import axios from "axios";
 import pozadina from "../resources/pozadina-signup.jpg"
+import { Page2, CoverSignUp, StyledUploadSignUp, UserPhoto, SignUpButton, StyledCol, StyledCol1, StyledFormItemLogin, StyledInput2, StyledSelect2, StyledLabel2 } from "../../components/CssComponents";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -24,93 +24,6 @@ const beforeUpload = (file) => {
   }
   return isJpgOrPng && isLt2M;
 };
-
-export const StyledUpload = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left:140px;
-  margin-top:160px;
-`;
-
-export const UserPhoto = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-`;
-
-export const Page = styled.div`
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-export const Cover = styled.div`
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100%;
-  width: 100%
-`;
-
-export const SignUpButton = styled.div`
-  width: 30%;
-  height: 2em;
-  background-color: rgba(0,21,41,255);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0.25em;
-  cursor: pointer;
-  transition: 0.5s;
-  color: aliceblue;
-  font-size: 1.7em;
-  &:hover {
-      transform: scale(1.15);
-  }
-  margin-left: 48%;
-`;
-
-export const StyledCol = styled(Col)`
-  align-content: center;
-  margin-left:170px;
-  margin-top: -40px;
-`;
-
-export const StyledCol1 = styled(Col)`
-  align-content: center;
-  margin-left:100px;
-  margin-top: 91px;
-`;
-
-export const StyledForm = styled(Form)`
-  margin-top:-10px;
-  width:380px;
-`;
-
-export const StyledFormItem = styled(Form.Item)`
-  padding: 10px;
-`;
-
-export const StyledInput = styled(Input)`
-  font-size:20px;
-`;
-
-export const StyledSelect = styled(Select)`
-  margin-top:15px;
-  font-size:18px;
-  width:360px;
-  heigth:150px;
-`;
-
-export const StyledLabel = styled.div`
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-`;
 
 const SignUpPage = () => {
   const [firstName, setFirstName] = useState('');
@@ -211,8 +124,8 @@ const SignUpPage = () => {
   };
       
   return (
-    <Page>
-      <Cover style={{ backgroundImage: `url(${pozadina})` }} >
+    <Page2>
+      <CoverSignUp style={{ backgroundImage: `url(${pozadina})` }} >
         <Row>
           <Col>
             <img src={require('../resources/logo.png')} alt="logo" style={{width: '380px', height: 'auto', marginTop: '30%'}}/>
@@ -230,13 +143,14 @@ const SignUpPage = () => {
             </p>
           </Col>
           <StyledCol>
-            <StyledForm
+            <Form
+              style={{marginTop: '-10px', width: '380px'}}
               form={form}
               size="middle"
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
             >
-              <StyledUpload>
+              <StyledUploadSignUp>
                 <Upload
                   name="avatar"
                   customRequest={saveFile}
@@ -256,43 +170,45 @@ const SignUpPage = () => {
                     uploadButton
                   )} 
                 </Upload>
-              </StyledUpload>
+              </StyledUploadSignUp>
 
-              <StyledFormItem
-                label={ <StyledLabel style={{fontSize:"18px"}}>Ime</StyledLabel> }
+              <StyledFormItemLogin
+                label={ <StyledLabel2>Ime</StyledLabel2> }
                 name="name"
               >
-                <StyledInput value={firstName}
+                <StyledInput2 value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}/>
-              </StyledFormItem>
-              <StyledFormItem
-                label={ <StyledLabel style={{fontSize:"18px"}}>Prezime</StyledLabel> }
+              </StyledFormItemLogin>
+              <StyledFormItemLogin
+                label={ <StyledLabel2>Prezime</StyledLabel2> }
                 name="surname"
               >
-                <StyledInput value={lastName}
+                <StyledInput2 value={lastName}
                   onChange={(e) => setLastName(e.target.value)}/>
-              </StyledFormItem>
-              <StyledFormItem
-                label={ <StyledLabel style={{fontSize:"18px"}}>Email</StyledLabel> }
+              </StyledFormItemLogin>
+              <StyledFormItemLogin
+                label={ <StyledLabel2>Email</StyledLabel2> }
                 name="email"
               >
-                <StyledInput value={email}
+                <StyledInput2 value={email}
                   onChange={(e) => setEmail(e.target.value)}/>
-              </StyledFormItem>
-            </StyledForm>
+              </StyledFormItemLogin>
+            </Form>
           </StyledCol>
           <StyledCol1>
-            <StyledForm form={form}
+            <Form 
+              style={{width: '380px'}}
+              form={form}
               size='middle'
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
             >
-              <StyledFormItem
+              <StyledFormItemLogin
                 name="place"
-                label={ <StyledLabel style={{fontSize:"18px", marginTop:"25px"}}>Naselje</StyledLabel> }
+                label={ <StyledLabel2>Naselje</StyledLabel2> }
                 rules={[{ required: true, message: "Polje je obavezno!"}]}
               >
-                <StyledSelect size="large" 
+                <StyledSelect2 size="large" 
                   allowClear
                   style={{
                     width: '100%',
@@ -301,35 +217,35 @@ const SignUpPage = () => {
                   defaultValue={locations[0]} 
                   onChange={selectLocation}
                 />
-              </StyledFormItem>
-              <StyledFormItem
-                label={ <StyledLabel style={{fontSize:"18px"}}>Broj telefona</StyledLabel> }
+              </StyledFormItemLogin>
+              <StyledFormItemLogin
+                label={ <StyledLabel2>Broj telefona</StyledLabel2> }
                 name="phonenumber"
               >
-                <StyledInput value={phoneNumber}
+                <StyledInput2 value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}/>
-              </StyledFormItem>
-              <StyledFormItem
-                label={ <StyledLabel style={{fontSize:"18px"}}>Korisničko ime</StyledLabel> }
+              </StyledFormItemLogin>
+              <StyledFormItemLogin
+                label={ <StyledLabel2>Korisničko ime</StyledLabel2> }
                 name="username"
               >
-                <StyledInput value={username}
+                <StyledInput2 value={username}
                   onChange={(e) => setUsername(e.target.value)}/>
-              </StyledFormItem>
-              <StyledFormItem
-                label={ <StyledLabel style={{fontSize:"18px"}}>Lozinka</StyledLabel> }
+              </StyledFormItemLogin>
+              <StyledFormItemLogin
+                label={ <StyledLabel2>Lozinka</StyledLabel2> }
                 name="password"
               >
-                <StyledInput type="password" 
+                <StyledInput2 type="password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}/>
-              </StyledFormItem>
-            </StyledForm>
+              </StyledFormItemLogin>
+            </Form>
           </StyledCol1>
         </Row>
         <SignUpButton onClick={handleSubmit}>Registruj se</SignUpButton>
-      </Cover>
-    </Page>
+      </CoverSignUp>
+    </Page2>
   );
 };
 

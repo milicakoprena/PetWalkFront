@@ -6,44 +6,15 @@ import 'leaflet/dist/leaflet.css';
 import { useMap } from 'react-leaflet/hooks'
 import "leaflet-geosearch/dist/geosearch.css";
 import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
-import styled from "styled-components";
-import {  Layout, Modal, Input } from 'antd';
+import {  Layout, Modal } from 'antd';
 import MainMenu from "../../components/MainMenu";
 import { useMapEvents } from 'react-leaflet';
 import { useLocation } from 'react-router-dom';
 import { ROLE_ADMIN } from "../../util.js/constants";
 import axios from 'axios';
+import { Page, StyledInput, Desc } from '../../components/CssComponents';
 
 const { Content, Sider } = Layout;
-
-export const Page = styled.div`
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-`;
-
-export const StyledInput = styled(Input)`
-  font-size:15px;
-`;
-
-export const Cover = styled.div`
-    background-color:rgba(224,223,223,255);  
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-`;
-
-export const Desc = styled.div`
-    display: flex;
-    flex-direction: column;
-`;
 
 const customMarker = new L.icon({
     iconUrl: require('../resources/location-pin.png'),

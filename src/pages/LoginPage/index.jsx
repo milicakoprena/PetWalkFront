@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { Form, Input, message } from "antd";
 import { useNavigate } from "react-router";
@@ -6,73 +5,8 @@ import axios from "axios";
 import pozadina from "../resources/pozadina2darker.jpg"
 import { useLocation } from "react-router-dom";
 import { ROLE_ADMIN, ROLE_OWNER, ROLE_WALKER } from "../../util.js/constants";
+import { Page, Cover, LoginButton, Logo, Icon, StyledFormLogin, StyledFormItemLogin } from "../../components/CssComponents";
 
-
-export const Page = styled.div`
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-export const Cover = styled.div`
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;    
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-`;
-
-export const LoginButton = styled.div`
-  width: 100%;
-  height: 2em;
-  background-color: rgba(0,21,41,255);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0.25em;
-  cursor: pointer;
-  transition: 0.5s;
-  color: aliceblue;
-  font-size: 1.7em;
-  margin-top: -20px;
-  margin-bottom: 40px;
-  &:hover {
-    transform: scale(1.15);
-  }
-`;
-
-export const Logo = styled.img`
-  width: 400px;
-  height: auto;
-  margin: 60px 0px 0px 0px;
-  position: relative;
-`;
-
-export const Icon = styled.img`
-  width:25px;
-  height:25px;
-`;
-
-export const StyledForm = styled(Form)`
-  width:340px;
-  margin-bottom:40px;
-`;
-
-export const StyledFormItem = styled(Form.Item)`
-  padding: 15px;
-`;
-
-export const StyledInput = styled(Input)`
-  font-size:20px;
-`;
 
 const LoginPage = () => {
   const locationIdState = useLocation();
@@ -170,34 +104,36 @@ const LoginPage = () => {
   const [form] = Form.useForm();
 
   return (
-    <Page>
+    <Page style={{height: '100vh'}}>
       <Cover style={{ backgroundImage: `url(${pozadina})` }} >
         <Logo src={require('../resources/logo.png')}/>
-        <StyledForm
+        <StyledFormLogin
           form={form}
           size="large"
         >
-          <StyledFormItem
+          <StyledFormItemLogin
             name="username"
             rules={[{ required: true, message: "Polje je obavezno!"}]}
           >
-            <StyledInput prefix={<Icon  src={require('../resources/mail.png')}/>} placeholder="Korisničko ime" 
+            <Input  prefix={<Icon  src={require('../resources/mail.png')}/>} placeholder="Korisničko ime" 
               value={username}
-              onChange={(e) => setUsername(e.target.value)}/>
-          </StyledFormItem>
-          <StyledFormItem
+              onChange={(e) => setUsername(e.target.value)}
+              style={{fontSize: '20px'}}/>
+          </StyledFormItemLogin>
+          <StyledFormItemLogin
             name="password"
             rules={[{ required: true, message: "Polje je obavezno!" }]}
           >
-            <StyledInput type="password" prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" 
+            <Input type="password" prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" 
               value={password}
-              onChange={(e) => setPassword(e.target.value)}/>
-          </StyledFormItem>
-          <StyledFormItem>
+              onChange={(e) => setPassword(e.target.value)}
+              style={{fontSize: '20px'}}/>
+          </StyledFormItemLogin>
+          <StyledFormItemLogin>
             {contextHolder}
             <LoginButton onClick={handleSubmit}>Prijavi se</LoginButton>
-          </StyledFormItem>
-        </StyledForm>   
+          </StyledFormItemLogin>
+        </StyledFormLogin>   
       </Cover>
     </Page>
   );

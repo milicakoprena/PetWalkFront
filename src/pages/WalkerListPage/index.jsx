@@ -1,43 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Layout, Button, Rate, Input, message } from 'antd';
-import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
-import { Table, FloatButton, Select, Divider } from 'antd';
+import { FloatButton, Select, Divider } from 'antd';
 import { List } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { ROLE_WALKER, STATUS_ACTIVE } from '../../util.js/constants';
+import { Page, Cover } from "../../components/CssComponents";
 
 const { Content, Sider } = Layout;
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
 const { TextArea } = Input;
-
-export const StyledTable = styled(Table) `
-  width: 100%;
-  height: 95%;
-`;
-
-export const Page = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-export const Cover = styled.div`
-  background-color:rgba(250,250,250,255);
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-`;
 
 const WalkerListPage = () => {
   const userState = useLocation();

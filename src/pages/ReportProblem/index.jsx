@@ -2,26 +2,12 @@ import React from 'react';
 import { useState } from 'react';
 import MainMenu from '../../components/MainMenu';
 import { Layout, Input, Button, Card , message} from 'antd';
-import { Page } from '../AddPetPage';
-import styled from 'styled-components';
+import { Page, Cover } from '../../components/CssComponents';
 import pozadina from "../resources/pozadina2.jpg"
 import { useLocation } from 'react-router-dom';
 import axios from "axios";
 
 const { TextArea } = Input;
-
-export const Cover = styled.div`
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-`;
 
 const { Content, Sider } = Layout;
 

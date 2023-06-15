@@ -1,44 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Layout, Descriptions } from 'antd';
-import styled from "styled-components";
+import { Layout } from 'antd';
 import MainMenu from "../../components/MainMenu";
-import { Space, Table } from 'antd';
-import { Button } from 'antd';
-import { Avatar } from 'antd';
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import pozadina from "../resources/pozadina2.jpg"
+import { Page, Cover, StyledTable } from "../../components/CssComponents";
 
 const { Content, Sider } = Layout;
-
-export const StyledTable = styled(Table) `
-    width: 70%;
-    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%);
-    background-color: white;
-    border-radius: 10px;
-`;
-
-export const Page = styled.div`
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-`;
-
-export const Cover = styled.div`
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-`;
 
 const RasporedPage = () => {
     const userState = useLocation();
@@ -46,12 +14,7 @@ const RasporedPage = () => {
     const [pets, setPets] = useState([]);
     const [rasporedi, setRasporedi] = useState([]);
     const [types, setTypes] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalOpen2, setIsModalOpen2] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
-    const [selectedPetPhoto, setSelectedPetPhoto] = useState('');
-
-   
     
 
     const columns = [

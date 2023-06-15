@@ -1,34 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Layout, Button, Rate, Input, FloatButton, Avatar, Divider } from 'antd';
-import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { List } from 'antd';
 import axios from "axios";
 import { SearchOutlined} from '@ant-design/icons';
 import { useLocation } from 'react-router';
 import { ROLE_OWNER, ROLE_WALKER, STATUS_ACTIVE, STATUS_BLOCKED } from '../../util.js/constants';
+import { Page, Cover } from "../../components/CssComponents";
 
 const { Content, Sider } = Layout;
 
-export const Page = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-export const Cover = styled.div`
-  background-color:rgba(250,250,250,255);
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-`;
 
 const AccountListPage = () => {
   const [isCalled, setIsCalled] = useState(true);

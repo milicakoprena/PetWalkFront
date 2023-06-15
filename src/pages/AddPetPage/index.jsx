@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Select } from "antd";
-import TextArea from "rc-textarea";
+import { Form } from "antd";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Upload, message, Layout, Card, Button } from 'antd';
-import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import pozadina from "../resources/pozadina2.jpg"
+import { Cover, Page, StyledForm, StyledFormItem, StyledInput, StyledLabel, StyledSelect, StyledTextArea, StyledUpload, PetPhoto } from "../../components/CssComponents";
 
 const { Content, Sider } = Layout;
 
@@ -28,97 +27,6 @@ const beforeUpload = (file) => {
   }
   return isJpgOrPng && isLt2M;
 };
-
-export const Page = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-export const Cover = styled.div`
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-`;
-
-export const AddPetButton = styled.div`
-  width: 360px;
-  height: 2em;
-  background-color: rgba(0,21,41,255);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0.25em;
-  cursor: pointer;
-  transition: 0.5s;
-  color: aliceblue;
-  font-size: 1.7em;
-  margin-top:-170px;
-  &:hover {
-      transform: scale(1.15);
-  }
-`;
-
-export const StyledForm = styled(Form)`
-  width:360px;
-  margin-top:0.5%;
-  margin-left:10%;
-  justify-content: center;
-`;
-
-export const StyledFormItem = styled(Form.Item)`
-  margin-top:-10px;
-`;
-
-export const StyledInput = styled(Input)`
-  font-size:15px;
-`;
-
-export const StyledTextArea = styled(TextArea)`
-  font-size:15px;
-  width:360px;
-  height:80px;
-  border-radius: 5px;
-  border-color: #DEDDDD;
-  resize: none;
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-`;
-
-export const StyledSelect = styled(Select)`
-  font-size:15px;
-  width:360px;
-`;
-
-export const StyledUpload = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left:120px;
-  margin-top:20px;
-`;
-
-export const PetPhoto = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-`;
-
-export const StyledLabel = styled.div`
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-size: 16px;
-  color: rgba(19, 19, 20, 0.704);
-`;
 
 const AddPetPage = (props) => {
   const userState = useLocation();

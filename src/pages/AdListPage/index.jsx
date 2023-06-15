@@ -11,43 +11,11 @@ import { useLocation } from "react-router-dom";
 import { CATEGORY_NUDIM } from '../../util.js/constants';
 import pozadina from "../resources/pozadina2.jpg"
 import dayjs from 'dayjs';
+import { Page, Cover, StyledSelect } from "../../components/CssComponents";
 
 const { Content, Sider } = Layout;
 const desc = ['užasno', 'loše', 'normalno', 'dobro', 'odlično'];
 const { TextArea } = Input;
-
-export const StyledTable = styled(Table) `
-  width: 100%;
-  height: 95%;
-`;
-
-export const Page = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-export const Cover = styled.div`
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-`;
-
-
-export const StyledSelect = styled(Select)`
-    font-size:15px;
-    width:360px;
-`;
 
 const AdListPage = () => {
   const userState = useLocation();

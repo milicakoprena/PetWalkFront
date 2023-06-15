@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Layout, Button } from 'antd';
-import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import { Divider, List, Skeleton } from 'antd';
 import { Descriptions } from 'antd';
@@ -10,30 +9,9 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import pozadina from "../resources/pozadina2.jpg"
 import { useLocation } from "react-router-dom";
 import { UserOutlined } from '@ant-design/icons';
+import { Page, Cover } from "../../components/CssComponents";
 
 const { Content, Sider } = Layout;
-
-export const Page = styled.div`
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-`;
-
-export const Cover = styled.div`
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-`;
 
 const ProblemView = () => {
     const userState = useLocation();

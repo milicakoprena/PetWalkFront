@@ -1,73 +1,14 @@
 import React, { useState } from "react";
 import { Form, Input, Select, Space, Button } from "antd";
-import TextArea from "rc-textarea";
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Modal, Upload, message, Row, Col, Card, Table } from 'antd';
-import styled from "styled-components";
 import axios from "axios";
 import pozadina from "../pages/resources/pozadina2.jpg"
 import { ROLE_WALKER } from '../util.js/constants';
 import { useLocation } from "react-router-dom";
 import { useEffect } from 'react';
+import { CoverEditPage, StyledLabel, StyledSelect, StyledInput, StyledFormItem, StyledEditForm, StyledTextAreaEdit, StyledUploadEdit, UserPhoto } from "./CssComponents";
 
-export const Cover = styled.div`
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: space-around;
-`;
-
-export const StyledForm = styled(Form)`
-    width:350px;
-    margin-top:4%;
-`;
-
-export const StyledFormItem = styled(Form.Item)`
-    margin-top:-10px;
-`;
-
-export const StyledInput = styled(Input)`
-    font-size:15px;
-`;
-
-export const StyledTextArea = styled(TextArea)`
-    font-size:15px;
-    width:353px;
-    height:150px;
-    border-radius: 5px;
-    border-color: #DEDDDD;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-`;
-
-export const StyledSelect = styled(Select)`
-    font-size:15px;
-    width:360px;
-`;
-
-export const StyledUpload = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left:120px;
-    width: 200px;
-    height: 200px;
-`;
-
-export const UserPhoto = styled.img`
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-`;
-
-export const StyledLabel = styled.div`
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 16px;
-    color: rgba(19, 19, 20, 0.704);
-`;
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -456,7 +397,7 @@ const EditProfile = () => {
     const [form] = Form.useForm();
 
     return (
-        <Cover style={{ maxHeight: '103vh', backgroundImage: `url(${pozadina})` }}>
+        <CoverEditPage style={{ maxHeight: '103vh', backgroundImage: `url(${pozadina})` }}>
           <Row gutter={16}>
             <Col span={8}>
               <Card title="Profilna slika" bordered={false}
@@ -468,7 +409,7 @@ const EditProfile = () => {
                   justifyContent: 'center'
                 }} 
               >
-                <StyledUpload>
+                <StyledUploadEdit>
                   <Space style={{width: '300px', height: '300px'}} >
                   <Upload
                     name="avatar"
@@ -487,7 +428,7 @@ const EditProfile = () => {
                     )} 
                   </Upload>
                   </Space>
-                </StyledUpload>
+                </StyledUploadEdit>
               </Card>
             </Col>
             <Col >
@@ -501,7 +442,7 @@ const EditProfile = () => {
               >
                 <Row gutter={16}>
                   <Col span={8}>
-                    <StyledForm
+                    <StyledEditForm
                       form={form}
                       size="default"
                       labelCol={{ span: 24 }}
@@ -539,7 +480,7 @@ const EditProfile = () => {
                         name="description"
                         label={ <StyledLabel>Opis</StyledLabel> }
                       >
-                        <StyledTextArea
+                        <StyledTextAreaEdit
                           defaultValue={user.description}
                           value={description}
                           onChange={(e) => setDescription(e.target.value)} />
@@ -550,10 +491,10 @@ const EditProfile = () => {
                           marginTop:5, minHeight:40, backgroundColor: 'rgba(0,21,41,255)', color:'white', fontSize: '16px'
                         }}  onClick={handleUpdate} >Sačuvaj promjene</Button>
                       </Space>
-                    </StyledForm>
+                    </StyledEditForm>
                   </Col>
                   <Col span={8} style={{ marginLeft: '16%' }} >
-                    <StyledForm
+                    <StyledEditForm
                       form={form}
                       size="default"
                       labelCol={{ span: 24 }}
@@ -685,13 +626,13 @@ const EditProfile = () => {
                       ) : (
                         <div></div>
                      )}
-                    </StyledForm>
+                    </StyledEditForm>
                   </Col>
                 </Row>
               </Card>
             </Col>
           </Row>
-        </Cover>
+        </CoverEditPage>
     );
 };
 

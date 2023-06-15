@@ -1,35 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Row, Col, Card, List, Button } from 'antd';
-import styled from "styled-components";
 import MainMenu from "../../components/MainMenu";
 import pozadina from "../resources/pozadina2.jpg"
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { DeleteOutlined } from "@ant-design/icons";
 import Input from "rc-input";
+import { Page, Cover } from "../../components/CssComponents";
 const { Content, Sider } = Layout;
-
-export const Page = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-export const Cover = styled.div`
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-`;
 
 const PlacesPage = () => {
 
@@ -38,7 +16,6 @@ const PlacesPage = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [places, setPlaces] = useState([]);
     const [newPlace, setNewPlace] = useState('');
-    const [selectedPlace, setSelectedPlace] = useState('');
 
     useEffect(() => {
         axios.get(`http://localhost:9000/mjesta`, {
