@@ -5,7 +5,6 @@ import AddPetPage from "./pages/AddPetPage";
 import MapPage from "./pages/MapPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import ReportProblem from "./pages/ReportProblem";
-import PetListPage from "./pages/PetListPage";
 import WalkerListPage from "./pages/WalkerListPage";
 import ReviewPage from "./pages/ReviewPage";
 import ReportPage from "./pages/ReportPage";
@@ -17,6 +16,7 @@ import AdListPage from "./pages/AdListPage";
 import RasporedPage from "./pages/RasporedPage";
 import StatisticsPage from "./pages/StatisticsPage";
 import PlacesPage from "./pages/PlacesPage";
+import MyAdsPage from "./pages/MyAdsPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -33,7 +33,6 @@ function App() {
           <Route path="/mappage" element={<MapPage />} />
           <Route path="/editprofile" element={<EditProfilePage />} />
           <Route path="/reportproblem" element={<ReportProblem />} />
-          <Route path="/petlist" element={<PetListPage />} />
           <Route path="/walkerlist" element={<WalkerListPage />} />
           <Route path="/reportpage" element={<ReportPage />} />
           <Route path="/reviewpage" element={<ReviewPage />} />
@@ -45,6 +44,7 @@ function App() {
           <Route exact path="/rasporedpage" element={<RasporedPage />} />
           <Route exact path="/statisticspage" element={<StatisticsPage />} />
           <Route exact path="/placespage" element={<PlacesPage />} />
+          <Route exact path="/myadspage" element={<MyAdsPage />} />
         </Routes>
       </Router>
       

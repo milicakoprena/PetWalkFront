@@ -11,6 +11,7 @@ import {
     NotificationOutlined,
     ScheduleOutlined,
     BarChartOutlined,
+    SolutionOutlined,
     HomeOutlined
 } from '@ant-design/icons';
 import { Menu, Radio, Space, Modal } from 'antd';
@@ -36,6 +37,7 @@ const ownerItems = [
     getItem('Dodaj ljubimca', "/addpetpage", <PlusCircleOutlined />),
     getItem('Lista čuvara', "/walkerlist", <TeamOutlined />),
     getItem('Oglasna tabla', "/adlist", <NotificationOutlined />),
+    getItem('Moji oglasi', "/myadspage", <SolutionOutlined />),
     getItem('Moji ljubimci', "/mypetslist", <UnorderedListOutlined />),
     getItem('Izvještaji', "/reportpage", <FormOutlined />),
     getItem('Mapa', "/mappage", <EnvironmentOutlined />),
@@ -47,6 +49,7 @@ const walkerItems = [
     getItem('Uredi profil', "/editprofile", <EditOutlined />),
     getItem('Lista ljubimaca', "/petlist", <UnorderedListOutlined />),
     getItem('Oglasna tabla', "/adlist", <NotificationOutlined  />),
+    getItem('Moji oglasi', "/myadspage", <SolutionOutlined />),
     getItem('Lista čuvanja', "/rasporedpage", <ScheduleOutlined />),
     getItem('Recenzije', "/reviewpage", <StarOutlined />),
     getItem('Statistika', "/statisticspage", <BarChartOutlined />),
