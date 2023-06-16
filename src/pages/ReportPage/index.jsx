@@ -4,8 +4,7 @@ import MainMenu from "../../components/MainMenu";
 import pozadina from "../resources/pozadina2.jpg"
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-import { ROLE_ADMIN } from "../../util.js/constants";
-import { Page, Cover, StyledTable } from "../../components/CssComponents";
+import { Page, Cover } from "../../components/CssComponents";
 
 const { Content, Sider } = Layout;
 
@@ -16,47 +15,6 @@ const ReportPage = () => {
   const [users, setUsers] = useState([]);
   const [pets, setPets] = useState([]);
   const [reports, setReports] = useState([]);
-
-  const columnsAdmin = [
-    {
-      title: 'Čuvar',
-      dataIndex: 'userName',
-      width: '20%',
-    },
-    {
-      title: 'Vlasnik',
-      dataIndex: 'ownerName',
-      width: '20%',
-    },
-    {
-      title: 'Ljubimac',
-      dataIndex: 'petName',
-      width: '15%',
-    },
-    {
-      title: 'Izvještaj',
-      dataIndex: 'content',
-      width: '45%',
-    },
-  ];
-
-  const columnsOwner = [
-    {
-      title: 'Čuvar',
-      dataIndex: 'userName',
-      width: '25%',
-    },
-    {
-      title: 'Ljubimac',
-      dataIndex: 'petName',
-      width: '25%',
-    },
-    {
-      title: 'Izvještaj',
-      dataIndex: 'content',
-      width: '50%',
-    },
-  ];
   
   useEffect(() => {
     axios.get(`http://localhost:9000/korisnici`, {
@@ -99,17 +57,6 @@ const ReportPage = () => {
         let userId = res.data.at(i).korisnikId;
         let ownerId = pets.find(element => element.id === res.data.at(i).ljubimacId).vlasnikId;
         
-        if (user.role===ROLE_ADMIN) {
-          tempReport = {
-            userName: users.find(element => element.id === userId).firstName + " " + users.find(element => element.id === userId).lastName,
-            ownerName: users.find(element => element.id === ownerId).firstName + " " + users.find(element => element.id === ownerId).lastName,
-            petName: pets.find(element => element.id === res.data.at(i).ljubimacId).ime,
-            key: i,
-            content: res.data.at(i).sadrzaj,
-          }
-          temp.push(tempReport);
-        }
-        else {
           if(user.id===ownerId){
             tempReport = {
               userName: users.find(element => element.id === userId).firstName + " " + users.find(element => element.id === userId).lastName,
@@ -121,7 +68,7 @@ const ReportPage = () => {
             }
             temp.push(tempReport);
           }
-        }
+        
       }
 
       setReports(temp);
@@ -145,14 +92,6 @@ const ReportPage = () => {
             maxHeight: '103vh',
             backgroundImage: `url(${pozadina})`,
           }} >
-            {user.role===ROLE_ADMIN ? (
-              <StyledTable
-              columns={columnsAdmin}
-              dataSource={reports}
-              pagination={false}
-              style={{ maxHeight: '400px', overflow: 'auto', borderRadius: '10px' }}
-            />
-            ) : (
               
                 <div style={{ maxHeight: '400px', width: '600px', overflow: 'auto', backgroundColor: 'white', borderRadius: '10px', 
                   boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)', paddingLeft: '2%', paddingRight: '2%' }}>
@@ -177,7 +116,6 @@ const ReportPage = () => {
                       )}
                     />
                 </div>
-            )}
           </Cover>
         </Page>
       </Content>

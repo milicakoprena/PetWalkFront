@@ -57,8 +57,8 @@ const walkerItems = [
 
 const adminItems = [
     getItem('Lista naloga', "/accountlistpage", <UnorderedListOutlined />),
-    getItem('Izvještaji', "/reportpage", <FormOutlined />),
     getItem('Mapa', "/mappage", <EnvironmentOutlined />),
+    getItem('Pregled oglasa', "/adlist", <NotificationOutlined />),
     getItem('Pregled prijava problema', "/problemview", <ExclamationCircleOutlined />),
     getItem('Pregled naselja', "/placespage", <HomeOutlined />),
     getItem('Odjavi se', "/", <LogoutOutlined />),
