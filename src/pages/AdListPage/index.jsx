@@ -17,11 +17,12 @@ import {
   UserOutlined,
   FilterOutlined,
   PlusCircleOutlined,
+  DeleteOutlined
 } from "@ant-design/icons";
 import { Avatar } from "antd";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-import { CATEGORY_NUDIM } from "../../util.js/constants";
+import { CATEGORY_NUDIM, CATEGORY_TRAZIM, ROLE_ADMIN } from "../../util.js/constants";
 import pozadina from "../resources/pozadina2.jpg";
 import dayjs from "dayjs";
 import { Page, Cover, StyledSelect } from "../../components/CssComponents";
@@ -66,6 +67,12 @@ const AdListPage = () => {
   const [pets, setPets] = useState([]);
   const [money, setMoney] = useState("");
   const [pet, setPet] = useState("");
+
+  const [userPets, setUserPets] = useState([]);
+  const [types, setTypes] = useState([]);
+
+  const [isPetsModalOpen, setIsPetsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const filterByCategory = () => {
     setIsCalled(false);
@@ -132,27 +139,30 @@ const AdListPage = () => {
           let temp = [];
 
           for (let i = 0; i < res.data.length; i++) {
-            let adId = res.data.at(i).id;
-            let userName =
-              allUsers?.find(
-                (element) => element.id === res.data.at(i).korisnikId
-              )?.["firstName"] +
-              " " +
-              allUsers?.find(
-                (element) => element.id === res.data.at(i).korisnikId
-              )?.["lastName"];
-            if (res.data.at(i).status === true)
-              temp.push({
-                id: adId,
-                name: userName,
-                info: res.data.at(i).sadrzaj,
-                date: res.data.at(i).datum.slice(0, 10),
-                categoryId: res.data.at(i).kategorijaId,
-                category: kategorije?.find(
-                  (element) => element.value === res.data.at(i).kategorijaId
-                )?.["label"],
-                userId: res.data.at(i).korisnikId,
-              });
+            if (user.id != res.data.at(i).korisnikId) {
+              let adId = res.data.at(i).id;
+              let userName =
+                allUsers?.find(
+                  (element) => element.id === res.data.at(i).korisnikId
+                )?.["firstName"] +
+                " " +
+                allUsers?.find(
+                  (element) => element.id === res.data.at(i).korisnikId
+                )?.["lastName"];
+              if (res.data.at(i).status === true)
+                temp.push({
+                  id: adId,
+                  name: userName,
+                  info: res.data.at(i).sadrzaj,
+                  date: res.data.at(i).datum.slice(0, 10),
+                  categoryId: res.data.at(i).kategorijaId,
+                  category: kategorije?.find(
+                    (element) => element.value === res.data.at(i).kategorijaId
+                  )?.["label"],
+                  userId: res.data.at(i).korisnikId,
+                });
+            }
+
           }
           setAllAds(temp);
           setAllAdsTemp(temp);
@@ -253,6 +263,36 @@ const AdListPage = () => {
     setIsModalOpen(false);
   };
 
+  const showDeleteModal = (item) => {
+    setIsDeleteModalOpen(true);
+  }
+
+  const deleteAd = async () => {
+    console.log(selectedAd);
+    try {
+      await axios.delete(`http://localhost:9000/oglasi/${selectedAd.id}`, {
+          headers: {
+              Authorization: `Bearer ${user.token}`,
+          },
+      })
+      .then(() => {
+          console.log("obrisano");
+          //window.location.reload(true);
+      })
+      .catch((e) => {
+          console.log(e);
+      })
+      setIsDeleteModalOpen(false);
+  }
+  catch(error) {
+      console.log(error);
+  }
+  }
+
+  const handleCancelDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  }
+
   const showFilterModal = () => {
     setIsFilterModalOpen(true);
   };
@@ -263,6 +303,96 @@ const AdListPage = () => {
 
   const handleCancelAdModal = () => {
     setIsAdModalOpen(false);
+  };
+
+  const showPetsModal = async () => {
+    console.log(selectedUser);
+
+    axios.get(`http://localhost:9000/vrste`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+      .then((res) => {
+        let temp = [];
+        for (let i = 0; i < res.data.length; i++) {
+          temp.push({
+            id: res.data.at(i).id,
+            naziv: res.data.at(i).naziv,
+          })
+        }
+        setTypes(res.data);
+      })
+      .catch((e) => console.log(e));
+
+    axios.get(`http://localhost:9000/ljubimci`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+      .then((res) => {
+        let tempArray = [];
+        let tempPet = '';
+
+        for (let i = 0; i < res.data.length; i++) {
+
+          let image = '';
+          axios.get(`http://localhost:9000/ljubimci/image/${res.data.at(i).slika}`, {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+              responseType: 'arraybuffer',
+              "Content-Type": 'image/jpeg',
+            }
+          })
+            .then((response) => {
+
+              image = `data:image/jpeg;base64,${response.data}`;
+              console.log("IMAGE", image);
+              let userId = res.data.at(i).korisnikId;
+              let typeId = res.data.at(i).vrstaId;
+
+              if (userId === selectedUser.id) {
+                tempPet = {
+                  imageName: res.data.at(i).slika,
+                  image: image,
+                  id: res.data.at(i).id,
+                  ime: res.data.at(i).ime,
+                  opis: res.data.at(i).opis,
+                  vrsta: types?.find(element => element.id === typeId)?.['naziv'],
+                }
+                tempArray.push(tempPet);
+              }
+            })
+            .catch((response) => {
+              console.log(response);
+              let userId = res.data.at(i).korisnikId;
+              let typeId = res.data.at(i).vrstaId;
+
+              if (userId === selectedUser.id) {
+                tempPet = {
+                  imageName: res.data.at(i).slika,
+                  image: '',
+                  id: res.data.at(i).id,
+                  ime: res.data.at(i).ime,
+                  opis: res.data.at(i).opis,
+                  vrsta: types?.find(element => element.id === typeId)?.['naziv'],
+                }
+                tempArray.push(tempPet);
+              }
+            });
+
+
+        }
+        setUserPets(tempArray);
+        console.log(userPets);
+      })
+      .catch((e) => console.log(e));
+
+    setIsPetsModalOpen(true);
+  }
+
+  const handleCancelPetsModal = () => {
+    setIsPetsModalOpen(false);
   };
 
   const showWalkerModal = async () => {
@@ -470,7 +600,7 @@ const AdListPage = () => {
                             <text>Kategorija: {item.category}</text>
                             <text>Datum objave: {item.date}</text>
                           </div>
-                          <div style={{ marginTop: "-25px" }}>
+                          <div style={{ marginTop: "-25px", display: "flex", flexDirection: "column" }}>
                             <Button
                               icon={<UserOutlined />}
                               onClick={() => {
@@ -478,6 +608,19 @@ const AdListPage = () => {
                               }}
                               style={{ scale: "1.5", borderRadius: "50%" }}
                             ></Button>
+                            {(user.role === ROLE_ADMIN) ? (
+                              <Button
+                                icon={<DeleteOutlined />}
+                                onClick={() => {
+                                  setSelectedAd(item);
+                                  showDeleteModal(item);
+                                }}
+                                style={{ scale: "1.5", borderRadius: "50%", marginTop: "30px" }}
+                              ></Button>
+                            ) : (
+                              <div></div>
+                            )}
+                          
                           </div>
                         </div>
                       }
@@ -486,6 +629,14 @@ const AdListPage = () => {
                 )}
               />
             </div>
+            <Modal
+                            open={isDeleteModalOpen}
+                            onOk={deleteAd}
+                            onCancel={handleCancelDeleteModal}
+                            width={"350px"}
+                          >
+                            <p>Da li ste sigurni da želite da izbrišete oglas?</p>
+                          </Modal>
             <Modal
               title="Informacije"
               open={isModalOpen}
@@ -516,11 +667,57 @@ const AdListPage = () => {
                   {selectedUser.description}
                 </Descriptions.Item>
               </Descriptions>
-              {selectedUser.category == CATEGORY_NUDIM ? (
+              {(selectedUser.category == CATEGORY_NUDIM && user.role != ROLE_ADMIN) ? (
                 <Button onClick={showWalkerModal}>Izaberi čuvara</Button>
               ) : (
                 <div></div>
               )}
+              {(selectedUser.category == CATEGORY_TRAZIM && user.role != ROLE_ADMIN) ? (
+                <Button onClick={showPetsModal}>Pregled ljubimaca</Button>
+              ) : (
+                <div></div>
+              )}
+            </Modal>
+            <Modal
+              title="Pregled ljubimaca"
+              open={isPetsModalOpen}
+              onOk={handleCancelPetsModal}
+              onCancel={handleCancelPetsModal}
+              width={"400px"}
+            >
+              <List
+                itemLayout="horizontal"
+                dataSource={userPets}
+                pagination={false}
+                renderItem={item => (
+                  <List.Item>
+                    <List.Item.Meta
+
+                      avatar={
+                        <Avatar
+
+                          src={item.image}
+                          style={{
+                            marginTop: "22px",
+                            scale: "1.8",
+                            marginLeft: "10px",
+                          }}
+                        />
+                      }
+                      title={item.ime}
+                      description={
+                        <div style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
+                          <div style={{ display: "flex", flexDirection: 'column', marginRight: '20px' }}>
+                            <text style={{ color: 'black' }}>{item.vrsta}</text>
+                            <text style={{ color: 'black' }}>{item.opis}</text>
+                          </div>
+
+                        </div>
+                      }
+                    />
+                  </List.Item>
+                )}
+              />
             </Modal>
             <Modal
               title="Dodaj oglas"
@@ -559,12 +756,17 @@ const AdListPage = () => {
               style={{ right: 30, top: 8 }}
               onClick={showFilterModal}
             />
-            <FloatButton
-              icon={<PlusCircleOutlined />}
-              type="primary"
-              style={{ right: 90, top: 8 }}
-              onClick={showAdModal}
-            />
+            {user.role == ROLE_ADMIN ? (
+              <div></div>
+            ) : (
+              <FloatButton
+                icon={<PlusCircleOutlined />}
+                type="primary"
+                style={{ right: 90, top: 8 }}
+                onClick={showAdModal}
+              />
+            )}
+
             <Modal
               title="Filtriranje po kategorijama"
               open={isFilterModalOpen}
@@ -615,7 +817,7 @@ const AdListPage = () => {
                     Izaberite uslugu: (
                     {
                       prices?.find((element) => element.uslugaId === service)?.[
-                        "cijena"
+                      "cijena"
                       ]
                     }{" "}
                     KM)
