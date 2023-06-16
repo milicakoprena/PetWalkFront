@@ -36,6 +36,7 @@ const WalkerListPage = () => {
   const [reviews, setReviews] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [averageRates, setAverageRates] = useState([]);
+  const [isSorted, setIsSorted] = useState(false);
   
   const postRecenzija = async (event) => {
     event.preventDefault();
@@ -79,8 +80,10 @@ const WalkerListPage = () => {
     setPlaceFilterName(event);
   };
 
-  const sortiraj = () => {
-    
+  const sortByAverageRate = () => {
+    const sortedWalkers = [...walkers].sort((a, b) => b.averageRate - a.averageRate);
+    setWalkers(sortedWalkers);
+    setIsSorted(true);
   };
 
   const filterByPlace = () => {
@@ -105,6 +108,28 @@ const WalkerListPage = () => {
     .catch((e) => console.log(e));
     setIsModalOpen2(false);
   };
+
+  useEffect(() => {
+    axios.get(`http://localhost:9000/recenzije/prosjecnaOcjena`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then((response) => {
+      let temp = [];
+      for(let i = 0; i < response.data.length; i++)
+      {
+        temp.push({
+          id: response.data.at(i).left,
+          average: response.data.at(i).right,
+        });
+      }
+      setAverageRates(temp);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  }, [isCalled]);
 
   useEffect( () => {
     axios.get(`http://localhost:9000/usluge`, {
@@ -152,27 +177,7 @@ const WalkerListPage = () => {
       setPlaces(res.data);
     })
     .catch((e) => console.log(e));
-
-    axios.get(`http://localhost:9000/recenzije/prosjecnaOcjena`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    })
-    .then((response) => {
-      let temp = [];
-      for(let i = 0; i < response.data.length; i++)
-      {
-        temp.push({
-          id: response.data.at(i).left,
-          average: response.data.at(i).right,
-        });
-      }
-      setAverageRates(temp);
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-
+    
     axios.get(`http://localhost:9000/cijene`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -210,7 +215,8 @@ const WalkerListPage = () => {
     .then((res) => {
       let temp = [];
       setAllUsers(res.data);
-      if(isCalled || placeFilterName===undefined) {
+      console.log("isSorted: ", isSorted);
+      if(!isSorted && (isCalled || placeFilterName===undefined)) {
         for(let i = 0; i < res.data.length; i++)
         {
           let userId = res.data.at(i).id;
@@ -232,7 +238,7 @@ const WalkerListPage = () => {
               phoneNumber: res.data.at(i).phoneNumber,
               location: places?.find((element) => element.id === placeId)?.['naziv'],
               description: res.data.at(i).description,
-              averageRate: averageRates?.find((element) => element.id === res.data.at(i).id)?.['average'],
+              averageRate: averageRates.length > 0 && averageRates?.find((element) => element.id === res.data.at(i).id)?.['average'],
               pricePerHour: pricesPerHour?.find((element) => element.userId === res.data.at(i).id)?.['price'],
               pricePerDay: pricesPerDay?.find((element) => element.userId === res.data.at(i).id)?.['price'],
             });
@@ -243,7 +249,7 @@ const WalkerListPage = () => {
       }
     })
     .catch((e) => console.log(e));
-  }, [averageRates, isCalled, locations, placeFilterName, places, pricesPerDay, pricesPerHour, services, user.token, walkers]);
+  }, [averageRates, isCalled, isSorted, placeFilterName]);
 
   const showModal1 = () => {
     setIsModalOpen1(true);
@@ -300,7 +306,7 @@ const WalkerListPage = () => {
             temp.push({
               rating: res.data.at(i).ocjena,
               comment: res.data.at(i).komentar,
-              date: res.data.at(i).datum,
+              date: res.data.at(i).datum.split("T")[0],
               image: `data:image/jpeg;base64,${response.data}`,
               name: allUsers.find(element => element.id === res.data.at(i).korisnikOdId).firstName + " " + allUsers.find(element => element.id === res.data.at(i).korisnikOdId).lastName,
             })
@@ -309,7 +315,7 @@ const WalkerListPage = () => {
             temp.push({
               rating: res.data.at(i).ocjena,
               comment: res.data.at(i).komentar,
-              date: res.data.at(i).datum,
+              date: res.data.at(i).datum.split("T")[0],
               image: '',
               name: allUsers.find(element => element.id === res.data.at(i).korisnikOdId).firstName + " " + allUsers.find(element => element.id === res.data.at(i).korisnikOdId).lastName,
             })
@@ -350,7 +356,7 @@ const WalkerListPage = () => {
       <Content style={{ maxHeight: '103vh' }}>
         <Page>
           <Cover>
-            <div style={{ maxHeight: '100%', width: '100%', overflow: 'auto', backgroundColor: 'white', paddingLeft: '2%', paddingRight: '2%' }}>
+            <div style={{ maxHeight: '100vh', width: '100%', overflow: 'auto', backgroundColor: 'white', paddingLeft: '2%', paddingRight: '2%' }}>
               <List
                 itemLayout="horizontal"
                 dataSource={walkers}
@@ -439,7 +445,7 @@ const WalkerListPage = () => {
             </div>
             
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 10 }} onClick={showModal2} />
-            <FloatButton icon={<SortAscendingOutlined />} type="primary" style={{ right: 90, top: 10 }} onClick={sortiraj} />
+            <FloatButton icon={<SortAscendingOutlined />} type="primary" style={{ right: 90, top: 10 }} onClick={sortByAverageRate} />
             <Modal title="Filtriranje" open={isModalOpen2} onOk={filterByPlace} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
               <Select size="middle" 
                 placeholder="Izaberite lokacije"
