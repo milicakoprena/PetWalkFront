@@ -3,7 +3,7 @@ import { Modal, Layout, Button, Rate, Input, message } from 'antd';
 import MainMenu from "../../components/MainMenu";
 import { FloatButton, Select, Divider } from 'antd';
 import { List } from 'antd';
-import { FilterOutlined } from '@ant-design/icons';
+import { FilterOutlined, SortAscendingOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -77,6 +77,10 @@ const WalkerListPage = () => {
 
   const selectPlace = (event) => {
     setPlaceFilterName(event);
+  };
+
+  const sortiraj = () => {
+    
   };
 
   const filterByPlace = () => {
@@ -435,6 +439,7 @@ const WalkerListPage = () => {
             </div>
             
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 10 }} onClick={showModal2} />
+            <FloatButton icon={<SortAscendingOutlined />} type="primary" style={{ right: 90, top: 10 }} onClick={sortiraj} />
             <Modal title="Filtriranje" open={isModalOpen2} onOk={filterByPlace} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
               <Select size="middle" 
                 placeholder="Izaberite lokacije"
