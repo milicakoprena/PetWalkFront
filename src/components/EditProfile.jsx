@@ -43,6 +43,7 @@ const EditProfile = () => {
     const [lastName, setLastName] = useState(user.lastName);
     const [username, setUsername] = useState(user.username);
     const [password, setPassword] = useState('');
+    const [passwordRepeat, setPasswordRepeat] = useState('');
     const [email, setEmail] = useState(user.email);
     const [description, setDescription] = useState(user.description);
     const [photo, setPhoto] = useState(user.photo);
@@ -200,26 +201,33 @@ const EditProfile = () => {
         const request = {
             password,
         };
-        axios.put(`http://localhost:9000/korisnici/${user.id}/${user.username}`, request, {
-            headers: {
-                Authorization: `Bearer ${user.token}`,
-            },
-        })
-        .then(() => {
-            console.log("sifra apdejtovana");
-            messageApi.open({
-                type: 'success',
-                content: 'Lozinka uspješno promijenjena.',
-            });
-            setIsPassModalOpen(false);
-        })
-        .catch((e) => {
-            messageApi.open({
-                type: 'error',
-                content: 'Došlo je do greške, lozinka nije promijenjena.',
-            });
-            console.log(e)
-        });  
+        if (password === passwordRepeat) {
+          axios.put(`http://localhost:9000/korisnici/${user.id}/${user.username}`, request, {
+              headers: {
+                  Authorization: `Bearer ${user.token}`,
+              },
+          })
+          .then(() => {
+              console.log("sifra apdejtovana");
+              messageApi.open({
+                  type: 'success',
+                  content: 'Lozinka uspješno promijenjena.',
+              });
+              setIsPassModalOpen(false);
+          })
+          .catch((e) => {
+              messageApi.open({
+                  type: 'error',
+                  content: 'Došlo je do greške, lozinka nije promijenjena.',
+              });
+              console.log(e)
+          });
+        }else {
+          messageApi.open({
+            type: 'error',
+            content: 'Došlo je do greške, lozinke se ne poklapaju.',
+        });
+        } 
     };
     
     
@@ -562,11 +570,15 @@ const EditProfile = () => {
                           onCancel={handleCancel3} 
                           okText="Potvrdi"
                           cancelText="Otkaži">
-                            <p>Unesite novu lozinku</p>
-                            <Input.Password
-                              value={password}
-                              style={{fontSize: '15px'}}
-                              onChange={(e) => setPassword(e.target.value)} />                       
+                          <p>Unesite novu lozinku</p>
+                          <Input.Password
+                            value={password}
+                            style={{fontSize: '15px'}}
+                            onChange={(e) => setPassword(e.target.value)} />   
+                          <Input.Password
+                            value={passwordRepeat}
+                            style={{fontSize: '15px', marginTop: '9px'}}
+                            onChange={(e) => setPasswordRepeat(e.target.value)} />                     
                         </Modal>
                       </StyledFormItem>
                       { (isWalker) ? (

@@ -129,7 +129,7 @@ const WalkerListPage = () => {
     .catch((e) => {
       console.log(e);
     });
-  }, [isCalled]);
+  }, []);
 
   useEffect( () => {
     axios.get(`http://localhost:9000/usluge`, {
@@ -141,7 +141,6 @@ const WalkerListPage = () => {
       setServices(res.data);
     })
     .catch((e) => console.log(e));
-
     axios.get(`http://localhost:9000/lokacije`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -201,12 +200,11 @@ const WalkerListPage = () => {
             service: services?.find(element => element.id === res.data.at(i).uslugaId)?.['naziv'],
           })
         }
-        setPricesPerHour(temp1);
-        setPricesPerDay(temp2);
       }
+      setPricesPerHour(temp1);
+      setPricesPerDay(temp2);
     })
     .catch((e) => console.log(e));
-
     axios.get(`http://localhost:9000/korisnici`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -215,8 +213,7 @@ const WalkerListPage = () => {
     .then((res) => {
       let temp = [];
       setAllUsers(res.data);
-      console.log("isSorted: ", isSorted);
-      if(!isSorted && (isCalled || placeFilterName===undefined)) {
+      if((!isSorted && (isCalled || (placeFilterName===undefined))) || (isSorted && (isCalled || (placeFilterName===undefined))) ) {
         for(let i = 0; i < res.data.length; i++)
         {
           let userId = res.data.at(i).id;
@@ -238,7 +235,7 @@ const WalkerListPage = () => {
               phoneNumber: res.data.at(i).phoneNumber,
               location: places?.find((element) => element.id === placeId)?.['naziv'],
               description: res.data.at(i).description,
-              averageRate: averageRates.length > 0 && averageRates?.find((element) => element.id === res.data.at(i).id)?.['average'],
+              averageRate: averageRates?.find((element) => element.id === res.data.at(i).id)?.['average'],
               pricePerHour: pricesPerHour?.find((element) => element.userId === res.data.at(i).id)?.['price'],
               pricePerDay: pricesPerDay?.find((element) => element.userId === res.data.at(i).id)?.['price'],
             });
@@ -249,16 +246,14 @@ const WalkerListPage = () => {
       }
     })
     .catch((e) => console.log(e));
-  }, [averageRates, isCalled, isSorted, placeFilterName]);
+  }, [averageRates, isCalled, isSorted, pricesPerHour]);
 
   const showModal1 = () => {
     setIsModalOpen1(true);
   };
-
   const showModal2 = () => {
     setIsModalOpen2(true);
   };
-
   const showReviewModal = (item) => {
     axios.get(`http://localhost:9000/korisnici/image/${item.imageName}`, {
       headers: {
@@ -283,7 +278,6 @@ const WalkerListPage = () => {
       }
       setSelWalkerPhoto(temp);
     })
-
     axios.get(`http://localhost:9000/recenzije`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -325,22 +319,17 @@ const WalkerListPage = () => {
       setReviews(temp);
       console.log(reviews);
     })
-
     setIsReviewModalOpen(true);
   }
-
   const handleCancel1 = () => {
     setIsModalOpen1(false);
   };
-
   const handleCancel2 = () => {
     setIsModalOpen2(false);
   };
-
   const handleCancel4 = () => {
     setIsReviewModalOpen(false);
   }
-
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -443,7 +432,7 @@ const WalkerListPage = () => {
                 </span>
               </Modal>
             </div>
-            
+
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 10 }} onClick={showModal2} />
             <FloatButton icon={<SortAscendingOutlined />} type="primary" style={{ right: 90, top: 10 }} onClick={sortByAverageRate} />
             <Modal title="Filtriranje" open={isModalOpen2} onOk={filterByPlace} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
@@ -464,9 +453,4 @@ const WalkerListPage = () => {
     </Layout>
   );
 };
-
 export default WalkerListPage;
-
-
- 
-           

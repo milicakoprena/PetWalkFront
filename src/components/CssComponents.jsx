@@ -94,12 +94,16 @@ export const StyledFormItemLogin = styled(Form.Item)`
   padding: 15px;
 `;
 
+export const StyledFormItem1 = styled(Form.Item)`
+  padding: 10px;
+`;
+
 export const StyledInput = styled(Input)`
   font-size:15px;
 `;
 
 export const StyledInput2 = styled(Input)`
-  font-size:20px;
+  font-size:18px;
 `;
 
 export const StyledTextArea = styled(TextArea)`
@@ -145,7 +149,7 @@ export const StyledUploadSignUp = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left:140px;
+  margin-left:370px;
   margin-top:160px;
 `;
 
@@ -295,7 +299,7 @@ export const StyledTable = styled(Table) `
 export const StyledCol = styled(Col)`
   align-content: center;
   margin-left:170px;
-  margin-top: -40px;
+  margin-top: -120px;
 `;
 
 export const StyledCol1 = styled(Col)`
