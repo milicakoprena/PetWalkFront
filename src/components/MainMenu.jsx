@@ -47,7 +47,6 @@ const ownerItems = [
 
 const walkerItems = [
     getItem('Uredi profil', "/editprofile", <EditOutlined />),
-    getItem('Lista ljubimaca', "/petlist", <UnorderedListOutlined />),
     getItem('Oglasna tabla', "/adlist", <NotificationOutlined  />),
     getItem('Moji oglasi', "/myadspage", <SolutionOutlined />),
     getItem('Lista čuvanja', "/rasporedpage", <ScheduleOutlined />),

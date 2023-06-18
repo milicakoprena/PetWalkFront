@@ -131,6 +131,8 @@ const WalkerListPage = () => {
     });
   }, []);
 
+
+
   useEffect( () => {
     axios.get(`http://localhost:9000/usluge`, {
       headers: {
@@ -334,9 +336,28 @@ const WalkerListPage = () => {
   const handleCancel2 = () => {
     setIsModalOpen2(false);
   };
+
   const handleCancel4 = () => {
     setIsReviewModalOpen(false);
   }
+
+  
+  const provjeri = async () => {
+    try {
+      const res = await axios.get(`http://localhost:9000/rasporedi/${user.id}/${selectedWalker.id}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      console.log(res.data); // Ako je potrebno, ispišite podatke dobivene iz odgovora
+  
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+  
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -375,8 +396,11 @@ const WalkerListPage = () => {
                             <div style={{color: 'black', textAlign: 'justify'}}>{item.description}</div>
                           </div>
                           <div style={{ display: "flex", flexDirection: 'column' }}>
-                            <Button type="primary" style={{ borderRadius: '5%', marginTop: '25px' }} onClick={() => showReviewModal(item)}>Pregledaj recenzije</Button>
-                            <Button type="primary" style={{ borderRadius: '5%', marginTop: '25px' }} onClick={() => {setSelectedWalker(item); showModal1()}}>Dodaj recenziju</Button>
+                            <Button type="primary" style={{ borderRadius: '5%', marginTop: '25px' }} onClick={() => {
+                              setSelectedWalker(item);
+                              showReviewModal(item)}}>Pregledaj recenzije</Button>
+                            
+                            
                           </div>
                         </div>
                       }
@@ -388,7 +412,7 @@ const WalkerListPage = () => {
               footer={[
                 <Button key="back" onClick={handleCancel4}>
                   Izađi
-                </Button>,
+                </Button>
               ]}>
                 <div style={{ height: '400px', overflow: 'auto' }}>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} >
@@ -418,6 +442,14 @@ const WalkerListPage = () => {
                       </List.Item>
                     )}
                   />
+                </div>
+                <div>
+                {(provjeri()) ? (
+                  <Button type="primary" style={{ borderRadius: '5%', marginTop: '25px' }} 
+                  onClick={() => {setSelectedWalker(selWalkerPhoto); showModal1()}}>Dodaj recenziju</Button>
+                ) : (
+                  <div></div>
+                )}
                 </div>
               </Modal>
               {contextHolder}
