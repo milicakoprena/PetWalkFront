@@ -37,6 +37,7 @@ const WalkerListPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [averageRates, setAverageRates] = useState([]);
   const [isSorted, setIsSorted] = useState(false);
+  const [allowed, setAllowed]  = useState(false);
   
   const postRecenzija = async (event) => {
     event.preventDefault();
@@ -326,6 +327,7 @@ const WalkerListPage = () => {
         }
       }
       setReviews(temp);
+      provjeri(item.id)
       console.log(reviews);
     })
     setIsReviewModalOpen(true);
@@ -342,20 +344,22 @@ const WalkerListPage = () => {
   }
 
   
-  const provjeri = async () => {
-    try {
-      const res = await axios.get(`http://localhost:9000/rasporedi/${user.id}/${selectedWalker.id}`, {
+  const provjeri =  (walkerId) => {
+    
+      axios.get(`http://localhost:9000/rasporedi/${user.id}/${walkerId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
+      })
+      .then(res =>{
+        console.log(res);
+        setAllowed(res.data);
+      }).
+      catch(e => {
+        console.log(e);
       });
-      console.log(res.data); // Ako je potrebno, ispišite podatke dobivene iz odgovora
-  
-      return true;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
+      
+    
   };
   
   const [isModalOpen1, setIsModalOpen1] = useState(false);
@@ -410,9 +414,20 @@ const WalkerListPage = () => {
               />
               <Modal title="Pregled recenzija" open={isReviewModalOpen} onOk={handleCancel4} onCancel={handleCancel4} 
               footer={[
+                <div style={{ display: 'flex', flexDirection: 'row' , justifyContent: 'end'}}>
+                <div>
+                {(allowed) ? (
+                  <Button type="primary" 
+                  style={{ marginRight: '10px'}}
+                  onClick={() => {setSelectedWalker(selWalkerPhoto); showModal1()}}>Dodaj recenziju</Button>
+                ) : (
+                 null
+                )}
+                </div>
                 <Button key="back" onClick={handleCancel4}>
                   Izađi
                 </Button>
+                </div>
               ]}>
                 <div style={{ height: '400px', overflow: 'auto' }}>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} >
@@ -432,10 +447,10 @@ const WalkerListPage = () => {
                             <div style={{ display: "flex", flexDirection: 'column' }}>
                               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} >
                                 <Rate disabled value={item.rating} />
-                                <text>({item.rating})</text>
+                                <div>({item.rating})</div>
                               </div>
-                              <text style={{color: 'black'}}>{item.comment}</text>
-                              <text>{item.date}</text>
+                              <div style={{color: 'black'}}>{item.comment}</div>
+                              <div>{item.date}</div>
                             </div>
                           }
                         />
@@ -443,14 +458,7 @@ const WalkerListPage = () => {
                     )}
                   />
                 </div>
-                <div>
-                {(provjeri()) ? (
-                  <Button type="primary" style={{ borderRadius: '5%', marginTop: '25px' }} 
-                  onClick={() => {setSelectedWalker(selWalkerPhoto); showModal1()}}>Dodaj recenziju</Button>
-                ) : (
-                  <div></div>
-                )}
-                </div>
+                
               </Modal>
               {contextHolder}
               <Modal title="Dodaj recenziju" open={isModalOpen1} onOk={postRecenzija} onCancel={handleCancel1} okText="Dodaj"
