@@ -213,7 +213,7 @@ const WalkerListPage = () => {
     .then((res) => {
       let temp = [];
       setAllUsers(res.data);
-      if((!isSorted && (isCalled || (placeFilterName===undefined))) || (isSorted && (isCalled || (placeFilterName===undefined))) ) {
+      if(isCalled || (placeFilterName===undefined)) {
         for(let i = 0; i < res.data.length; i++)
         {
           let userId = res.data.at(i).id;
@@ -241,12 +241,19 @@ const WalkerListPage = () => {
             });
           }
         }
-        setWalkers(temp);
+
+        if (isSorted) {
+          const sortedWalkers = temp.sort((a, b) => b.averageRate - a.averageRate);
+          setWalkers(sortedWalkers);
+        } else {
+          setWalkers(temp);
+        }
         setWalkersTemp(walkers);
       }
+
     })
     .catch((e) => console.log(e));
-  }, [averageRates, isCalled, isSorted, pricesPerHour]);
+  }, [averageRates, isCalled, isSorted, locations, placeFilterName, places, pricesPerDay, pricesPerHour, services, user.token, walkers]);
 
   const showModal1 = () => {
     setIsModalOpen1(true);
@@ -434,7 +441,7 @@ const WalkerListPage = () => {
             </div>
 
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 10 }} onClick={showModal2} />
-            <FloatButton icon={<SortAscendingOutlined />} type="primary" style={{ right: 90, top: 10 }} onClick={sortByAverageRate} />
+            <FloatButton icon={<SortAscendingOutlined />} type="primary" style={{ right: 90, top: 10 }} onClick={() => setIsSorted(true)} />
             <Modal title="Filtriranje" open={isModalOpen2} onOk={filterByPlace} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
               <Select size="middle" 
                 placeholder="Izaberite lokacije"
