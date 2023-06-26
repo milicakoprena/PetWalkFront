@@ -81,11 +81,7 @@ const WalkerListPage = () => {
     setPlaceFilterName(event);
   };
 
-  const sortByAverageRate = () => {
-    const sortedWalkers = [...walkers].sort((a, b) => b.averageRate - a.averageRate);
-    setWalkers(sortedWalkers);
-    setIsSorted(true);
-  };
+ 
 
   const filterByPlace = () => {
     setIsCalled(false);

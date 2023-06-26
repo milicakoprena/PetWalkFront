@@ -4,46 +4,43 @@ import MainMenu from "../../components/MainMenu";
 import { useState } from "react";
 import { Column } from '@ant-design/plots';
 import { Page1 } from "../../components/CssComponents";
-
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 const { Content, Sider } = Layout;
+
+
 
 const StatisticsPage = () => {
     const [collapsed, setCollapsed] = useState(false);
+    const userState = useLocation();
+    const user = userState.state.user;
+    const [data, setData] = useState([]); 
+    useEffect(() => {
+      axios.get(`http://localhost:9000/rasporedi/monthlyTotals/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((response) => {
+        let dataTemp = [];
+        console.log(response);
+        for(let i = 0; i < response.data.length; i++){
+        dataTemp.push({
+          mjeseci: months[response.data.at(i).month - 1],
+          zarada: response.data.at(i).totalPrice,
+        });
+      }
+       setData(dataTemp);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    }, [data]);
 
-    const data = [
-        {
-          mjeseci: 'jan',
-          zarada: 38,
-        },
-        {
-          mjeseci: 'feb',
-          zarada: 52,
-        },
-        {
-          mjeseci: 'mart',
-          zarada: 61,
-        },
-        {
-          mjeseci: 'april',
-          zarada: 45,
-        },
-        {
-          mjeseci: 'jun',
-          zarada: 48,
-        },
-        {
-          mjeseci: 'jul',
-          zarada: 38,
-        },
-        {
-          mjeseci: 'avgust',
-          zarada: 38,
-        },
-        {
-          mjeseci: 'sep',
-          zarada: 38,
-        },
-      ];
+    const months = ['Januar','Februar','Mart','April','Maj','Jun','Jul','Avgust','Septembar','Oktobar','Novembar','Decembar'];
+
+    
 
       const config = {
         data,
@@ -65,10 +62,10 @@ const StatisticsPage = () => {
         },
         meta: {
           mjeseci: {
-            alias: 'bla1',
+            alias: 'Mjesec',
           },
           zarada: {
-            alias: 'bla2',
+            alias: 'Zarada',
           },
           minColumnWidth: 20,
           maxColumnWidth: 20,
