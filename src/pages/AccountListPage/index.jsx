@@ -212,7 +212,7 @@ const AccountListPage = () => {
                 temp.push({
                   rating: res.data.at(i).ocjena,
                   comment: res.data.at(i).komentar,
-                  date: res.data.at(i).datum,
+                  date: res.data.at(i).datum.slice(0, 10),
                   image: `data:image/jpeg;base64,${response.data}`,
                   name: users.find(
                     (element) => element.id === res.data.at(i).korisnikOdId

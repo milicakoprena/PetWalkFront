@@ -45,10 +45,7 @@ const AdListPage = () => {
   const [reviews, setReviews] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
 
-  const [sadrzaj, setSadrzaj] = useState("");
-  const [kategorije, setKategorije] = useState([]);
-  const [kategorijeSelect, setKategorijeSelect] = useState([]);
-  const [kategorija, setKategorija] = useState("");
+
   const [kategorijaFilter, setKategorijaFilter] = useState("");
 
   const [allAds, setAllAds] = useState([]);
@@ -70,6 +67,7 @@ const AdListPage = () => {
 
   const [userPets, setUserPets] = useState([]);
   const [types, setTypes] = useState([]);
+  const [kategorije, setKategorije] = useState([]);
 
   const [isPetsModalOpen, setIsPetsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -250,10 +248,7 @@ const AdListPage = () => {
     setIsModalOpen(true);
   };
 
-  const showAdModal = () => {
-    console.log(kategorijeSelect);
-    setIsAdModalOpen(true);
-  };
+
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -271,22 +266,22 @@ const AdListPage = () => {
     console.log(selectedAd);
     try {
       await axios.delete(`http://localhost:9000/oglasi/${selectedAd.id}`, {
-          headers: {
-              Authorization: `Bearer ${user.token}`,
-          },
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
       })
-      .then(() => {
+        .then(() => {
           console.log("obrisano");
           //window.location.reload(true);
-      })
-      .catch((e) => {
+        })
+        .catch((e) => {
           console.log(e);
-      })
+        })
       setIsDeleteModalOpen(false);
-  }
-  catch(error) {
+    }
+    catch (error) {
       console.log(error);
-  }
+    }
   }
 
   const handleCancelDeleteModal = () => {
@@ -301,9 +296,7 @@ const AdListPage = () => {
     setIsFilterModalOpen(false);
   };
 
-  const handleCancelAdModal = () => {
-    setIsAdModalOpen(false);
-  };
+
 
   const showPetsModal = async () => {
     console.log(selectedUser);
@@ -467,39 +460,6 @@ const AdListPage = () => {
     setDateWalker(dateObject);
   };
 
-  const dodajOglas = async (event) => {
-    event.preventDefault();
-    try {
-      const datum = new Date();
-      const oglasRequest = {
-        id: 1,
-        sadrzaj: sadrzaj,
-        status: true,
-        kategorijaId: kategorija,
-        datum: datum,
-        korisnikId: user.id,
-      };
-      const response = await fetch("http://localhost:9000/oglasi", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify(oglasRequest),
-      }).catch((e) => console.log(e));
-      messageApi.open({
-        type: "success",
-        content: "Oglas uspješno sačuvan!",
-      });
-      setIsAdModalOpen(false);
-    } catch (error) {
-      console.log(error);
-      messageApi.open({
-        type: "error",
-        content: "Oglas nije sačuvan!",
-      });
-    }
-  };
 
   const dodajCuvanje = async (event) => {
     event.preventDefault();
@@ -529,6 +489,10 @@ const AdListPage = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const disabledDate = (current) => {
+    return current < dayjs().startOf('day');
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -620,7 +584,7 @@ const AdListPage = () => {
                             ) : (
                               <div></div>
                             )}
-                          
+
                           </div>
                         </div>
                       }
@@ -630,21 +594,22 @@ const AdListPage = () => {
               />
             </div>
             <Modal
-                            open={isDeleteModalOpen}
-                            onOk={deleteAd}
-                            onCancel={handleCancelDeleteModal}
-                            width={"350px"}
-                          >
-                            <p>Da li ste sigurni da želite da izbrišete oglas?</p>
-                          </Modal>
+              open={isDeleteModalOpen}
+              onOk={deleteAd}
+              onCancel={handleCancelDeleteModal}
+              width={"350px"}
+            >
+              <p>Da li ste sigurni da želite da izbrišete oglas?</p>
+            </Modal>
             <Modal
               title="Informacije"
               open={isModalOpen}
               onOk={handleOk}
               onCancel={handleCancel}
-              width={550}
+              width={400}
               centered
               style={{ maxHeight: "500px", overflow: "auto" }}
+              footer={[]}
             >
               <Descriptions title="" size="default" column={1}>
                 <Descriptions.Item>
@@ -667,16 +632,18 @@ const AdListPage = () => {
                   {selectedUser.description}
                 </Descriptions.Item>
               </Descriptions>
-              {(selectedUser.category == CATEGORY_NUDIM && user.role != ROLE_ADMIN) ? (
-                <Button onClick={showWalkerModal}>Izaberi čuvara</Button>
-              ) : (
-                <div></div>
-              )}
-              {(selectedUser.category == CATEGORY_TRAZIM && user.role != ROLE_ADMIN) ? (
-                <Button onClick={showPetsModal}>Pregled ljubimaca</Button>
-              ) : (
-                <div></div>
-              )}
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "end" }}>
+                {(selectedUser.category == CATEGORY_NUDIM && user.role != ROLE_ADMIN) ? (
+                  <Button onClick={showWalkerModal}>Izaberi čuvara</Button>
+                ) : (
+                  <div></div>
+                )}
+                {(selectedUser.category == CATEGORY_TRAZIM && user.role != ROLE_ADMIN) ? (
+                  <Button onClick={showPetsModal}>Pregled ljubimaca</Button>
+                ) : (
+                  <div></div>
+                )}
+              </div>
             </Modal>
             <Modal
               title="Pregled ljubimaca"
@@ -719,36 +686,6 @@ const AdListPage = () => {
                 )}
               />
             </Modal>
-            <Modal
-              title="Dodaj oglas"
-              open={isAdModalOpen}
-              onOk={dodajOglas}
-              onCancel={handleCancelAdModal}
-            >
-              <TextArea
-                showCount
-                maxLength={2000}
-                style={{
-                  height: 120,
-                  resize: "none",
-                  textAlign: "justify",
-                }}
-                placeholder="Unesite komentar (opciono)"
-                value={sadrzaj}
-                onChange={(e) => setSadrzaj(e.target.value)}
-              />
-              <p>Unesite kategoriju</p>
-              <StyledSelect
-                size="default"
-                allowClear
-                style={{
-                  width: "100%",
-                }}
-                onChange={(selectedOption) => setKategorija(selectedOption)}
-                options={kategorije}
-                value={kategorija}
-              />
-            </Modal>
 
             <FloatButton
               icon={<FilterOutlined />}
@@ -756,16 +693,7 @@ const AdListPage = () => {
               style={{ right: 30, top: 8 }}
               onClick={showFilterModal}
             />
-            {user.role == ROLE_ADMIN ? (
-              <div></div>
-            ) : (
-              <FloatButton
-                icon={<PlusCircleOutlined />}
-                type="primary"
-                style={{ right: 90, top: 8 }}
-                onClick={showAdModal}
-              />
-            )}
+
 
             <Modal
               title="Filtriranje po kategorijama"
@@ -797,7 +725,7 @@ const AdListPage = () => {
               open={isWalkerModalOpen}
               onOk={dodajCuvanje}
               onCancel={handleCancelWalkerModal}
-              width={450}
+              width={430}
             >
               <div
                 style={{
@@ -811,6 +739,7 @@ const AdListPage = () => {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
+                    width: "50%",
                   }}
                 >
                   <p>
@@ -826,7 +755,7 @@ const AdListPage = () => {
                     size="default"
                     allowClear
                     style={{
-                      width: "100%",
+                      width: "90%",
                     }}
                     onChange={(selectedOption) => {
                       setService(selectedOption);
@@ -842,6 +771,7 @@ const AdListPage = () => {
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",
+                      width: "50%",
                     }}
                   >
                     <p>Unesite broj sati čuvanja:</p>
@@ -857,7 +787,7 @@ const AdListPage = () => {
                       }}
                       addonAfter="h"
                       style={{
-                        width: "30%",
+                        width: "40%",
                       }}
                     />
                   </div>
@@ -867,6 +797,7 @@ const AdListPage = () => {
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",
+                      width: "50%",
                     }}
                   >
                     <p>Unesite broj dana čuvanja:</p>
@@ -880,7 +811,7 @@ const AdListPage = () => {
                       }}
                       addonAfter="d"
                       style={{
-                        width: "30%",
+                        width: "40%",
                       }}
                     />
                   </div>
@@ -891,16 +822,20 @@ const AdListPage = () => {
                 onChange={onChange}
                 style={{
                   marginTop: "20px",
-                  width: "80%",
+                  width: "100%",
                 }}
                 placeholder="Unesite datum"
                 value={dateWalker}
+                disabledDate={disabledDate}
               />
               <p>Izaberite svog ljubimca:</p>
               <StyledSelect
                 onChange={(selectedOption) => {
                   setPet(selectedOption);
                   console.log(pet);
+                }}
+                style={{
+                  width: "100%",
                 }}
                 options={pets}
                 value={pet}
