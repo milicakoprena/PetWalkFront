@@ -26,9 +26,17 @@ const StatisticsPage = () => {
     let tempData = [];
     for (let i = 0; i < currentMonth; i++) {
       tempData.push({
+        name: 'Zarada',
         mjesec: months[i],
-        zarada: i + 4,
-        vrijeme: i + 2,
+        num: i + 1,
+        vrijednost: i + 100,
+      });
+
+      tempData.push({
+        name: 'Ukupno vrijeme',
+        mjesec: months[i],
+        num: i + 1,
+        vrijednost: i + 80,
       });
     }
     setData(tempData);
@@ -43,9 +51,13 @@ const StatisticsPage = () => {
       .then((response) => {
         setData(prevData => {
           const updatedData = [...prevData];
-          for (let i = 0; i < response.data.length; i++) {
-            updatedData[response.data.at(i).month - 1].zarada = response.data.at(i).totalPrice;
-            updatedData[response.data.at(i).month - 1].vrijeme = response.data.at(i).totalTime;
+         
+          for (let i = 0; i < updatedData.length ; i++) {
+            let element = response.data.find(element => element.month ===updatedData[i].num);
+            if(updatedData[i].name === 'Zarada' && element!=undefined)
+              updatedData[i].vrijednost = element.totalPrice;
+            else if(updatedData[i].name === 'Ukupno vrijeme' && element!=undefined)
+            updatedData[i].vrijednost = response.data.find(element => element.month ===updatedData[i].num).totalTime;
           }
           return updatedData;
         });
@@ -62,7 +74,7 @@ const StatisticsPage = () => {
     data,
     isGroup: true,
     xField: 'mjesec',
-    yField: ['zarada', 'vrijeme'],
+    yField: ['vrijednost'],
     seriesField: 'name',
     label: {
       position: 'middle',
