@@ -81,10 +81,9 @@ const WalkerListPage = () => {
     setPlaceFilterName(event);
   };
 
- 
-
   const filterByPlace = () => {
     setIsCalled(false);
+    setIsSorted(false);
     axios.get(`http://localhost:9000/lokacije/trazenoMjesto/${placeFilterName}`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -240,14 +239,13 @@ const WalkerListPage = () => {
             });
           }
         }
-
-        if (isSorted) {
-          const sortedWalkers = temp.sort((a, b) => b.averageRate - a.averageRate);
-          setWalkers(sortedWalkers);
-        } else {
-          setWalkers(temp);
-        }
+        setWalkers(temp);
         setWalkersTemp(walkers);
+      }
+
+      if (isSorted) {
+        const sortedWalkers = walkers.sort((a, b) => b.averageRate - a.averageRate);
+        setWalkers(sortedWalkers);
       }
 
     })
@@ -257,9 +255,11 @@ const WalkerListPage = () => {
   const showModal1 = () => {
     setIsModalOpen1(true);
   };
+
   const showModal2 = () => {
     setIsModalOpen2(true);
   };
+
   const showReviewModal = (item) => {
     axios.get(`http://localhost:9000/korisnici/image/${item.imageName}`, {
       headers: {
@@ -350,8 +350,8 @@ const WalkerListPage = () => {
       .then(res =>{
         console.log(res);
         setAllowed(res.data);
-      }).
-      catch(e => {
+      })
+      .catch(e => {
         console.log(e);
       });
       
