@@ -10,9 +10,9 @@ import {
   Divider,
 } from "antd";
 import MainMenu from "../../components/MainMenu";
-import { List } from "antd";
+import { List, Select } from "antd";
 import axios from "axios";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
 import {
   ROLE_OWNER,
@@ -43,6 +43,10 @@ const AccountListPage = () => {
   const [selWalkerPhoto, setSelWalkerPhoto] = useState("");
   const [pets, setPets] = useState([]);
   const [reports, setReports] = useState([]);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+  const [rolesFilter, setRolesFilter] = useState([]);
+  const [roleFilterName, setRoleFilterName]=useState('');
 
   const searchByUsername = () => {
     setIsCalled(false);
@@ -59,6 +63,33 @@ const AccountListPage = () => {
       setUsersResult([]);
     }
     setIsModalOpen(false);
+  };
+
+  const selectRole = (event) => {
+    setRoleFilterName(event);
+  };
+
+  const filterByRole = () => {
+    setIsCalled(false);
+    axios.get(`http://localhost:9000/korisnici/filterByRole/${roleFilterName}`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then((res) => {
+      let temp = [];
+      for(let i = 0; i < usersTemp.length; i++){
+        for(let j = 0; j < res.data.length; j++){
+          if(usersTemp.at(i).id === res.data.at(j).id)
+          {
+            temp.push(usersTemp.at(i));
+          }
+        }
+      }
+      setUsers(temp);
+    })
+    .catch((e) => console.log(e));
+    setIsFilterModalOpen(false);
   };
 
   useEffect(() => {
@@ -89,7 +120,7 @@ const AccountListPage = () => {
         },
       })
       .then((res) => {
-        if (isCalled && searchedUsername === "") {
+        if (isCalled && (searchedUsername === "" || roleFilterName===undefined)) {
           let temp = [];
           for (let i = 0; i < res.data.length; i++) {
             if (
@@ -348,6 +379,24 @@ const AccountListPage = () => {
     setSelWalkerPhoto("");
   };
 
+  const showFilterModal = () => {
+
+    rolesFilter.push({
+      value: "CUVAR",
+      label: "Čuvar"
+    });
+    rolesFilter.push({
+      value: "VLASNIK",
+      label: "Vlasnik"
+    });
+
+    setIsFilterModalOpen(true);
+  };
+
+  const handleCancelFilterModal = () => {
+    setIsFilterModalOpen(false);
+  };
+
   return (
     <Layout hasSider>
       <Sider
@@ -426,7 +475,7 @@ const AccountListPage = () => {
                               Uloga: {item.role}
                             </text>
                             <text style={{ color: "black" }}>
-                              Status naloga: {item.status}
+                              Status naloga: {item.status === STATUS_ACTIVE ? 'AKTIVAN' : 'BLOKIRAN'}
                             </text>
                             <text style={{ textAlign: "justify" }}>
                               {item.description}
@@ -638,6 +687,7 @@ const AccountListPage = () => {
               style={{ right: 40, top: 10 }}
               onClick={showModal}
             />
+            <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 95, top: 10 }} onClick={showFilterModal} />
             <Modal
               title="Pretraživanje po korisničkom imenu"
               open={isModalOpen}
@@ -671,6 +721,19 @@ const AccountListPage = () => {
                 value={searchedUsername}
                 onChange={(e) => setSearchedUsername(e.target.value)}
               />
+            </Modal>
+
+            <Modal title="Filtriranje" open={isFilterModalOpen} onOk={filterByRole} onCancel={handleCancelFilterModal} okText="Filtriraj" cancelText="Otkaži" >
+              <Select size="middle" 
+                placeholder="Izaberite ulogu"
+                allowClear
+                style={{
+                  width: '100%',
+                  marginBottom: '3%',
+                  marginTop: '3%'
+                }}
+                options={rolesFilter}
+                onChange={selectRole}/>
             </Modal>
           </Cover>
         </Page>
