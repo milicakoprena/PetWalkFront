@@ -21,10 +21,12 @@ const ReportProblem = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const date = new Date();
         try {
             const problemRequest = {
                 sadrzaj,
                 korisnikId: user.id,
+                datum: date,
             };
             await axios.post('http://localhost:9000/problemi', problemRequest, {
                 headers: {
