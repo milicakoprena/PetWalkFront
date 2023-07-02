@@ -84,17 +84,17 @@ const RasporedPage = () => {
         catch (error) {
           console.log(error);
         }
-      };
+    };
 
-      const showModal = () => {
-        setIsModalOpen(true);
-      };
+    const showModal = () => {
+    setIsModalOpen(true);
+    };
+
     
-      
-    
-      const handleCancel = () => {
-        setIsModalOpen(false);
-      };
+
+    const handleCancel = () => {
+    setIsModalOpen(false);
+    };
 
     useEffect(() => {
         axios.get(`http://localhost:9000/ljubimci`, {
@@ -105,15 +105,26 @@ const RasporedPage = () => {
         .then((res) => {
             let temp = [];
             for(let i = 0; i < res.data.length; i++){
-                temp.push({
-                    id: res.data.at(i).id,
-                    ime: res.data.at(i).ime,
+                axios.get(`http://localhost:9000/ljubimci/getKorisnik/${res.data.at(i).id}`, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
                 })
+                .then((response) => {
+                    temp.push({
+                        id: res.data.at(i).id,
+                        ime: res.data.at(i).ime,
+                        imeVlasnika: response.data.firstName + " " + response.data.lastName,
+                    })
+                })
+                .catch((e) => console.log(e));
             }
-            setPets(res.data);
+            setPets(temp);
         })
         .catch((e) => console.log(e));
+    }, []);
 
+    useEffect(() => {
         axios.get(`http://localhost:9000/rasporedi`, {
             headers: {
                 Authorization: `Bearer ${user.token}`,
@@ -128,7 +139,7 @@ const RasporedPage = () => {
                 
                 if(userId===user.id){
                     tempRaspored = {
-                        vlasnik: 'vlasnik blabla',
+                        vlasnik: pets.find(element => element.id === res.data.at(i).ljubimacId).imeVlasnika,
                         ljubimac : pets.find(element => element.id === res.data.at(i).ljubimacId).ime,
                         id: res.data.at(i).id,
                         datum: res.data.at(i).datum.slice(0,10),
@@ -142,7 +153,7 @@ const RasporedPage = () => {
             setRasporedi(tempRasporedi);
         })
         .catch((e) => console.log(e));
-    }, [pets, types, user.token, user.id, rasporedi]);
+    }, [pets]);
 
 
     return (

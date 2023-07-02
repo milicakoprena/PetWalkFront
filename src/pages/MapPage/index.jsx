@@ -93,7 +93,13 @@ const MapPage = () => {
               temp.push({
                 position: [res.data.at(i).koordinataX, res.data.at(i).koordinataY],
                 name: res.data.at(i).nazivObjekta,
-                description: <Desc>{res.data.at(i).opisObjekta}<a href={res.data.at(i).putanja}>Link do veb stranice</a></Desc>,
+                description: 
+                  <Desc>
+                    {res.data.at(i).opisObjekta}
+                    {(res.data.at(i).putanja !== null) ? (
+                      <a href={res.data.at(i).putanja}>Link do veb stranice</a>
+                    ) : ( <div></div>)}
+                  </Desc>,
               })
             }
                

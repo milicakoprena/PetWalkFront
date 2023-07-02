@@ -29,14 +29,14 @@ const StatisticsPage = () => {
         name: 'Zarada',
         mjesec: months[i],
         num: i + 1,
-        vrijednost: i + 100,
+        vrijednost: 0,
       });
 
       tempData.push({
         name: 'Ukupno vrijeme',
         mjesec: months[i],
         num: i + 1,
-        vrijednost: i + 80,
+        vrijednost: 0,
       });
     }
     setData(tempData);
@@ -54,9 +54,9 @@ const StatisticsPage = () => {
          
           for (let i = 0; i < updatedData.length ; i++) {
             let element = response.data.find(element => element.month ===updatedData[i].num);
-            if(updatedData[i].name === 'Zarada' && element!=undefined)
+            if(updatedData[i].name === 'Zarada' && element!==undefined)
               updatedData[i].vrijednost = element.totalPrice;
-            else if(updatedData[i].name === 'Ukupno vrijeme' && element!=undefined)
+            else if(updatedData[i].name === 'Ukupno vrijeme' && element!==undefined)
             updatedData[i].vrijednost = response.data.find(element => element.month ===updatedData[i].num).totalTime;
           }
           return updatedData;

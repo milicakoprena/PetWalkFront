@@ -135,11 +135,11 @@ const MyPetsList = () => {
                                             title={item.ime}
                                             description={
                                                 <div style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                    <div style={{ display: "flex", flexDirection: 'column', marginRight: '20px' }}>
+                                                    <div style={{ display: "flex", flexDirection: 'column',  marginRight: '10px'}}>
                                                         <text style={{color: 'black'}}>{item.vrsta}</text>
                                                         <text style={{color: 'black'}}>{item.opis}</text>
                                                     </div>
-                                                    <div>
+                                                    <div style={{display: 'flex', flexDirection: 'row'}}>
                                                         <Button icon={<PictureOutlined /> }  onClick={() => {
                                                             axios.get(`http://localhost:9000/ljubimci/image/${item.imageName}`, {
                                                             headers: {
@@ -156,7 +156,7 @@ const MyPetsList = () => {
                                                         })
                                                         .catch((e) => console.log(e));
                                                         showModal2();}}></Button>
-                                                        <Button icon={<DeleteOutlined />} style={{marginLeft: '10px'}} onClick={() => {setSelectedPet(item); showModal()}} ></Button>
+                                                        <Button icon={<DeleteOutlined />} style={{marginLeft: '5px'}} onClick={() => {setSelectedPet(item); showModal()}} ></Button>
                                                     </div>
                                                 </div>
                                             }

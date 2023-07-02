@@ -137,7 +137,7 @@ const AdListPage = () => {
           let temp = [];
 
           for (let i = 0; i < res.data.length; i++) {
-            if (user.id != res.data.at(i).korisnikId) {
+            if (user.id !== res.data.at(i).korisnikId) {
               let adId = res.data.at(i).id;
               let userName =
                 allUsers?.find(
@@ -633,12 +633,12 @@ const AdListPage = () => {
                 </Descriptions.Item>
               </Descriptions>
               <div style={{ display: "flex", flexDirection: "row", justifyContent: "end" }}>
-                {(selectedUser.category == CATEGORY_NUDIM && user.role != ROLE_ADMIN) ? (
+                {(selectedUser.category === CATEGORY_NUDIM && user.role !== ROLE_ADMIN) ? (
                   <Button onClick={showWalkerModal}>Izaberi čuvara</Button>
                 ) : (
                   <div></div>
                 )}
-                {(selectedUser.category == CATEGORY_TRAZIM && user.role != ROLE_ADMIN) ? (
+                {(selectedUser.category === CATEGORY_TRAZIM && user.role !== ROLE_ADMIN) ? (
                   <Button onClick={showPetsModal}>Pregled ljubimaca</Button>
                 ) : (
                   <div></div>

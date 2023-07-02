@@ -226,7 +226,7 @@ const MyAdsPage = () => {
                                                             flexDirection: "column",
                                                         }}
                                                     >
-                                                        <div style={{ color: 'red' }}>{item.status}</div>
+                                                        <div style={{ color: item.statusBool ? 'green' : 'red' }}>{item.status}</div>
                                                         <text
                                                             style={{
                                                                 textAlign: "justify",

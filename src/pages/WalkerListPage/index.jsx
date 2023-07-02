@@ -366,11 +366,11 @@ const WalkerListPage = () => {
     <Layout hasSider>
       <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
         style={{
-          maxHeight: '103vh'
+          maxHeight: '100vh'
         }}>
         <MainMenu/>
       </Sider>
-      <Content style={{ maxHeight: '103vh' }}>
+      <Content style={{ maxHeight: '100vh' }}>
         <Page>
           <Cover>
             <div style={{ maxHeight: '100vh', width: '100%', overflow: 'auto', backgroundColor: 'white', paddingLeft: '2%', paddingRight: '2%' }}>

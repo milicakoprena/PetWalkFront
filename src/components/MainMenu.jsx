@@ -39,7 +39,7 @@ const ownerItems = [
     getItem('Oglasna tabla', "/adlist", <NotificationOutlined />),
     getItem('Moji oglasi', "/myadspage", <SolutionOutlined />),
     getItem('Moji ljubimci', "/mypetslist", <UnorderedListOutlined />),
-    getItem('Izvještaji', "/reportpage", <FormOutlined />),
+    getItem('Izvještaji čuvara', "/reportpage", <FormOutlined />),
     getItem('Mapa', "/mappage", <EnvironmentOutlined />),
     getItem('Prijava problema', "/reportproblem", <ExclamationCircleOutlined />),
     getItem('Odjavi se', "/", <LogoutOutlined />),
