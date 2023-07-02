@@ -51,6 +51,7 @@ const ProblemView = () => {
                     key: i,
                     username: users.find(element => element.id === userId).username,
                     sadrzaj: res.data.at(i).sadrzaj,
+                    datum: res.data.at(i).datum,
                 }
 
                 temp.push(tempProblem);
@@ -101,6 +102,7 @@ const ProblemView = () => {
                 key: problem.key,
                 username: problem.username,
                 sadrzaj: problem.sadrzaj,
+                datum: problem.datum,
             })
         })
         .catch((response) =>
@@ -113,6 +115,7 @@ const ProblemView = () => {
                 key: problem.key,
                 username: problem.username,
                 sadrzaj: problem.sadrzaj,
+                datum: problem.datum,
             })
         })
         
@@ -202,6 +205,7 @@ const ProblemView = () => {
                                     <Descriptions.Item label="Ime i prezime">{selectedProblem.firstName} {selectedProblem.lastName}</Descriptions.Item>
                                     <Descriptions.Item label="Korisničko ime">{selectedProblem.username}</Descriptions.Item>
                                     <Descriptions.Item label="Tekst">{selectedProblem.sadrzaj}</Descriptions.Item>
+                                    <Descriptions.Item label="Datum">{selectedProblem.datum}</Descriptions.Item>
                                 </Descriptions>
                             </Modal>
                         </div>
