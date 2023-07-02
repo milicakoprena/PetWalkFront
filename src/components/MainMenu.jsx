@@ -62,7 +62,7 @@ const adminItems = [
     getItem('Mapa', "/mappage", <EnvironmentOutlined />),
     getItem('Pregled oglasa', "/adlist", <NotificationOutlined />),
     getItem('Pregled prijava problema', "/problemview", <ExclamationCircleOutlined />),
-    getItem('Pregled naselja', "/placespage", <HomeOutlined />),
+    getItem('Izmjena naselja', "/placespage", <HomeOutlined />),
     getItem('Odjavi se', "/", <LogoutOutlined />),
 ]
 

@@ -190,7 +190,7 @@ const ProblemView = () => {
                                     )}
                                 />
                             </InfiniteScroll>
-                            <Modal title="Detalji o problemu" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={300}
+                            <Modal title="Detalji o problemu" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={450}
                                 footer={[
                                     <Button key="back" onClick={handleCancel}>
                                       Izađi
