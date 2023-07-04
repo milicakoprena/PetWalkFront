@@ -10,14 +10,14 @@ const EditProfilePage = () => {
 
   return (
     <Layout hasSider>
-      <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
+      <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)}
         style={{
           maxHeight: '103vh'
         }}>
-        <MainMenu/>
+        <MainMenu />
       </Sider>
       <Content style={{ maxHeight: '103vh' }}>
-        <EditProfile/>
+        <EditProfile />
       </Content>
     </Layout>
   );

@@ -28,20 +28,20 @@ const WalkerListPage = () => {
   const [services, setServices] = useState([]);
   const [pricesPerHour, setPricesPerHour] = useState([]);
   const [pricesPerDay, setPricesPerDay] = useState([]);
-  const [komentar,setKomentar]=useState('');
-  const [ocjena, setOcjena]=useState('');
-  const [placeFilterName, setPlaceFilterName]=useState('');
-  const [isCalled, setIsCalled]=useState(true);
+  const [komentar, setKomentar] = useState('');
+  const [ocjena, setOcjena] = useState('');
+  const [placeFilterName, setPlaceFilterName] = useState('');
+  const [isCalled, setIsCalled] = useState(true);
   const [allUsers, setAllUsers] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [averageRates, setAverageRates] = useState([]);
   const [isSorted, setIsSorted] = useState(false);
-  const [allowed, setAllowed]  = useState(false);
-  
+  const [allowed, setAllowed] = useState(false);
+
   const postRecenzija = async (event) => {
     event.preventDefault();
-    let korisnikZaId=selectedWalker.id;
+    let korisnikZaId = selectedWalker.id;
     try {
       const date = new Date();
       const recenzijaRequest = {
@@ -59,14 +59,13 @@ const WalkerListPage = () => {
         },
         body: JSON.stringify(recenzijaRequest),
       })
-      .catch((e) => console.log(e));
-        messageApi.open({
-          type: 'success',
-          content: 'Recenzija uspješno sačuvana!',
-        });
-        setIsModalOpen1(false);
-        window.location.reload();
-        console.log(response);
+        .catch((e) => console.log(e));
+      messageApi.open({
+        type: 'success',
+        content: 'Recenzija uspješno sačuvana!',
+      });
+      setIsModalOpen1(false);
+      window.location.reload();
     }
     catch (error) {
       console.log(error);
@@ -89,19 +88,18 @@ const WalkerListPage = () => {
         Authorization: `Bearer ${user.token}`,
       },
     })
-    .then((res) => {
-      let temp = [];
-      for(let i = 0; i < walkersTemp.length; i++){
-        for(let j = 0; j < res.data.length; j++){
-          if(walkersTemp.at(i).id === res.data.at(j).id)
-          {
-            temp.push(walkersTemp.at(i));
+      .then((res) => {
+        let temp = [];
+        for (let i = 0; i < walkersTemp.length; i++) {
+          for (let j = 0; j < res.data.length; j++) {
+            if (walkersTemp.at(i).id === res.data.at(j).id) {
+              temp.push(walkersTemp.at(i));
+            }
           }
         }
-      }
-      setWalkers(temp);
-    })
-    .catch((e) => console.log(e));
+        setWalkers(temp);
+      })
+      .catch((e) => console.log(e));
     setIsModalOpen2(false);
   };
 
@@ -111,145 +109,141 @@ const WalkerListPage = () => {
         Authorization: `Bearer ${user.token}`,
       },
     })
-    .then((response) => {
-      let temp = [];
-      for(let i = 0; i < response.data.length; i++)
-      {
-        temp.push({
-          id: response.data.at(i).left,
-          average: response.data.at(i).right,
-        });
-      }
-      setAverageRates(temp);
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+      .then((response) => {
+        let temp = [];
+        for (let i = 0; i < response.data.length; i++) {
+          temp.push({
+            id: response.data.at(i).left,
+            average: response.data.at(i).right,
+          });
+        }
+        setAverageRates(temp);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }, []);
 
 
 
-  useEffect( () => {
+  useEffect(() => {
     axios.get(`http://localhost:9000/usluge`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     })
-    .then((res) => {
-      setServices(res.data);
-    })
-    .catch((e) => console.log(e));
+      .then((res) => {
+        setServices(res.data);
+      })
+      .catch((e) => console.log(e));
     axios.get(`http://localhost:9000/lokacije`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     })
-    .then((res) => {
-      let temp = [];
-      for(let i = 0; i < res.data.length; i++){
-        temp.push({
-          korisnikId: res.data.at(i).korisnikId,
-          mjesto: res.data.at(i).mjestoId,
-        })
-      }
-      
-      setLocations(temp);
-    })
-    .catch((e) => console.log(e));
-  
+      .then((res) => {
+        let temp = [];
+        for (let i = 0; i < res.data.length; i++) {
+          temp.push({
+            korisnikId: res.data.at(i).korisnikId,
+            mjesto: res.data.at(i).mjestoId,
+          })
+        }
+
+        setLocations(temp);
+      })
+      .catch((e) => console.log(e));
+
     axios.get(`http://localhost:9000/mjesta`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     })
-    .then((res) => {
-      let temp = [];
-      for(let i = 0; i < res.data.length; i++){
-        temp.push({
-          value: res.data.at(i).naziv,
-          label: res.data.at(i).naziv,
-        })
-      }
-      setPlacesFilter(temp);
-      setPlaces(res.data);
-    })
-    .catch((e) => console.log(e));
-    
+      .then((res) => {
+        let temp = [];
+        for (let i = 0; i < res.data.length; i++) {
+          temp.push({
+            value: res.data.at(i).naziv,
+            label: res.data.at(i).naziv,
+          })
+        }
+        setPlacesFilter(temp);
+        setPlaces(res.data);
+      })
+      .catch((e) => console.log(e));
+
     axios.get(`http://localhost:9000/cijene`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     })
-    .then((res) => {
-      let temp1 = [];
-      let temp2 = [];
-      for(let i = 0; i < res.data.length; i++){
-        if(res.data.at(i).uslugaId === 1) {
-          temp1.push({
-            userId: res.data.at(i).korisnikId,
-            price: res.data.at(i).cijena,
-            service: services?.find(element => element.id === res.data.at(i).uslugaId)?.['naziv'],
-          })
+      .then((res) => {
+        let temp1 = [];
+        let temp2 = [];
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.data.at(i).uslugaId === 1) {
+            temp1.push({
+              userId: res.data.at(i).korisnikId,
+              price: res.data.at(i).cijena,
+              service: services?.find(element => element.id === res.data.at(i).uslugaId)?.['naziv'],
+            })
+          }
+          else if (res.data.at(i).uslugaId === 2) {
+            temp2.push({
+              userId: res.data.at(i).korisnikId,
+              price: res.data.at(i).cijena,
+              service: services?.find(element => element.id === res.data.at(i).uslugaId)?.['naziv'],
+            })
+          }
         }
-        else if (res.data.at(i).uslugaId === 2) {
-          temp2.push({
-            userId: res.data.at(i).korisnikId,
-            price: res.data.at(i).cijena,
-            service: services?.find(element => element.id === res.data.at(i).uslugaId)?.['naziv'],
-          })
-        }
-      }
-      setPricesPerHour(temp1);
-      setPricesPerDay(temp2);
-    })
-    .catch((e) => console.log(e));
+        setPricesPerHour(temp1);
+        setPricesPerDay(temp2);
+      })
+      .catch((e) => console.log(e));
     axios.get(`http://localhost:9000/korisnici`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     })
-    .then((res) => {
-      let temp = [];
-      setAllUsers(res.data);
-      if(isCalled || (placeFilterName===undefined)) {
-        for(let i = 0; i < res.data.length; i++)
-        {
-          let userId = res.data.at(i).id;
-          let placeId = 0;
-          for(let j = 0; j < locations.length; j++)
-          {
-            if (locations.at(j).korisnikId === userId)
-              placeId = locations.at(j).mjesto;
+      .then((res) => {
+        let temp = [];
+        setAllUsers(res.data);
+        if (isCalled || (placeFilterName === undefined)) {
+          for (let i = 0; i < res.data.length; i++) {
+            let userId = res.data.at(i).id;
+            let placeId = 0;
+            for (let j = 0; j < locations.length; j++) {
+              if (locations.at(j).korisnikId === userId)
+                placeId = locations.at(j).mjesto;
+            }
+            if (res.data.at(i).role === ROLE_WALKER && res.data.at(i).status === STATUS_ACTIVE) {
+              temp.push({
+                imageName: res.data.at(i).photo,
+                image: '',
+                id: res.data.at(i).id,
+                firstName: res.data.at(i).firstName,
+                lastName: res.data.at(i).lastName,
+                name: res.data.at(i).firstName + " " + res.data.at(i).lastName,
+                phoneNumber: res.data.at(i).phoneNumber,
+                location: places?.find((element) => element.id === placeId)?.['naziv'],
+                description: res.data.at(i).description,
+                averageRate: averageRates?.find((element) => element.id === res.data.at(i).id)?.['average'],
+                pricePerHour: pricesPerHour?.find((element) => element.userId === res.data.at(i).id)?.['price'],
+                pricePerDay: pricesPerDay?.find((element) => element.userId === res.data.at(i).id)?.['price'],
+              });
+            }
           }
-          if(res.data.at(i).role === ROLE_WALKER && res.data.at(i).status === STATUS_ACTIVE)
-          {
-            temp.push({
-              imageName : res.data.at(i).photo,
-              image: '',
-              id: res.data.at(i).id,
-              firstName: res.data.at(i).firstName,
-              lastName: res.data.at(i).lastName,
-              name: res.data.at(i).firstName + " " + res.data.at(i).lastName,
-              phoneNumber: res.data.at(i).phoneNumber,
-              location: places?.find((element) => element.id === placeId)?.['naziv'],
-              description: res.data.at(i).description,
-              averageRate: averageRates?.find((element) => element.id === res.data.at(i).id)?.['average'],
-              pricePerHour: pricesPerHour?.find((element) => element.userId === res.data.at(i).id)?.['price'],
-              pricePerDay: pricesPerDay?.find((element) => element.userId === res.data.at(i).id)?.['price'],
-            });
-          }
+          setWalkers(temp);
+          setWalkersTemp(walkers);
         }
-        setWalkers(temp);
-        setWalkersTemp(walkers);
-      }
 
-      if (isSorted) {
-        const sortedWalkers = walkers.sort((a, b) => b.averageRate - a.averageRate);
-        setWalkers(sortedWalkers);
-      }
+        if (isSorted) {
+          const sortedWalkers = walkers.sort((a, b) => b.averageRate - a.averageRate);
+          setWalkers(sortedWalkers);
+        }
 
-    })
-    .catch((e) => console.log(e));
+      })
+      .catch((e) => console.log(e));
   }, [averageRates, isCalled, isSorted, locations, placeFilterName, places, pricesPerDay, pricesPerHour, services, user.token, walkers]);
 
   const showModal1 = () => {
@@ -268,64 +262,62 @@ const WalkerListPage = () => {
         "Content-Type": 'image/jpeg',
       },
     })
-    .then((response) => { 
-      let temp = {
-        image : `data:image/jpeg;base64,${response.data}`,
-        imageName : item.imageName,
-        name: item.firstName + " " + item.lastName,
-      }
-      setSelWalkerPhoto(temp);
-    })
-    .catch((response) => { 
-      let temp = {
-        image : '',
-        imageName : '',
-        name: item.firstName + " " + item.lastName,
-      }
-      setSelWalkerPhoto(temp);
-    })
+      .then((response) => {
+        let temp = {
+          image: `data:image/jpeg;base64,${response.data}`,
+          imageName: item.imageName,
+          name: item.firstName + " " + item.lastName,
+        }
+        setSelWalkerPhoto(temp);
+      })
+      .catch((response) => {
+        let temp = {
+          image: '',
+          imageName: '',
+          name: item.firstName + " " + item.lastName,
+        }
+        setSelWalkerPhoto(temp);
+      })
     axios.get(`http://localhost:9000/recenzije`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     })
-    .then((res) => {
-      let temp = [];
-      console.log(res);
-      for(let i = 0; i < res.data.length; i++){
-        if(res.data.at(i).korisnikZaId===item.id){
-          let tempImg = allUsers.find((element) => element.id === res.data.at(i).korisnikOdId).photo;
-          axios.get(`http://localhost:9000/korisnici/image/${tempImg}`, {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-              responseType: 'arraybuffer',
-              "Content-Type": 'image/jpeg',
-            },
-          })
-          .then((response) => { 
-            temp.push({
-              rating: res.data.at(i).ocjena,
-              comment: res.data.at(i).komentar,
-              date: res.data.at(i).datum.split("T")[0],
-              image: `data:image/jpeg;base64,${response.data}`,
-              name: allUsers.find(element => element.id === res.data.at(i).korisnikOdId).firstName + " " + allUsers.find(element => element.id === res.data.at(i).korisnikOdId).lastName,
+      .then((res) => {
+        let temp = [];
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.data.at(i).korisnikZaId === item.id) {
+            let tempImg = allUsers.find((element) => element.id === res.data.at(i).korisnikOdId).photo;
+            axios.get(`http://localhost:9000/korisnici/image/${tempImg}`, {
+              headers: {
+                Authorization: `Bearer ${user.token}`,
+                responseType: 'arraybuffer',
+                "Content-Type": 'image/jpeg',
+              },
             })
-          })
-          .catch((response) => {
-            temp.push({
-              rating: res.data.at(i).ocjena,
-              comment: res.data.at(i).komentar,
-              date: res.data.at(i).datum.split("T")[0],
-              image: '',
-              name: allUsers.find(element => element.id === res.data.at(i).korisnikOdId).firstName + " " + allUsers.find(element => element.id === res.data.at(i).korisnikOdId).lastName,
-            })
-          })
+              .then((response) => {
+                temp.push({
+                  rating: res.data.at(i).ocjena,
+                  comment: res.data.at(i).komentar,
+                  date: res.data.at(i).datum.split("T")[0],
+                  image: `data:image/jpeg;base64,${response.data}`,
+                  name: allUsers.find(element => element.id === res.data.at(i).korisnikOdId).firstName + " " + allUsers.find(element => element.id === res.data.at(i).korisnikOdId).lastName,
+                })
+              })
+              .catch((response) => {
+                temp.push({
+                  rating: res.data.at(i).ocjena,
+                  comment: res.data.at(i).komentar,
+                  date: res.data.at(i).datum.split("T")[0],
+                  image: '',
+                  name: allUsers.find(element => element.id === res.data.at(i).korisnikOdId).firstName + " " + allUsers.find(element => element.id === res.data.at(i).korisnikOdId).lastName,
+                })
+              })
+          }
         }
-      }
-      setReviews(temp);
-      provjeri(item.id)
-      console.log(reviews);
-    })
+        setReviews(temp);
+        provjeri(item.id);
+      })
     setIsReviewModalOpen(true);
   }
   const handleCancel1 = () => {
@@ -339,36 +331,35 @@ const WalkerListPage = () => {
     setIsReviewModalOpen(false);
   }
 
-  
-  const provjeri =  (walkerId) => {
-    
-      axios.get(`http://localhost:9000/rasporedi/${user.id}/${walkerId}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      })
-      .then(res =>{
-        console.log(res);
+
+  const provjeri = (walkerId) => {
+
+    axios.get(`http://localhost:9000/rasporedi/${user.id}/${walkerId}`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+      .then(res => {
         setAllowed(res.data);
       })
       .catch(e => {
         console.log(e);
       });
-      
-    
+
+
   };
-  
+
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  
+
   return (
     <Layout hasSider>
-      <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
+      <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)}
         style={{
           maxHeight: '100vh'
         }}>
-        <MainMenu/>
+        <MainMenu />
       </Sider>
       <Content style={{ maxHeight: '100vh' }}>
         <Page>
@@ -381,26 +372,27 @@ const WalkerListPage = () => {
                 renderItem={item => (
                   <List.Item>
                     <List.Item.Meta
-                      title={item.name} 
+                      title={item.name}
                       description={
                         <div style={{ display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
                           <div style={{ display: "flex", flexDirection: 'column', marginRight: '20px' }}>
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} >
-                              <Rate disabled allowHalf value={item.averageRate} style={{marginRight: '8px'}}/>
+                              <Rate disabled allowHalf value={item.averageRate} style={{ marginRight: '8px' }} />
                               {item.averageRate}
                             </div>
-                            <div style={{color: 'black'}}>📍 {item.location}</div>
-                            <div style={{color: 'black'}}>📞 {item.phoneNumber}</div>
-                            <div style={{color: 'black'}}>💵 čuvanje po satu: {item.pricePerHour} KM</div>
-                            <div style={{color: 'black'}}>💵 čuvanje po danu: {item.pricePerDay} KM</div>
-                            <div style={{color: 'black', textAlign: 'justify'}}>{item.description}</div>
+                            <div style={{ color: 'black' }}>📍 {item.location}</div>
+                            <div style={{ color: 'black' }}>📞 {item.phoneNumber}</div>
+                            <div style={{ color: 'black' }}>💵 čuvanje po satu: {item.pricePerHour} KM</div>
+                            <div style={{ color: 'black' }}>💵 čuvanje po danu: {item.pricePerDay} KM</div>
+                            <div style={{ color: 'black', textAlign: 'justify' }}>{item.description}</div>
                           </div>
                           <div style={{ display: "flex", flexDirection: 'column' }}>
                             <Button type="primary" style={{ borderRadius: '5%', marginTop: '25px' }} onClick={() => {
                               setSelectedWalker(item);
-                              showReviewModal(item)}}>Pregledaj recenzije</Button>
-                            
-                            
+                              showReviewModal(item)
+                            }}>Pregledaj recenzije</Button>
+
+
                           </div>
                         </div>
                       }
@@ -408,27 +400,27 @@ const WalkerListPage = () => {
                   </List.Item>
                 )}
               />
-              <Modal title="Pregled recenzija" open={isReviewModalOpen} onOk={handleCancel4} onCancel={handleCancel4} 
-              footer={[
-                <div style={{ display: 'flex', flexDirection: 'row' , justifyContent: 'end'}}>
-                <div>
-                {(allowed) ? (
-                  <Button type="primary" 
-                  style={{ marginRight: '10px'}}
-                  onClick={() => {setSelectedWalker(selWalkerPhoto); showModal1()}}>Dodaj recenziju</Button>
-                ) : (
-                 null
-                )}
-                </div>
-                <Button key="back" onClick={handleCancel4}>
-                  Izađi
-                </Button>
-                </div>
-              ]}>
+              <Modal title="Pregled recenzija" open={isReviewModalOpen} onOk={handleCancel4} onCancel={handleCancel4}
+                footer={[
+                  <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'end' }}>
+                    <div>
+                      {(allowed) ? (
+                        <Button type="primary"
+                          style={{ marginRight: '10px' }}
+                          onClick={() => { setSelectedWalker(selWalkerPhoto); showModal1() }}>Dodaj recenziju</Button>
+                      ) : (
+                        null
+                      )}
+                    </div>
+                    <Button key="back" onClick={handleCancel4}>
+                      Izađi
+                    </Button>
+                  </div>
+                ]}>
                 <div style={{ height: '400px', overflow: 'auto' }}>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} >
-                    <Avatar src={selWalkerPhoto.image} style={{ marginLeft: '42px', marginTop: '30px', marginBottom: '20px', scale: '3'}} />
-                    <p style={{marginLeft: '62px', fontSize: '25px' }}>{selWalkerPhoto.name}</p>
+                    <Avatar src={selWalkerPhoto.image} style={{ marginLeft: '42px', marginTop: '30px', marginBottom: '20px', scale: '3' }} />
+                    <p style={{ marginLeft: '62px', fontSize: '25px' }}>{selWalkerPhoto.name}</p>
                   </div>
                   <Divider />
                   <List
@@ -437,7 +429,7 @@ const WalkerListPage = () => {
                     renderItem={item => (
                       <List.Item>
                         <List.Item.Meta
-                          avatar={<Avatar src={item.image} style={{ marginTop: '22px', scale: '1.4', marginLeft: '10px'}} />}
+                          avatar={<Avatar src={item.image} style={{ marginTop: '22px', scale: '1.4', marginLeft: '10px' }} />}
                           title={item.name}
                           description={
                             <div style={{ display: "flex", flexDirection: 'column' }}>
@@ -445,7 +437,7 @@ const WalkerListPage = () => {
                                 <Rate disabled value={item.rating} />
                                 <div>({item.rating})</div>
                               </div>
-                              <div style={{color: 'black'}}>{item.comment}</div>
+                              <div style={{ color: 'black' }}>{item.comment}</div>
                               <div>{item.date}</div>
                             </div>
                           }
@@ -454,11 +446,11 @@ const WalkerListPage = () => {
                     )}
                   />
                 </div>
-                
+
               </Modal>
               {contextHolder}
               <Modal title="Dodaj recenziju" open={isModalOpen1} onOk={postRecenzija} onCancel={handleCancel1} okText="Dodaj"
-                  cancelText="Otkaži">
+                cancelText="Otkaži">
                 <TextArea
                   showCount
                   maxLength={300}
@@ -471,7 +463,7 @@ const WalkerListPage = () => {
                   onChange={(e) => setKomentar(e.target.value)}
                 />
                 <span>
-                  <Rate tooltips={desc} onChange={(e) => {setOcjena(e); }} value={ocjena} />
+                  <Rate tooltips={desc} onChange={(e) => { setOcjena(e); }} value={ocjena} />
                 </span>
               </Modal>
             </div>
@@ -479,7 +471,7 @@ const WalkerListPage = () => {
             <FloatButton icon={<FilterOutlined />} type="primary" style={{ right: 40, top: 10 }} onClick={showModal2} />
             <FloatButton icon={<SortAscendingOutlined />} type="primary" style={{ right: 90, top: 10 }} onClick={() => setIsSorted(true)} />
             <Modal title="Filtriranje" open={isModalOpen2} onOk={filterByPlace} onCancel={handleCancel2} okText="Filtriraj" cancelText="Otkaži" >
-              <Select size="middle" 
+              <Select size="middle"
                 placeholder="Izaberite lokacije"
                 allowClear
                 style={{
@@ -488,7 +480,7 @@ const WalkerListPage = () => {
                   marginTop: '3%'
                 }}
                 options={placesFilter}
-                onChange={selectPlace}/>
+                onChange={selectPlace} />
             </Modal>
           </Cover>
         </Page>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import MainMenu from '../../components/MainMenu';
-import { Layout} from 'antd';
+import { Layout } from 'antd';
 import EditProfile from '../../components/EditProfile';
 
 const { Content, Sider } = Layout;
@@ -11,14 +11,14 @@ const EditProfileOwnerPage = () => {
 
   return (
     <Layout hasSider>
-      <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
+      <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)}
         style={{
           minHeight: '103vh',
         }}>
-        <MainMenu/>
+        <MainMenu />
       </Sider>
       <Content style={{ maxHeight: '103vh' }} >
-        <EditProfile/>
+        <EditProfile />
       </Content>
     </Layout>
   );

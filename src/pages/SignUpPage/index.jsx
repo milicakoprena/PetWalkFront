@@ -85,24 +85,24 @@ const SignUpPage = () => {
     }
   };
 
-  useEffect( () => {
+  useEffect(() => {
     axios.get(`http://localhost:9000/mjesta`)
-    .then((res) => {
-      let temp = [];
-      for(let i = 0; i < res.data.length; i++){
-        temp.push({
-          value: res.data.at(i).id,
-          label: res.data.at(i).naziv,
-        })
-      }
-      setLocations(temp);
-    })
-    .catch((e) => console.log(e));
+      .then((res) => {
+        let temp = [];
+        for (let i = 0; i < res.data.length; i++) {
+          temp.push({
+            value: res.data.at(i).id,
+            label: res.data.at(i).naziv,
+          })
+        }
+        setLocations(temp);
+      })
+      .catch((e) => console.log(e));
   }, [locations]);
 
   const uploadButton = (
     <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined/>
+      {loading ? <LoadingOutlined /> : <PlusOutlined />
       }
       <div
         style={{
@@ -125,7 +125,7 @@ const SignUpPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     if (password === passwordRepeat) {
       try {
         const request = {
@@ -135,16 +135,16 @@ const SignUpPage = () => {
           password,
           email,
           phoneNumber,
-          photo:image
+          photo: image
         };
         await axios.post('http://localhost:9000/sign-up', request)
-        .then(() => {
-          navigate("/loginpage",
-          {
-            state: {locationId, imageFile}
-          });
-        })
-        .catch((e) => console.log(e)); 
+          .then(() => {
+            navigate("/loginpage",
+              {
+                state: { locationId, imageFile }
+              });
+          })
+          .catch((e) => console.log(e));
       }
       catch (error) {
         console.log(error);
@@ -153,7 +153,7 @@ const SignUpPage = () => {
           content: 'Došlo je do greške, registracija nije moguća.',
         });
       }
-    }else {
+    } else {
       messageApi.open({
         type: 'error',
         content: 'Lozinke se ne poklapaju, molimo Vas unesite ih ponovo.',
@@ -167,86 +167,87 @@ const SignUpPage = () => {
     backgroundColor: '#163CB3',
     height: '2em'
   };
-      
+
   return (
     <Page2>
       <CoverSignUp style={{ backgroundImage: `url(${pozadina})` }} >
         <Row>
-          <Col style={{width: '530px'}}>
-            <img src={logo} alt="logo" style={{width: '380px', height: 'auto', marginTop: '30%'}}/>
-            <p style={{ 
+          <Col style={{ width: '530px' }}>
+            <img src={logo} alt="logo" style={{ width: '380px', height: 'auto', marginTop: '30%' }} />
+            <p style={{
               width: '250px',
               marginLeft: '12%',
-              fontFamily:"cursive",
+              fontFamily: "cursive",
               fontStyle: 'oblique',
               textShadow: '1px 1px 2px darkblue',
               fontWeight: 'bold',
               fontSize: '30px',
               color: 'rgba(0, 33, 64, 0.59)',
-              textAlign: 'center' }} >
+              textAlign: 'center'
+            }} >
               DOBRO DOŠLI!
             </p>
           </Col>
-          <Col style={{width: '850px', marginTop: '80px'}}>
+          <Col style={{ width: '850px', marginTop: '80px' }}>
             <Steps current={current} items={steps} />
-            <div style={{maxHeight: '420px', minHeight: '270px'}}>
+            <div style={{ maxHeight: '420px', minHeight: '270px' }}>
               <Form
-                style={{marginTop: '10px', }}
+                style={{ marginTop: '10px', }}
                 form={form}
                 size="middle"
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
               >
                 {current === 0 && (
-                  <Row style={{justifyContent: 'space-evenly'}}>
-                    <Col style={{width: '380px', marginTop: '80px'}}>
+                  <Row style={{ justifyContent: 'space-evenly' }}>
+                    <Col style={{ width: '380px', marginTop: '80px' }}>
                       <StyledFormItem1
-                        label={ <StyledLabel2>Ime</StyledLabel2> }
+                        label={<StyledLabel2>Ime</StyledLabel2>}
                         name="name"
-                        rules={[{ required: true, message: "Polje je obavezno!"}]}
+                        rules={[{ required: true, message: "Polje je obavezno!" }]}
                       >
                         <StyledInput2 value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}/>
+                          onChange={(e) => setFirstName(e.target.value)} />
                       </StyledFormItem1>
                       <StyledFormItem1
-                        label={ <StyledLabel2>Prezime</StyledLabel2> }
+                        label={<StyledLabel2>Prezime</StyledLabel2>}
                         name="surname"
-                        rules={[{ required: true, message: "Polje je obavezno!"}]}
+                        rules={[{ required: true, message: "Polje je obavezno!" }]}
                       >
                         <StyledInput2 value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}/>
+                          onChange={(e) => setLastName(e.target.value)} />
                       </StyledFormItem1>
                       <StyledFormItem1
-                        label={ <StyledLabel2>Broj telefona</StyledLabel2> }
+                        label={<StyledLabel2>Broj telefona</StyledLabel2>}
                         name="phonenumber"
-                        rules={[{ required: true, message: "Polje je obavezno!"}]}
+                        rules={[{ required: true, message: "Polje je obavezno!" }]}
                       >
                         <StyledInput2 value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}/>
+                          onChange={(e) => setPhoneNumber(e.target.value)} />
                       </StyledFormItem1>
                     </Col>
-                    <Col style={{width: '380px', marginTop: '80px'}}>
+                    <Col style={{ width: '380px', marginTop: '80px' }}>
                       <StyledFormItem1
-                        label={ <StyledLabel2>Email</StyledLabel2> }
+                        label={<StyledLabel2>Email</StyledLabel2>}
                         name="email"
-                        rules={[{ required: true, message: "Polje je obavezno!"}]}
+                        rules={[{ required: true, message: "Polje je obavezno!" }]}
                       >
                         <StyledInput2 value={email}
-                          onChange={(e) => setEmail(e.target.value)}/>
+                          onChange={(e) => setEmail(e.target.value)} />
                       </StyledFormItem1>
                       <StyledFormItem1
                         name="place"
-                        label={ <StyledLabel2>Naselje</StyledLabel2> }
-                        rules={[{ required: true, message: "Polje je obavezno!"}]}
+                        label={<StyledLabel2>Naselje</StyledLabel2>}
+                        rules={[{ required: true, message: "Polje je obavezno!" }]}
                       >
-                        <StyledSelect2 size="large" 
+                        <StyledSelect2 size="large"
                           allowClear
                           style={{
                             width: '100%',
                             marginTop: '-2px'
                           }}
                           options={locations}
-                          defaultValue={locations[0]} 
+                          defaultValue={locations[0]}
                           onChange={selectLocation}
                         />
                       </StyledFormItem1>
@@ -255,11 +256,11 @@ const SignUpPage = () => {
                 )}
 
                 {current === 1 && (
-                  <div style={{width: '380px', marginTop: '80px', marginLeft: '240px'}}>
+                  <div style={{ width: '380px', marginTop: '80px', marginLeft: '240px' }}>
                     <StyledFormItem1
                       label={<StyledLabel2>Korisničko ime</StyledLabel2>}
                       name="username"
-                      rules={[{ required: true, message: "Polje je obavezno!"}]}
+                      rules={[{ required: true, message: "Polje je obavezno!" }]}
                     >
                       <StyledInput2 value={username}
                         onChange={(e) => setUsername(e.target.value)} />
@@ -267,7 +268,7 @@ const SignUpPage = () => {
                     <StyledFormItem1
                       label={<StyledLabel2>Lozinka</StyledLabel2>}
                       name="password"
-                      rules={[{ required: true, message: "Polje je obavezno!"}]}
+                      rules={[{ required: true, message: "Polje je obavezno!" }]}
                     >
                       <Input.Password
                         value={password}
@@ -277,7 +278,7 @@ const SignUpPage = () => {
                     <StyledFormItem1
                       label={<StyledLabel2>Ponovite lozinku</StyledLabel2>}
                       name="passwordRepeat"
-                      rules={[{ required: true, message: "Polje je obavezno!"}]}
+                      rules={[{ required: true, message: "Polje je obavezno!" }]}
                     >
                       <Input.Password
                         value={passwordRepeat}
@@ -298,7 +299,7 @@ const SignUpPage = () => {
                       action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                       beforeUpload={beforeUpload}
                       onChange={handleChange}
-                      //style={{scale: 2}}
+                    //style={{scale: 2}}
                     >
                       {imageUrl ? (
                         <UserPhoto
@@ -307,7 +308,7 @@ const SignUpPage = () => {
                         />
                       ) : (
                         uploadButton
-                      )} 
+                      )}
                     </Upload>
                   </StyledUploadSignUp>
                 )}
@@ -346,7 +347,7 @@ const SignUpPage = () => {
             </div>
           </Col>
         </Row>
-        
+
       </CoverSignUp>
     </Page2>
   );

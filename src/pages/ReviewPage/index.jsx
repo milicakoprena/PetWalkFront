@@ -8,7 +8,7 @@ import { Page, Cover } from "../../components/CssComponents";
 const { Content, Sider } = Layout;
 
 const ReviewPage = () => {
-  
+
   const userState = useLocation();
   const user = userState.state.user;
   const [reviews, setReviews] = useState([]);
@@ -29,7 +29,7 @@ const ReviewPage = () => {
         });
         const tempReviews = resReviews.data;
         const users = resUsers.data;
-  
+
         let temp = [];
         let korisnikOd;
         let korisnikZa;
@@ -38,7 +38,7 @@ const ReviewPage = () => {
         for (let i = 0; i < tempReviews.length; i++) {
           if (user.id === tempReviews.at(i).korisnikZaId) {
             korisnikOd =
-              users.find((element) => element.id === tempReviews.at(i).korisnikOdId).firstName 
+              users.find((element) => element.id === tempReviews.at(i).korisnikOdId).firstName
               + " " +
               users.find((element) => element.id === tempReviews.at(i).korisnikOdId).lastName;
             korisnikZa = user.firstName + " " + user.lastName;
@@ -60,15 +60,15 @@ const ReviewPage = () => {
       }
     }
     fetchData();
-  },[reviews, user.token, user.role, user.id, user.firstName, user.lastName]);
+  }, [reviews, user.token, user.role, user.id, user.firstName, user.lastName]);
 
   return (
     <Layout hasSider>
-      <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
+      <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)}
         style={{
           maxHeight: '103vh'
         }}>
-        <MainMenu/>
+        <MainMenu />
       </Sider>
       <Content style={{ maxHeight: '103vh' }}>
         <Page>
@@ -76,32 +76,34 @@ const ReviewPage = () => {
             maxHeight: '103vh',
             backgroundImage: `url(${pozadina})`,
           }} >
-            <div style={{ maxHeight: '400px', width: '800px', overflow: 'auto', backgroundColor: 'white', borderRadius: '10px', 
-              boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)', paddingLeft: '2%', paddingRight: '2%' }}>
-                <List
-                  itemLayout="horizontal"
-                  dataSource={reviews}
-                  pagination={false}
-                  renderItem={item => (
-                    <List.Item>
-                      <List.Item.Meta
-                        title={item.korisnikOd}
-                        description={
-                          <div style={{ display: "flex", flexDirection: 'column' }}>
-                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} >
-                              <Rate disabled defaultValue={item.ocjena} />
-                              <text>({item.ocjena})</text>
-                            </div>
-                            <text>{item.komentar}</text>
+            <div style={{
+              maxHeight: '400px', width: '800px', overflow: 'auto', backgroundColor: 'white', borderRadius: '10px',
+              boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)', paddingLeft: '2%', paddingRight: '2%'
+            }}>
+              <List
+                itemLayout="horizontal"
+                dataSource={reviews}
+                pagination={false}
+                renderItem={item => (
+                  <List.Item>
+                    <List.Item.Meta
+                      title={item.korisnikOd}
+                      description={
+                        <div style={{ display: "flex", flexDirection: 'column' }}>
+                          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }} >
+                            <Rate disabled defaultValue={item.ocjena} />
+                            <text>({item.ocjena})</text>
                           </div>
-                        }
-                      />
-                    </List.Item>
-                  )}
-                />
+                          <text>{item.komentar}</text>
+                        </div>
+                      }
+                    />
+                  </List.Item>
+                )}
+              />
             </div>
           </Cover>
-        </Page>    
+        </Page>
       </Content>
     </Layout>
   );

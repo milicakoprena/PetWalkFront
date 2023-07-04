@@ -23,20 +23,20 @@ const PlacesPage = () => {
                 Authorization: `Bearer ${user.token}`,
             },
         })
-        .then((res) => {
-            let temp = [];
-            for(let i = 0; i < res.data.length; i++){
-                temp.push({
-                    id: res.data.at(i).id,
-                    label: res.data.at(i).naziv,
-                })
-            }
-            setPlaces(temp);
-        })
-        .catch((e) => console.log(e));
+            .then((res) => {
+                let temp = [];
+                for (let i = 0; i < res.data.length; i++) {
+                    temp.push({
+                        id: res.data.at(i).id,
+                        label: res.data.at(i).naziv,
+                    })
+                }
+                setPlaces(temp);
+            })
+            .catch((e) => console.log(e));
     });
 
-    const addPlace = async(event) => {
+    const addPlace = async (event) => {
         event.preventDefault();
         try {
             const request = {
@@ -47,49 +47,48 @@ const PlacesPage = () => {
                     Authorization: `Bearer ${user.token}`,
                 },
             })
-            .then(() => {
-                console.log("dodano");
-                setNewPlace("");
-                window.location.reload(true);
-            })
-            .catch((e) => {
-                console.log(e);
-            })
+                .then(() => {
+                    console.log("dodano");
+                    setNewPlace("");
+                    window.location.reload(true);
+                })
+                .catch((e) => {
+                    console.log(e);
+                })
         }
-        catch(error){
+        catch (error) {
             console.log(error);
         }
-        
+
     };
 
-    const deletePlace = async(id) => {
-        //id.preventDefault();
+    const deletePlace = async (id) => {
         try {
             await axios.delete(`http://localhost:9000/mjesta/${id}`, {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                 },
             })
-            .then(() => {
-                console.log("obrisano");
-                window.location.reload(true);
-            })
-            .catch((e) => {
-                console.log(e);
-            })
+                .then(() => {
+                    console.log("obrisano");
+                    window.location.reload(true);
+                })
+                .catch((e) => {
+                    console.log(e);
+                })
         }
-        catch(error) {
+        catch (error) {
             console.log(error);
         }
     };
 
     return (
         <Layout hasSider>
-            <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} 
+            <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)}
                 style={{
                     maxHeight: '103vh'
                 }}>
-                <MainMenu/>
+                <MainMenu />
             </Sider>
             <Content style={{ maxHeight: '103vh' }}>
                 <Page>
@@ -97,26 +96,26 @@ const PlacesPage = () => {
                         maxHeight: '103vh',
                         backgroundImage: `url(${pozadina})`,
                     }} >
-                        <Row gutter={16} style={{justifyContent: 'space-between'}}>
+                        <Row gutter={16} style={{ justifyContent: 'space-between' }}>
                             <Col span={8}>
                                 <Card title="Lista naselja" bordered={false}
-                                    style={{ 
-                                        boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)', 
+                                    style={{
+                                        boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)',
                                         height: '400px',
                                         width: '300px',
                                         justifyContent: 'center',
                                         overflow: 'auto',
                                         marginLeft: '-100px'
-                                    }} 
+                                    }}
                                 >
                                     <List
                                         pagination={false}
                                         dataSource={places}
                                         renderItem={(item) => (
                                             <List.Item>
-                                                <div style={{display: 'flex', width: '300px', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between'}}>
+                                                <div style={{ display: 'flex', width: '300px', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' }}>
                                                     <p>{item.label}</p>
-                                                    <Button icon={<DeleteOutlined />} style={{justifySelf: 'end'}} onClick={() => {deletePlace(item.id)}}/>
+                                                    <Button icon={<DeleteOutlined />} style={{ justifySelf: 'end' }} onClick={() => { deletePlace(item.id) }} />
                                                 </div>
                                             </List.Item>
                                         )}
@@ -124,16 +123,16 @@ const PlacesPage = () => {
                                 </Card>
                             </Col>
                             <Col span={8}>
-                                <Card title="Dodaj naselje" bordered={false} 
-                                    style={{ 
+                                <Card title="Dodaj naselje" bordered={false}
+                                    style={{
                                         boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 35%)',
                                         width: '300px',
                                         height: '400px',
-                                    }} 
+                                    }}
                                 >
                                     <p>Unesite naziv naselja:</p>
-                                    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                        <Input style={{width: '253px', height: '28px', marginBottom: '25px'}}
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                        <Input style={{ width: '253px', height: '28px', marginBottom: '25px' }}
                                             onChange={(e) => setNewPlace(e.target.value)}
                                         />
                                         <Button type="primary" onClick={addPlace}>Dodaj</Button>
@@ -142,7 +141,7 @@ const PlacesPage = () => {
                             </Col>
                         </Row>
                     </Cover>
-                </Page>    
+                </Page>
             </Content>
         </Layout>
     );

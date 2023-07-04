@@ -20,7 +20,7 @@ const MyAdsPage = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [isAdModalOpen, setIsAdModalOpen] = useState(false);
     const [sadrzaj, setSadrzaj] = useState("");
-    const [kategorijeSelect, setKategorijeSelect] = useState([]);
+    
     const [kategorija, setKategorija] = useState("");
 
     const handleCancel = () => {
@@ -28,7 +28,6 @@ const MyAdsPage = () => {
     };
 
     const showAdModal = () => {
-        console.log(kategorijeSelect);
         setIsAdModalOpen(true);
     };
 
@@ -79,7 +78,6 @@ const MyAdsPage = () => {
             korisnikId: selectedAd.userId
         };
 
-        console.log("req", request);
 
         axios.put(`http://localhost:9000/oglasi/${selectedAd.id}`, request, {
             headers: {
@@ -97,7 +95,7 @@ const MyAdsPage = () => {
                     type: 'error',
                     content: 'Došlo je do greške, status nije promijenjen.',
                 });
-                console.log(e)
+                console.log(e);
             });
 
         setIsModalOpen(false);

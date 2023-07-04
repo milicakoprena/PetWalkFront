@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import MainMenu from '../../components/MainMenu';
-import { Layout, Input, Button, Card , message} from 'antd';
+import { Layout, Input, Button, Card, message } from 'antd';
 import { Page, Cover } from '../../components/CssComponents';
 import pozadina from "../resources/pozadina2.jpg"
 import { useLocation } from 'react-router-dom';
@@ -33,20 +33,21 @@ const ReportProblem = () => {
                     Authorization: `Bearer ${user.token}`,
                 },
             })
-            .then(() => {
-                console.log("Uspjesno");
-                messageApi.open({
-                    type: 'success',
-                    content: 'Problem uspješno prijavljen!',
+                .then(() => {
+                    console.log("Uspjesno");
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Problem uspješno prijavljen!',
+                    });
+                    setSadrzaj('');
+                })
+                .catch((e) => {
+                    console.log(e);
+                    messageApi.open({
+                        type: 'error',
+                        content: 'Problem nije uspješno prijavljen!',
+                    });
                 });
-                setSadrzaj('');
-            })
-            .catch((e) => {console.log(e);
-                messageApi.open({
-                    type: 'error',
-                    content: 'Problem nije uspješno prijavljen!',
-                });
-            });
         }
         catch (error) {
             console.log(error);
@@ -58,7 +59,7 @@ const ReportProblem = () => {
             <Sider collapsible collapsed={collapsed} collapsedWidth="100px" onCollapse={(value) => setCollapsed(value)} style={{
                 maxHeight: '103vh'
             }}>
-                <MainMenu/>
+                <MainMenu />
             </Sider>
             <Content style={{
                 maxHeight: '103vh'
@@ -90,13 +91,13 @@ const ReportProblem = () => {
                                 onChange={(e) => setSadrzaj(e.target.value)}
                             />
                             {contextHolder}
-                            <Button type="primary" 
+                            <Button type="primary"
                                 style={{
                                     backgroundColor: 'rgba(0,21,41,255)',
                                     marginTop: '30px',
                                     fontSize: '17px',
                                     marginLeft: '43%'
-                                }} 
+                                }}
                                 onClick={handleSubmit}
                             >Pošalji</Button>
                         </Card>

@@ -34,7 +34,7 @@ const StatisticsPage = () => {
             num: i + 1,
             vrijednost: response.data.at(i).totalPrice,
           });
-    
+
           tempData.push({
             name: 'Ukupno vrijeme',
             mjesec: months[response.data.at(i).month - 1],
@@ -43,7 +43,6 @@ const StatisticsPage = () => {
           });
         }
         setData(tempData);
-        console.log("data ", tempData);
       })
       .catch((e) => {
         console.log(e);
@@ -102,7 +101,7 @@ const StatisticsPage = () => {
             style={{
               height: '80%',
               width: '80%'
-            }}/>
+            }} />
         </Page1>
       </Content>
     </Layout>

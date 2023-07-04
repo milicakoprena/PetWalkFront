@@ -27,39 +27,39 @@ const ProblemView = () => {
                 Authorization: `Bearer ${user.token}`,
             },
         })
-        .then((res) => {
-            setUsers(res.data);
-        })
-        .catch((e) => console.log(e));
+            .then((res) => {
+                setUsers(res.data);
+            })
+            .catch((e) => console.log(e));
 
         axios.get(`http://localhost:9000/problemi`, {
             headers: {
                 Authorization: `Bearer ${user.token}`,
             },
         })
-        .then((res) => {
-            let temp = [];
-            let tempProblem = '';
-            for (let i = 0; i < res.data.length; i++) {
-                let userId = res.data.at(i).korisnikId;
+            .then((res) => {
+                let temp = [];
+                let tempProblem = '';
+                for (let i = 0; i < res.data.length; i++) {
+                    let userId = res.data.at(i).korisnikId;
 
-                tempProblem = {
-                    imageName: users.find(element => element.id === userId).photo,
-                    image: '',
-                    firstName: users.find(element => element.id === userId).firstName,
-                    lastName: users.find(element => element.id === userId).lastName,
-                    key: i,
-                    username: users.find(element => element.id === userId).username,
-                    sadrzaj: res.data.at(i).sadrzaj,
-                    datum: res.data.at(i).datum,
+                    tempProblem = {
+                        imageName: users.find(element => element.id === userId).photo,
+                        image: '',
+                        firstName: users.find(element => element.id === userId).firstName,
+                        lastName: users.find(element => element.id === userId).lastName,
+                        key: i,
+                        username: users.find(element => element.id === userId).username,
+                        sadrzaj: res.data.at(i).sadrzaj,
+                        datum: res.data.at(i).datum,
+                    }
+
+                    temp.push(tempProblem);
                 }
 
-                temp.push(tempProblem);
-            }
-
-            setProblems(temp);
-        })
-        .catch((e) => console.log(e));
+                setProblems(temp);
+            })
+            .catch((e) => console.log(e));
     }
 
     const loadMoreData = () => {
@@ -84,7 +84,7 @@ const ProblemView = () => {
     }, [users]);
 
     const showModal = (problem) => {
-        
+
         axios.get(`http://localhost:9000/korisnici/image/${problem.imageName}`, {
             headers: {
                 Authorization: `Bearer ${user.token}`,
@@ -92,33 +92,31 @@ const ProblemView = () => {
                 "Content-Type": 'image/jpeg',
             },
         })
-        .then((response) =>
-        {
-            setSelectedProblem({
-                image: `data:image/jpeg;base64,${response.data}`,
-                imageName: problem.imageName,
-                firstName: problem.firstName,
-                lastName: problem.lastName,
-                key: problem.key,
-                username: problem.username,
-                sadrzaj: problem.sadrzaj,
-                datum: problem.datum,
+            .then((response) => {
+                setSelectedProblem({
+                    image: `data:image/jpeg;base64,${response.data}`,
+                    imageName: problem.imageName,
+                    firstName: problem.firstName,
+                    lastName: problem.lastName,
+                    key: problem.key,
+                    username: problem.username,
+                    sadrzaj: problem.sadrzaj,
+                    datum: problem.datum,
+                })
             })
-        })
-        .catch((response) =>
-        {
-            setSelectedProblem({
-                image: '',
-                imageName: '',
-                firstName: problem.firstName,
-                lastName: problem.lastName,
-                key: problem.key,
-                username: problem.username,
-                sadrzaj: problem.sadrzaj,
-                datum: problem.datum,
+            .catch((response) => {
+                setSelectedProblem({
+                    image: '',
+                    imageName: '',
+                    firstName: problem.firstName,
+                    lastName: problem.lastName,
+                    key: problem.key,
+                    username: problem.username,
+                    sadrzaj: problem.sadrzaj,
+                    datum: problem.datum,
+                })
             })
-        })
-        
+
         setIsModalOpen(true);
     };
 
@@ -139,7 +137,7 @@ const ProblemView = () => {
                 style={{
                     maxHeight: '103vh'
                 }}>
-                <MainMenu/>
+                <MainMenu />
             </Sider>
             <Content style={{ maxHeight: '103vh' }}>
                 <Page>
@@ -193,14 +191,14 @@ const ProblemView = () => {
                             <Modal title="Detalji o problemu" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={450}
                                 footer={[
                                     <Button key="back" onClick={handleCancel}>
-                                      Izađi
+                                        Izađi
                                     </Button>,
-                                    ]}
+                                ]}
                             >
                                 <Descriptions title="" size="default" column={1} >
                                     <Descriptions.Item>
-                                        <Avatar size={130} icon={<UserOutlined />} 
-                                            src={selectedProblem.image}/>
+                                        <Avatar size={130} icon={<UserOutlined />}
+                                            src={selectedProblem.image} />
                                     </Descriptions.Item>
                                     <Descriptions.Item label="Ime i prezime">{selectedProblem.firstName} {selectedProblem.lastName}</Descriptions.Item>
                                     <Descriptions.Item label="Korisničko ime">{selectedProblem.username}</Descriptions.Item>

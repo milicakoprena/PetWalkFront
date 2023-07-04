@@ -264,8 +264,7 @@ const AccountListPage = () => {
           }
         }
         setReviews(temp);
-        console.log("Temp ", temp);
-        console.log(reviews);
+        
       });
     setIsModalOpen3(true);
   };
@@ -344,7 +343,6 @@ const AccountListPage = () => {
             });
           }
           setReports(temp);
-          console.log("temp", temp);
         }
         setIsModalOpen4(true);
       })

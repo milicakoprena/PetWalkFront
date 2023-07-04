@@ -7,7 +7,7 @@ const StartPage = () => {
     return (
         <Page2 >
             <Cover style={{ backgroundImage: `url(${pozadina})` }} >
-                <StartLogo src={require('../resources/logo.png')}/>
+                <StartLogo src={require('../resources/logo.png')} />
                 <StartLoginButton onClick={() => navigate("/loginpage")}>Prijavi se</StartLoginButton>
                 <StartSignUpButton onClick={() => navigate("/signuppage")}>Nemaš nalog? Registruj se ovdje!</StartSignUpButton>
             </Cover>

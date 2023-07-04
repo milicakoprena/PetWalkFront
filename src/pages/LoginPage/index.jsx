@@ -29,10 +29,10 @@ const LoginPage = () => {
         content: 'Prijava je uspješna!',
       });
 
-      if(locationId!=='') {
+      if (locationId !== '') {
         let mjestoRequest = {
           mjestoId: locationId,
-          korisnikId: user.id, 
+          korisnikId: user.id,
         }
 
         const response2 = fetch('http://localhost:9000/lokacije', {
@@ -43,46 +43,43 @@ const LoginPage = () => {
           },
           body: JSON.stringify(mjestoRequest),
         })
-        .catch((e) => console.log(e));
-        console.log(response2);
+          .catch((e) => console.log(e));
       }
 
-      if(imageFile){
+      if (imageFile) {
         const formData = new FormData();
         formData.append('file', imageFile);
-        axios.post(`http://localhost:9000/korisnici/image`, formData,  {
+        axios.post(`http://localhost:9000/korisnici/image`, formData, {
           headers: {
             Authorization: `Bearer ${user.token}`,
             "Content-Type": "multipart/form-data",
           },
         })
-        .then((res) => {
-          console.log("Uspjesno");
-        })
-        .catch((e) => console.log(e));
+          .then((res) => {
+            console.log("Uspjesno");
+          })
+          .catch((e) => console.log(e));
       }
 
-      if(user.role===ROLE_ADMIN)
+      if (user.role === ROLE_ADMIN)
         navigate("/accountlistpage",
-        {
-          state: {user}
-        });
-      else if(user.role===ROLE_OWNER)
-      {
+          {
+            state: { user }
+          });
+      else if (user.role === ROLE_OWNER) {
         navigate("/editprofileownerpage",
           {
-            state: {user}
+            state: { user }
           });
       }
-      else if(user.role===ROLE_WALKER)
-      {
+      else if (user.role === ROLE_WALKER) {
         navigate("/editprofile",
           {
-            state: {user}
+            state: { user }
           });
       }
-      return {...user, token: null};
-        
+      return { ...user, token: null };
+
     } catch (error) {
       console.error(error);
       messageApi.open({
@@ -98,8 +95,8 @@ const LoginPage = () => {
     }
   };
 
-  useEffect(()=>{
-    if(locationIdState.state){
+  useEffect(() => {
+    if (locationIdState.state) {
       setLocationId(locationIdState.state.locationId);
       setImageFile(locationIdState.state.imageFile);
     }
@@ -109,37 +106,37 @@ const LoginPage = () => {
   const [form] = Form.useForm();
 
   return (
-    <Page style={{height: '100vh'}}>
+    <Page style={{ height: '100vh' }}>
       <Cover style={{ backgroundImage: `url(${pozadina})` }} >
-        <Logo src={require('../resources/logo.png')}/>
+        <Logo src={require('../resources/logo.png')} />
         <StyledFormLogin
           form={form}
           size="large"
         >
           <StyledFormItemLogin
             name="username"
-            rules={[{ required: true, message: "Polje je obavezno!"}]}
+            rules={[{ required: true, message: "Polje je obavezno!" }]}
           >
-            <StyledInput2  prefix={<Icon  src={require('../resources/mail.png')}/>} placeholder="Korisničko ime" 
+            <StyledInput2 prefix={<Icon src={require('../resources/mail.png')} />} placeholder="Korisničko ime"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              onKeyDown={handleKeyPress}/>
+              onKeyDown={handleKeyPress} />
           </StyledFormItemLogin>
           <StyledFormItemLogin
             name="password"
             rules={[{ required: true, message: "Polje je obavezno!" }]}
           >
-            <Input.Password prefix={<Icon  src={require('../resources/padlock.png')}/>} placeholder="Lozinka" 
+            <Input.Password prefix={<Icon src={require('../resources/padlock.png')} />} placeholder="Lozinka"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={handleKeyPress}
-              style={{fontSize: '20px'}}/>
+              style={{ fontSize: '20px' }} />
           </StyledFormItemLogin>
           <StyledFormItemLogin>
             {contextHolder}
             <LoginButton onClick={handleSubmit}>Prijavi se</LoginButton>
           </StyledFormItemLogin>
-        </StyledFormLogin>   
+        </StyledFormLogin>
       </Cover>
     </Page>
   );
