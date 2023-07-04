@@ -19,29 +19,6 @@ const StatisticsPage = () => {
 
   const months = ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Jun', 'Jul', 'Avgust', 'Septembar', 'Oktobar', 'Novembar', 'Decembar'];
 
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth() + 1;
-
-  useEffect(() => {
-    let tempData = [];
-    for (let i = 0; i < currentMonth; i++) {
-      tempData.push({
-        name: 'Zarada',
-        mjesec: months[i],
-        num: i + 1,
-        vrijednost: 0,
-      });
-
-      tempData.push({
-        name: 'Ukupno vrijeme',
-        mjesec: months[i],
-        num: i + 1,
-        vrijednost: 0,
-      });
-    }
-    setData(tempData);
-  }, []);
-
   useEffect(() => {
     axios.get(`http://localhost:9000/rasporedi/monthlyTotals/${user.id}`, {
       headers: {
@@ -49,24 +26,29 @@ const StatisticsPage = () => {
       },
     })
       .then((response) => {
-        setData(prevData => {
-          const updatedData = [...prevData];
-         
-          for (let i = 0; i < updatedData.length ; i++) {
-            let element = response.data.find(element => element.month ===updatedData[i].num);
-            if(updatedData[i].name === 'Zarada' && element!==undefined)
-              updatedData[i].vrijednost = element.totalPrice;
-            else if(updatedData[i].name === 'Ukupno vrijeme' && element!==undefined)
-            updatedData[i].vrijednost = response.data.find(element => element.month ===updatedData[i].num).totalTime;
-          }
-          return updatedData;
-        });
-        console.log("data ", data);
+        let tempData = [];
+        for (let i = 0; i < response.data.length; i++) {
+          tempData.push({
+            name: 'Zarada',
+            mjesec: months[response.data.at(i).month - 1],
+            num: i + 1,
+            vrijednost: response.data.at(i).totalPrice,
+          });
+    
+          tempData.push({
+            name: 'Ukupno vrijeme',
+            mjesec: months[response.data.at(i).month - 1],
+            num: i + 1,
+            vrijednost: response.data.at(i).totalTime,
+          });
+        }
+        setData(tempData);
+        console.log("data ", tempData);
       })
       .catch((e) => {
         console.log(e);
       });
-  }, [data]);
+  }, []);
 
 
 
